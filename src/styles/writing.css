@@ -1,0 +1,97 @@
+/* ==========================================================================
+   WRITING & EDITORIAL THOUGHT SECTION
+   ========================================================================== */
+
+.writing-section {
+  padding-top: clamp(3rem, 6vw, 5rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.writing-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+}
+
+.writing-item {
+  display: block;
+  padding: 1.85rem 0;
+  border-bottom: 1px solid var(--color-border);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.writing-item:hover .writing-title {
+  color: var(--color-primary-accent);
+}
+
+.writing-item:hover .writing-arrow {
+  transform: translateX(4px) translateY(-4px);
+  color: var(--color-primary-accent);
+}
+
+.writing-meta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-muted-text);
+  margin-bottom: 0.5rem;
+}
+
+.writing-platform-tag {
+  color: var(--color-primary-accent);
+  font-weight: 600;
+}
+
+.writing-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.writing-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+  font-weight: 700;
+  color: var(--color-primary-text);
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.writing-arrow {
+  color: var(--color-muted-text);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.writing-excerpt {
+  font-size: 0.95rem;
+  color: var(--color-secondary-text);
+  line-height: 1.55;
+  max-width: 720px;
+}
+
+.writing-footer-cta {
+  margin-top: 2.5rem;
+}
+
+.link-substack-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary-text);
+  border-bottom: 1.5px solid var(--color-primary-accent);
+  padding-bottom: 0.15rem;
+  transition: color 0.2s ease;
+}
+
+.link-substack-all:hover {
+  color: var(--color-primary-accent);
+}

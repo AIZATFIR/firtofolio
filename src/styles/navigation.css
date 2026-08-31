@@ -1,0 +1,145 @@
+/* ==========================================================================
+   FLOATING PILL NAVIGATION
+   ========================================================================== */
+
+.header-wrapper {
+  position: fixed;
+  top: 1.25rem;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  pointer-events: none; /* Allows click-through outside pill */
+}
+
+.header-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--page-padding);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left Brand Logo */
+.brand-logo {
+  pointer-events: auto;
+  font-family: var(--font-signature);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--color-primary-text);
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  line-height: 1;
+  padding: 0.25rem 0;
+}
+
+.brand-logo:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+/* Center Floating Pill Navigation */
+.nav-pill-container {
+  pointer-events: auto;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--nav-border);
+  border-radius: var(--radius-pill);
+  padding: 0.28rem 0.35rem;
+  box-shadow: 0 4px 16px -2px rgba(80, 50, 20, 0.04);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 0.15rem;
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-secondary-text);
+  padding: 0.38rem 0.85rem;
+  border-radius: var(--radius-pill);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: var(--color-primary-text);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.nav-link.active {
+  color: var(--color-primary-text);
+  background: var(--pill-active-bg);
+  box-shadow: var(--pill-active-shadow);
+  font-weight: 600;
+}
+
+/* Right Direct Email Action */
+.header-contact-link {
+  pointer-events: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-secondary-text);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.header-contact-link:hover {
+  color: var(--color-primary-accent);
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--color-border);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 820px) {
+  .header-wrapper {
+    top: 0.75rem;
+  }
+  
+  .header-contact-link {
+    display: none;
+  }
+
+  .brand-logo {
+    font-size: 1.6rem;
+  }
+
+  .nav-link {
+    font-size: 0.78rem;
+    padding: 0.32rem 0.65rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-inner {
+    justify-content: center;
+  }
+  
+  .brand-logo {
+    display: none;
+  }
+
+  .nav-pill-container {
+    max-width: 95vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .nav-pill-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .nav-link {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.75rem;
+  }
+}

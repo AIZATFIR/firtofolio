@@ -1,0 +1,67 @@
+/* ==========================================================================
+   HEAVY WEIGHTED SCROLL & SLOW FADE-UP ANIMATIONS
+   ========================================================================== */
+
+/* Slow graceful bottom-up fade reveal */
+.reveal-slow {
+  opacity: 0;
+  transform: translateY(46px);
+  transition: opacity 1.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-slow.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered cascades for child cards / items */
+.reveal-cascade {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-cascade.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays */
+.delay-1 { transition-delay: 0.12s; }
+.delay-2 { transition-delay: 0.24s; }
+.delay-3 { transition-delay: 0.36s; }
+.delay-4 { transition-delay: 0.48s; }
+
+/* Custom Weighted Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2D9CB;
+  border-radius: 4px;
+  border: 1px solid var(--bg-canvas);
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--honey-gold);
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-slow,
+  .reveal-cascade {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

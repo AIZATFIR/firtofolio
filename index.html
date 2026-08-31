@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>AIZAT FAHIM FIRMANSYAH — Software Engineering & Digital Work</title>
+  <meta name="description" content="Personal portfolio of Aizat Fahim Firmansyah, a PPLG software engineering student building software, exploring AI systems, and creating digital & visual work.">
+  
+  <!-- OpenGraph / Social Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AIZAT FAHIM FIRMANSYAH — Personal Portfolio">
+  <meta property="og:description" content="BUILD. THINK. CREATE. Software, AI explorations, and curated digital work.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23FAF7F2' stroke='%23D97706' stroke-width='8'/><text x='50' y='64' font-family='sans-serif' font-size='38' font-weight='800' fill='%231C1917' text-anchor='middle'>AF</text></svg>">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/src/styles/theme.css">
+  <link rel="stylesheet" href="/src/styles/scroll.css">
+  <link rel="stylesheet" href="/src/styles/navigation.css">
+  <link rel="stylesheet" href="/src/styles/hero.css">
+  <link rel="stylesheet" href="/src/styles/projects.css">
+  <link rel="stylesheet" href="/src/styles/writing.css">
+  <link rel="stylesheet" href="/src/styles/creative.css">
+  <link rel="stylesheet" href="/src/styles/about.css">
+  <link rel="stylesheet" href="/src/styles/modal.css">
+</head>
+<body>
+
+  <!-- Floating Pill Navigation -->
+  <header class="header-wrapper" id="site-header">
+    <div class="header-inner">
+      <a href="#intro" class="brand-logo" id="brand-logo" aria-label="Aizat Fahim Home">aizat fahim</a>
+      
+      <nav class="nav-pill-container" aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="#intro" class="nav-link active" data-nav="intro">Intro</a></li>
+          <li><a href="#works" class="nav-link" data-nav="works">Works</a></li>
+          <li><a href="#writing" class="nav-link" data-nav="writing">Writing</a></li>
+          <li><a href="#creative" class="nav-link" data-nav="creative">Creative</a></li>
+          <li><a href="#about" class="nav-link" data-nav="about">About</a></li>
+          <li><a href="#now" class="nav-link" data-nav="now">Now</a></li>
+        </ul>
+      </nav>
+
+      <a href="mailto:aizatfir@gmail.com" class="header-contact-link" id="header-email-btn" aria-label="Email Aizat Fahim">aizatfir@gmail.com</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section site-container" id="intro">
+      <div class="hero-content reveal-slow">
+        <div class="hero-status-pill">
+          <span class="status-dot-pulse"></span>
+          <span id="hero-status-text">Exploring AI & Systems</span>
+        </div>
+
+        <h1 class="hero-title" id="hero-main-title">AIZAT FAHIM FIRMANSYAH</h1>
+
+        <div class="hero-positioning">
+          <span>BUILD.</span>
+          <span class="positioning-sep">/</span>
+          <span>THINK.</span>
+          <span class="positioning-sep">/</span>
+          <span>CREATE.</span>
+        </div>
+
+        <p class="hero-bio" id="hero-bio-text">
+          Software engineering student building software, exploring AI, and creating digital experiences.
+        </p>
+      </div>
+    </section>
+
+    <hr class="section-divider site-container" />
+
+    <!-- SELECTED WORK (PRIMARY SECTION) -->
+    <section class="projects-section site-container" id="works">
+      <div class="section-header reveal-slow">
+        <div class="section-label">Selected Work</div>
+        <h2 class="section-title-editorial">Featured Projects</h2>
+      </div>
+
+      <!-- Dynamic Featured Projects List Container -->
+      <div id="featured-projects-container">
+        <!-- Rendered dynamically from src/config/projects.js -->
+      </div>
+
+      <!-- Extensible Additional Real Repositories Section -->
+      <div class="additional-repos-block reveal-slow">
+        <h3 class="additional-repos-title">More Repositories & Software Work</h3>
+        <div class="repos-grid" id="additional-repos-grid">
+          <!-- Dynamically populated from config & GitHub -->
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider site-container" />
+
+    <!-- WRITING SECTION -->
+    <section class="writing-section site-container" id="writing">
+      <div class="section-header reveal-slow">
+        <div class="section-label">Writing & Thought</div>
+        <h2 class="section-title-editorial">Selected Essays</h2>
+      </div>
+
+      <div class="writing-list reveal-slow" id="writing-list-container">
+        <!-- Rendered from src/config/writing.js -->
+      </div>
+
+      <div class="writing-footer-cta reveal-slow">
+        <a href="https://substack.com/" target="_blank" rel="noopener noreferrer" class="link-substack-all" id="substack-external-link">
+          <span>Read all reflections on Substack</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <hr class="section-divider site-container" />
+
+    <!-- CREATIVE WORK SECTION -->
+    <section class="creative-section site-container" id="creative">
+      <div class="section-header reveal-slow">
+        <div class="section-label">Creative Work</div>
+        <h2 class="section-title-editorial">Visual & Generative</h2>
+        <p class="creative-desc">A curated selection of visual experiments, spatial typography, and generative studies.</p>
+      </div>
+
+      <div class="creative-grid reveal-slow" id="creative-gallery-grid">
+        <!-- Rendered from src/config/creative.js -->
+      </div>
+
+      <div class="creative-instagram-cta reveal-slow">
+        <div class="insta-text-group">
+          <h4>Explore More Visual Studies</h4>
+          <p>Computational geometry, render studies, and generative artworks.</p>
+        </div>
+        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" class="btn-instagram" id="instagram-external-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+          <span>Instagram ↗</span>
+        </a>
+      </div>
+    </section>
+
+    <hr class="section-divider site-container" />
+
+    <!-- ABOUT & NOW SECTION -->
+    <section class="about-section site-container" id="about">
+      <div class="section-header reveal-slow">
+        <div class="section-label">Profile & Context</div>
+        <h2 class="section-title-editorial">About Aizat Fahim</h2>
+      </div>
+
+      <div class="about-grid">
+        <!-- Left: Bio & Technical Stack -->
+        <div class="about-bio-col reveal-slow">
+          <h3 id="about-lead-title">Building thoughtful software with clear purpose.</h3>
+          <p id="about-bio-body">
+            I am a software engineering (PPLG) student passionate about building clean, performant software, distributed systems, and practical AI tools.
+          </p>
+          <p>
+            My engineering philosophy centers on restraint: less is more. The work is the product; the website is the frame.
+          </p>
+
+          <div class="about-tech-group">
+            <div class="about-tech-label">Demonstrated Stack & Technologies</div>
+            <div class="about-tech-tags" id="about-tech-container">
+              <!-- Rendered from config -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: NOW Status & Subtle Local Time -->
+        <div class="now-col reveal-slow" id="now">
+          <div class="now-card">
+            <div class="now-header-row">
+              <div class="now-heading">NOW</div>
+              <div class="local-time-badge" id="live-time-display">--:-- WIB</div>
+            </div>
+
+            <div class="now-entries">
+              <div class="now-entry-item">
+                <div class="now-item-label">Building</div>
+                <div class="now-item-val" id="now-building-val">Audio Mesh (RYNC432) & Arabic Morphology Systems (Qurabic)</div>
+              </div>
+
+              <div class="now-entry-item">
+                <div class="now-item-label">Learning</div>
+                <div class="now-item-val" id="now-learning-val">AI / Distributed Systems / Software Engineering</div>
+              </div>
+
+              <div class="now-entry-item">
+                <div class="now-item-label">Exploring</div>
+                <div class="now-item-val" id="now-exploring-val">Real-Time Protocols & Stoic Decision Systems</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER & EXTERNAL ECOSYSTEM HUB -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-top-row reveal-slow">
+        <div class="footer-brand">
+          <h2>AIZAT FAHIM FIRMANSYAH</h2>
+          <p>Personal ecosystem hub for software engineering, live applications, and visual work.</p>
+        </div>
+
+        <div class="footer-ecosystem-links">
+          <a href="https://github.com/aizatfir" target="_blank" rel="noopener noreferrer" class="eco-link" id="footer-github-link">
+            <span>GitHub ↗</span>
+          </a>
+          <a href="https://vercel.com/aizatfir" target="_blank" rel="noopener noreferrer" class="eco-link" id="footer-vercel-link">
+            <span>Vercel ↗</span>
+          </a>
+          <a href="https://substack.com/@aizatfir" target="_blank" rel="noopener noreferrer" class="eco-link" id="footer-substack-link">
+            <span>Substack ↗</span>
+          </a>
+          <a href="https://instagram.com/aizatfir" target="_blank" rel="noopener noreferrer" class="eco-link" id="footer-insta-link">
+            <span>Instagram ↗</span>
+          </a>
+          <a href="mailto:aizatfir@gmail.com" class="eco-link" id="footer-email-link">
+            <span>Email ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row reveal-slow">
+        <div>© 2026 AIZAT FAHIM FIRMANSYAH. Less is more.</div>
+        <div>Built with Vanilla Honey Ice Cream Natural</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal Container -->
+  <div id="preview-modal-root"></div>
+
+  <!-- Main JavaScript Entry -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
