@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* 
+ * ZAFIR; Design System & Global Styles
+ * Aesthetic: Editorial × Playful × Technical × Tactile
+ * Colors: Cream Paper, Charcoal Ink, Cocoa, Marker Orange
+ */
+
+:root {
+  /* Color Tokens */
+  --color-cream: #fdfbf9;
+  --color-charcoal: #171717;
+  --color-cocoa: #2b1a07;
+  --color-orange: #ff6f1e;
+  --color-dew: #f7efe9;
+  
+  --color-blue: #3b82f6;
+  --color-pink: #ff66cf;
+  --color-green: #22c55e;
+
+  --color-border: rgba(43, 26, 7, 0.12);
+  --color-card-bg: #ffffff;
+  --color-muted: #786b5e;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-serif: 'Newsreader', serif;
+
+  --display-size: clamp(64px, 11vw, 160px);
+}
+
+/* Base Reset & Smoothness */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--color-cream);
+}
+
+/* Typography Classes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+code, pre, .font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(43, 26, 7, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-orange);
+}
+
+/* Semicolon Glitch Micro-Animation */
+@keyframes glitchFlicker {
+  0% { transform: translate(0, 0); opacity: 1; }
+  20% { transform: translate(-2px, 1px); opacity: 0.8; }
+  40% { transform: translate(2px, -1px); opacity: 1; }
+  60% { transform: translate(-1px, 2px); opacity: 0.9; }
+  80% { transform: translate(1px, -1px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+
+.glitching {
+  animation: glitchFlicker 0.25s infinite ease-in-out;
+}
+
+/* Shiny Text Shimmer */
+@keyframes shine {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.animate-shine {
+  animation: shine 4s linear infinite;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .custom-cursor-follower {
+    display: none !important;
+  }
+}
