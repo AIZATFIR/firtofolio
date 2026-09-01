@@ -1,44 +1,65 @@
 @import "tailwindcss";
 
 /* 
- * ZAFIR; Design System & Global Styles
- * Aesthetic: Editorial × Playful × Technical × Tactile
- * Colors: Cream Paper, Charcoal Ink, Cocoa, Marker Orange
+ * Superr — Style Reference & Design Tokens
+ * Aesthetic: Warm schoolyard notebook in soft afternoon light.
+ * Canvas: Cream Paper (#fdfbf9), Charcoal (#171717), Cocoa Ink (#2b1a07), Marker Orange (#ff6f1e)
  */
 
 :root {
-  /* Color Tokens */
-  --color-cream: #fdfbf9;
+  /* Colors from Superr Reference */
+  --color-cream-paper: #fdfbf9;
   --color-charcoal: #171717;
-  --color-cocoa: #2b1a07;
-  --color-orange: #ff6f1e;
-  --color-dew: #f7efe9;
-  
-  --color-blue: #3b82f6;
-  --color-pink: #ff66cf;
-  --color-green: #22c55e;
+  --color-cocoa-ink: #2b1a07;
+  --color-true-black: #000000;
+  --color-dew-drop: #f7efe9;
+  --color-marker-orange: #ff6f1e;
+  --color-burnt-sienna: #ce500a;
+  --color-sky-sticker: #3b82f6;
+  --color-bubblegum-sticker: #ff66cf;
+  --color-sprout-sticker: #22c55e;
+  --color-shadow-mist: #bebcbb;
 
-  --color-border: rgba(43, 26, 7, 0.12);
-  --color-card-bg: #ffffff;
-  --color-muted: #786b5e;
-
-  /* Typography */
+  /* Typography Families */
+  --font-display: 'Fraunces', 'Space Grotesk', serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --font-serif: 'Newsreader', serif;
+  --font-handwritten: 'Caveat', cursive, sans-serif;
 
-  --display-size: clamp(64px, 11vw, 160px);
+  /* Type Scale */
+  --text-caption: 16px;
+  --text-body-sm: 18px;
+  --text-body: 20px;
+  --text-subheading: 24px;
+  --text-heading-sm: 28px;
+  --text-heading: 36px;
+  --text-heading-lg: 46px;
+  --text-display: clamp(54px, 8vw, 104px);
+
+  /* Border Radii */
+  --radius-tags: 20px;
+  --radius-cards: 12px;
+  --radius-footer: 56px;
+  --radius-inputs: 8px;
+  --radius-buttons: 20px;
+
+  /* Elevation Shadows */
+  --shadow-lg: rgba(0, 0, 0, 0.06) 0px 2px 20px 0px;
+  --shadow-subtle: rgba(0, 0, 0, 0.25) 0px 1px 2px 0px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 64px;
+  --card-padding: 32px;
 }
 
-/* Base Reset & Smoothness */
+/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
-  background-color: var(--color-cream);
+  background-color: var(--color-cream-paper);
   color: var(--color-charcoal);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
@@ -48,31 +69,88 @@ html {
 
 body {
   overflow-x: hidden;
-  background-color: var(--color-cream);
+  background-color: var(--color-cream-paper);
 }
 
-/* Typography Classes */
-h1, h2, h3, h4, h5, h6 {
+/* Typography Helpers */
+.font-display {
   font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
-code, pre, .font-mono {
+.font-handwritten {
+  font-family: var(--font-handwritten);
+}
+
+.font-mono {
   font-family: var(--font-mono);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 7px;
+/* Superr Display Headline: 104px, Cocoa Ink, lowercase, tight */
+.display-headline {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: 1.08;
+  font-weight: 600;
+  color: var(--color-cocoa-ink);
+  text-transform: lowercase;
+  letter-spacing: -0.03em;
 }
-::-webkit-scrollbar-track {
-  background: var(--color-cream);
+
+/* Pill Action Button: Cream fill, 1.5px Charcoal border, 20px radius, subtle paper shadow */
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-cream-paper);
+  border: 1.5px solid var(--color-charcoal);
+  border-radius: var(--radius-buttons);
+  padding: 10px 28px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-charcoal);
+  box-shadow: var(--shadow-subtle);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(43, 26, 7, 0.2);
-  border-radius: 4px;
+
+.pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 4px 0px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-orange);
+
+.pill-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* Marker Highlight: Handwritten underline in Marker Orange */
+.marker-highlight {
+  position: relative;
+  color: var(--color-marker-orange);
+  font-weight: 600;
+}
+
+.marker-highlight::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 0px;
+  height: 2.5px;
+  background-color: var(--color-marker-orange);
+  border-radius: 2px;
+  transform: rotate(-0.5deg);
+}
+
+/* Footer Brand Band with 56px asymmetric top border radius */
+.footer-brand-band {
+  background-color: var(--color-marker-orange);
+  border-top-left-radius: var(--radius-footer);
+  border-top-right-radius: var(--radius-footer);
+  color: var(--color-charcoal);
 }
 
 /* Semicolon Glitch Micro-Animation */
@@ -89,14 +167,19 @@ code, pre, .font-mono {
   animation: glitchFlicker 0.25s infinite ease-in-out;
 }
 
-/* Shiny Text Shimmer */
-@keyframes shine {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
-
-.animate-shine {
-  animation: shine 4s linear infinite;
+::-webkit-scrollbar-track {
+  background: var(--color-cream-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(43, 26, 7, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-marker-orange);
 }
 
 /* Reduced Motion Override */
@@ -106,8 +189,5 @@ code, pre, .font-mono {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .custom-cursor-follower {
-    display: none !important;
   }
 }
