@@ -15,12 +15,12 @@ export default function App() {
   return (
     <SmoothScrollProvider>
       <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-hidden transition-colors duration-400">
-        {/* Minimal Transparent Floating Headbar */}
+        {/* Minimal Transparent Static Top Header (Does not follow scroll) */}
         <MinimalHeader />
 
         {/* HERO SECTION — 100vw × 100svh Pure Minimal Atmospheric Canvas */}
         <section
-          className="hero-section relative w-full min-h-[100svh] flex flex-col justify-between pt-24 pb-10 px-6 md:px-16 overflow-hidden z-10"
+          className="hero-section relative w-full min-h-[100svh] flex flex-col justify-between pt-28 pb-10 px-6 md:px-16 overflow-hidden z-10"
           id="intro"
         >
           {/* Subtle Flowing Vector Wave Canvas */}
@@ -30,21 +30,20 @@ export default function App() {
           <DeepSemicolon />
 
           {/* Hero Core Identity (Centered in Viewport) */}
-          <div className="relative z-10 my-auto text-center max-w-[1400px] mx-auto w-full select-none">
-            {/* Primary Name: ZAFIR in CAPS LOCK */}
-            <h1 className="display-headline text-7xl sm:text-9xl md:text-[140px] lg:text-[180px] xl:text-[220px] font-black tracking-tighter leading-none mb-2 text-[var(--color-headline)]">
-              ZAFIR<SemicolonGlitch className="text-[var(--color-orange)] inline-block font-mono" />
+          <div className="relative z-10 my-auto text-center max-w-[1500px] mx-auto w-full select-none">
+            {/* Primary Name: AIZAT FAHIM FIRMANSYAH */}
+            <h1 className="display-headline text-5xl sm:text-7xl md:text-8xl lg:text-[110px] xl:text-[135px] font-black tracking-tighter leading-none mb-3 text-[var(--color-headline)]">
+              AIZAT FAHIM FIRMANSYAH
             </h1>
 
             {/* Sub-Identity */}
             <p className="font-mono text-sm md:text-base tracking-widest text-[var(--color-muted)] uppercase">
-              Zafir / Zephyr
+              ZAFIR<SemicolonGlitch className="text-[var(--color-orange)] inline-block font-mono" /> • Zafir / Zephyr
             </p>
           </div>
 
-          {/* Bottom Ambient Cue */}
-          <div className="relative z-10 pt-4 border-t border-[var(--color-border)] flex items-center justify-between text-xs font-mono text-[var(--color-muted)]">
-            <span className="tracking-widest">AIZAT FIRMANSYAH — 2026</span>
+          {/* Bottom Ambient Cue (Without "- 2026") */}
+          <div className="relative z-10 pt-4 flex items-center justify-center text-xs font-mono text-[var(--color-muted)]">
             <a href="#work" className="hover:text-[var(--color-orange)] transition-colors flex items-center gap-1.5 font-bold">
               <span>EXPLORE</span>
               <ArrowDown size={13} className="animate-bounce" />
@@ -52,22 +51,8 @@ export default function App() {
           </div>
         </section>
 
-        {/* WORK — FULLSCREEN IMMERSIVE PROJECT SHOWCASE (PRIMARY EXPERIENCE) */}
-        <div id="work" className="py-16">
-          <div className="w-[96vw] max-w-[1600px] mx-auto px-4 md:px-8 mb-12 flex items-baseline justify-between">
-            <div>
-              <span className="font-mono text-xs text-[var(--color-orange)] uppercase tracking-wider font-bold block mb-1">
-                01 / PRIMARY EXPERIENCE
-              </span>
-              <h2 className="display-headline text-5xl sm:text-7xl font-bold">
-                work
-              </h2>
-            </div>
-            <span className="font-mono text-xs text-[var(--color-muted)] hidden sm:inline-block">
-              01 — 05 / interactive exploration
-            </span>
-          </div>
-
+        {/* WORK — FULLSCREEN IMMERSIVE PROJECT SHOWCASE */}
+        <div id="work" className="pt-8 pb-16">
           {/* Project List with Continuous Perspective Tilt & 95vw Width */}
           {PROJECTS.map((project, idx) => (
             <ProjectCard key={project.id} project={project} index={idx} />
@@ -87,7 +72,7 @@ export default function App() {
         <section className="contact-section py-32" id="contact">
           <div className="w-[96vw] max-w-[1200px] mx-auto px-4 text-center">
             <span className="font-mono text-xs font-bold text-[var(--color-orange)] uppercase tracking-widest block mb-4">
-              05 / DIRECT CHANNEL
+              DIRECT CHANNEL
             </span>
 
             <h2 className="text-5xl md:text-8xl font-bold font-display text-[var(--color-headline)] max-w-3xl mx-auto leading-tight mb-8">
@@ -126,10 +111,10 @@ export default function App() {
           <div className="w-[96vw] max-w-[1600px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-2xl font-bold tracking-widest text-[var(--color-headline)]">
-                ZAFIR;
+                AIZAT FAHIM FIRMANSYAH
               </span>
               <span className="text-xs font-mono text-[var(--color-muted)]">
-                [Zafir / Zephyr]
+                [ZAFIR; / Zephyr]
               </span>
             </div>
 

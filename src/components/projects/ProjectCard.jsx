@@ -13,9 +13,9 @@ export default function ProjectCard({ project, index }) {
     offset: ['start end', 'center center'],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [6, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [0.8, 1]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [5, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.4], [0.85, 1]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -26,31 +26,17 @@ export default function ProjectCard({ project, index }) {
   return (
     <section
       ref={cardRef}
-      className="project-scene relative min-h-screen py-16 flex flex-col justify-center border-b border-[var(--color-border)]"
+      className="project-scene relative min-h-screen py-12 flex flex-col justify-center border-b border-[var(--color-border)]"
       id={`project-${project.id}`}
     >
-      {/* Background Big Index */}
-      <div className="absolute top-6 left-6 md:left-12 pointer-events-none select-none z-0">
-        <span className="font-mono text-7xl md:text-9xl font-black text-[var(--color-headline)] opacity-5">
-          0{index + 1};
-        </span>
-      </div>
-
       <div className="w-[96vw] max-w-[1600px] mx-auto px-2 md:px-6 relative z-10">
-        {/* Project Header Info */}
-        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-6">
+        {/* Project Header Info: Clean & Uncluttered */}
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-5">
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <span className="font-mono text-xs text-[var(--color-orange)] uppercase tracking-wider font-bold">
-                0{index + 1} / {project.category}
-              </span>
-              <span className="text-xs font-mono text-[var(--color-muted)]">• {project.year}</span>
-            </div>
-
-            <h3 className="display-headline text-4xl sm:text-6xl md:text-7xl font-bold">
+            <h3 className="display-headline text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
               {project.title}
             </h3>
-            <p className="text-base md:text-lg text-[var(--color-muted)] font-serif italic mt-1 max-w-2xl">
+            <p className="text-base md:text-xl text-[var(--color-muted)] font-serif italic mt-1 max-w-3xl">
               "{project.tagline}"
             </p>
           </div>
@@ -78,7 +64,7 @@ export default function ProjectCard({ project, index }) {
           </div>
         </div>
 
-        {/* FULLSCREEN PROJECT VIEWPORT FRAME (95vw Wide) with Smooth Scroll Tilt */}
+        {/* FULLSCREEN PROJECT VIEWPORT FRAME (Expanded Height to Avoid Any Vertical Cutoff) */}
         <motion.div
           style={{
             rotateX,
@@ -147,14 +133,14 @@ export default function ProjectCard({ project, index }) {
             </div>
           </div>
 
-          {/* Iframe Viewport Container (75vh Height) */}
+          {/* Iframe Viewport Container (Lengthened to 88vh / 850px min-height) */}
           <div className="bg-[var(--color-surface-tint)] p-2 md:p-6 flex justify-center items-center overflow-hidden">
             <div
               className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md"
               style={{
                 width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                height: viewportMode === 'desktop' ? '72vh' : viewportMode === 'tablet' ? '65vh' : '70vh',
-                minHeight: '480px',
+                height: viewportMode === 'desktop' ? '88vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
+                minHeight: viewportMode === 'desktop' ? '850px' : '550px',
                 maxWidth: '100%',
               }}
             >
