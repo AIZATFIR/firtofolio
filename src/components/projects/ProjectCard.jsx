@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, Play, Lock, Unlock } from 'lucide-react';
+import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 
 export default function ProjectCard({ project, index }) {
@@ -23,15 +23,19 @@ export default function ProjectCard({ project, index }) {
     setIframeKey((prev) => prev + 1);
   };
 
-  // Listen for Escape key to exit interactive mode
+  // Listen for Escape key to exit interactive mode across capture phases
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isInteractive) {
+      if ((e.key === 'Escape' || e.keyCode === 27) && isInteractive) {
         setIsInteractive(false);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, { capture: true });
+    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, { capture: true });
+      document.removeEventListener('keydown', handleKeyDown, { capture: true });
+    };
   }, [isInteractive]);
 
   return (
@@ -180,7 +184,7 @@ export default function ProjectCard({ project, index }) {
                 />
               )}
 
-              {/* Active Mode Banner / Lock Button */}
+              {/* Active Mode Banner / Exit Button */}
               <AnimatePresence>
                 {isInteractive && (
                   <motion.div
@@ -191,11 +195,11 @@ export default function ProjectCard({ project, index }) {
                   >
                     <button
                       onClick={() => setIsInteractive(false)}
-                      className="px-3.5 py-1.5 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-lg flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none"
-                      title="Lock scroll / Exit interaction (Esc)"
+                      className="px-4 py-2 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none group"
+                      title="Exit interaction mode"
                     >
-                      <Lock size={12} />
-                      <span>Lock Scroll / Exit (Esc)</span>
+                      <X size={13} className="text-[var(--color-orange)] group-hover:text-white transition-colors" />
+                      <span>Exit Esc</span>
                     </button>
                   </motion.div>
                 )}
