@@ -1,37 +1,48 @@
-import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, FileText, Sparkles, Terminal } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, Play, Lock, Unlock } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 
 export default function ProjectCard({ project, index }) {
   const [viewportMode, setViewportMode] = useState('desktop');
   const [iframeKey, setIframeKey] = useState(0);
+  const [isInteractive, setIsInteractive] = useState(false);
   const cardRef = useRef(null);
+  const iframeContainerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'center center'],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [5, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.95, 1]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [4, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.96, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.4], [0.85, 1]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
   };
 
-  const isFocusClock = project.id === 'focus-clock';
+  // Listen for Escape key to exit interactive mode
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isInteractive) {
+        setIsInteractive(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isInteractive]);
 
   return (
     <section
       ref={cardRef}
-      className="project-scene relative min-h-screen py-12 flex flex-col justify-center border-b border-[var(--color-border)]"
+      className="project-scene relative min-h-screen py-16 flex flex-col justify-center border-b border-[var(--color-border)]"
       id={`project-${project.id}`}
     >
       <div className="w-[96vw] max-w-[1600px] mx-auto px-2 md:px-6 relative z-10">
-        {/* Project Header Info: Clean & Uncluttered */}
-        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-5">
+        {/* Project Header Info */}
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-6">
           <div>
             <h3 className="display-headline text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
               {project.title}
@@ -49,7 +60,7 @@ export default function ProjectCard({ project, index }) {
               rel="noopener noreferrer"
               className="pill-btn text-xs md:text-sm font-bold"
             >
-              <span>try live</span>
+              <span>open new tab</span>
               <ExternalLink size={13} />
             </a>
             <a
@@ -64,7 +75,7 @@ export default function ProjectCard({ project, index }) {
           </div>
         </div>
 
-        {/* FULLSCREEN PROJECT VIEWPORT FRAME (Expanded Height to Avoid Any Vertical Cutoff) */}
+        {/* FULLSCREEN PROJECT VIEWPORT FRAME (With Lazy Click-to-Interact to prevent scroll hijacking) */}
         <motion.div
           style={{
             rotateX,
@@ -72,7 +83,7 @@ export default function ProjectCard({ project, index }) {
             opacity,
             transformPerspective: 1000,
           }}
-          className="w-full border-[1.5px] border-[var(--color-text)] rounded-[20px] bg-[var(--color-card-bg)] overflow-hidden shadow-lg mb-8 will-change-transform"
+          className="w-full border-[1.5px] border-[var(--color-text)] rounded-[20px] bg-[var(--color-card-bg)] overflow-hidden shadow-lg mb-8 will-change-transform relative"
         >
           {/* Browser Header Bar */}
           <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
@@ -85,7 +96,7 @@ export default function ProjectCard({ project, index }) {
               </span>
             </div>
 
-            {/* Viewport Mode Switchers */}
+            {/* Viewport Mode Switchers & Interactive Toggle */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setViewportMode('desktop')}
@@ -133,10 +144,13 @@ export default function ProjectCard({ project, index }) {
             </div>
           </div>
 
-          {/* Iframe Viewport Container (Lengthened to 88vh / 850px min-height) */}
-          <div className="bg-[var(--color-surface-tint)] p-2 md:p-6 flex justify-center items-center overflow-hidden">
+          {/* Iframe Viewport Container (88vh height) with Click-To-Interact Protection */}
+          <div
+            ref={iframeContainerRef}
+            className="bg-[var(--color-surface-tint)] p-2 md:p-6 flex justify-center items-center overflow-hidden relative"
+          >
             <div
-              className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md"
+              className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md relative"
               style={{
                 width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
                 height: viewportMode === 'desktop' ? '88vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
@@ -144,6 +158,7 @@ export default function ProjectCard({ project, index }) {
                 maxWidth: '100%',
               }}
             >
+              {/* Real Live Iframe (pointer-events disabled when not active to prevent scroll trap) */}
               <iframe
                 key={iframeKey}
                 src={project.liveUrl}
@@ -151,73 +166,55 @@ export default function ProjectCard({ project, index }) {
                 className="w-full h-full border-0"
                 loading="lazy"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                style={{
+                  pointerEvents: isInteractive ? 'auto' : 'none',
+                }}
               />
+
+              {/* Inactive Click-to-Interact Overlay */}
+              {!isInteractive && (
+                <div
+                  onClick={() => setIsInteractive(true)}
+                  className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/10 hover:bg-black/15 backdrop-blur-[1px] transition-all cursor-pointer group select-none"
+                  title="Click to interact with live web app"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-5 py-3 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xl flex items-center gap-2.5 font-mono text-xs md:text-sm font-bold tracking-wider uppercase group-hover:border-[var(--color-orange)] transition-colors"
+                  >
+                    <Play size={14} className="text-[var(--color-orange)] fill-[var(--color-orange)]" />
+                    <span>Click to interact live</span>
+                  </motion.div>
+                  <span className="mt-2 text-[11px] font-mono text-[var(--color-text)] opacity-60 font-semibold">
+                    (Scroll freely over canvas • Click once to activate)
+                  </span>
+                </div>
+              )}
+
+              {/* Active Mode Banner / Lock Button */}
+              <AnimatePresence>
+                {isInteractive && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="absolute top-4 right-4 z-30 flex items-center gap-2"
+                  >
+                    <button
+                      onClick={() => setIsInteractive(false)}
+                      className="px-3.5 py-1.5 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-lg flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none"
+                      title="Lock scroll / Exit interaction (Esc)"
+                    >
+                      <Lock size={12} />
+                      <span>Lock Scroll / Exit (Esc)</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>
-
-        {/* Focus Clock Dedicated GitHub README Card */}
-        {isFocusClock && project.readme && (
-          <div className="w-full bg-[var(--color-card-bg)] border-[1.5px] border-[var(--color-border)] rounded-[16px] p-6 md:p-8 shadow-xs mb-8">
-            <div className="flex items-center justify-between pb-4 border-b border-[var(--color-border)] mb-6">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[var(--color-text)]">
-                <FileText size={15} className="text-[var(--color-orange)]" />
-                <span>README.md</span>
-                <span className="text-[var(--color-muted)] font-normal">({project.readme.branch})</span>
-              </div>
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-xs text-[var(--color-orange)] hover:underline flex items-center gap-1 font-bold"
-              >
-                <span>{project.readme.repoName} ↗</span>
-              </a>
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-2xl font-bold font-display text-[var(--color-headline)] mb-1">Focus Clock</h4>
-                <p className="text-xs text-[var(--color-muted)] font-mono">{project.readme.description}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {project.readme.sections.map((sec, secIdx) => (
-                  <div key={secIdx} className="bg-[var(--color-surface-tint)] p-4 rounded-[12px] border border-[var(--color-border)]">
-                    <h5 className="font-mono text-xs font-bold text-[var(--color-text)] mb-3 flex items-center gap-1.5">
-                      <Sparkles size={13} className="text-[var(--color-orange)]" />
-                      {sec.title}
-                    </h5>
-                    <ul className="space-y-2">
-                      {sec.points.map((pt, ptIdx) => {
-                        const parts = pt.split('**:');
-                        const boldPart = parts[0]?.replace('**', '');
-                        const restPart = parts[1] || '';
-                        return (
-                          <li key={ptIdx} className="text-xs text-[var(--color-text)] leading-relaxed">
-                            <strong className="font-bold text-[var(--color-headline)]">{boldPart}:</strong>
-                            {restPart}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              {/* Build Command Box */}
-              <div className="bg-[#171717] p-4 rounded-[10px] text-white font-mono text-xs border border-gray-800">
-                <div className="flex items-center gap-2 mb-2 text-gray-400 pb-2 border-b border-gray-800 text-[10px]">
-                  <Terminal size={12} className="text-[var(--color-orange)]" />
-                  <span>Build From Source</span>
-                </div>
-                <pre className="overflow-x-auto text-[11px] text-green-400 whitespace-pre leading-relaxed">
-                  {project.readme.buildSnippet}
-                </pre>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 4-Stage Case Study Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

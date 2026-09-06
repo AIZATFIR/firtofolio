@@ -3,19 +3,20 @@ import Lenis from 'lenis';
 
 /**
  * Global SmoothScrollProvider
- * Provides buttery-smooth 60fps interpolation with Lenis across the entire portfolio.
+ * Provides weighted, inertial, cinematic 60fps smooth scrolling with Lenis.
  */
 export default function SmoothScrollProvider({ children }) {
   useEffect(() => {
-    // Initialize Lenis
+    // Initialize heavy, cinematic Lenis smooth scroll
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential ease
+      duration: 1.8, // heavier, slower, more intentional
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -9 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 0.85, // prevents jarring jumps
+      touchMultiplier: 1.2,
+      infinite: false,
     });
 
     // RequestAnimationFrame Loop
@@ -26,7 +27,7 @@ export default function SmoothScrollProvider({ children }) {
     }
     rafId = requestAnimationFrame(raf);
 
-    // Global Lenis expose for anchor links
+    // Global Lenis expose
     window.__lenis = lenis;
 
     return () => {
