@@ -171,25 +171,13 @@ export default function ProjectCard({ project, index }) {
                 }}
               />
 
-              {/* Inactive Click-to-Interact Overlay */}
+              {/* Pure Transparent Click-to-Interact Layer (Zero visual shadow/badge, pure immersive live visual) */}
               {!isInteractive && (
                 <div
                   onClick={() => setIsInteractive(true)}
-                  className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/10 hover:bg-black/15 backdrop-blur-[1px] transition-all cursor-pointer group select-none"
-                  title="Click to interact with live web app"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-5 py-3 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xl flex items-center gap-2.5 font-mono text-xs md:text-sm font-bold tracking-wider uppercase group-hover:border-[var(--color-orange)] transition-colors"
-                  >
-                    <Play size={14} className="text-[var(--color-orange)] fill-[var(--color-orange)]" />
-                    <span>Click to interact live</span>
-                  </motion.div>
-                  <span className="mt-2 text-[11px] font-mono text-[var(--color-text)] opacity-60 font-semibold">
-                    (Scroll freely over canvas • Click once to activate)
-                  </span>
-                </div>
+                  className="absolute inset-0 z-20 cursor-pointer bg-transparent"
+                  title="Click to interact"
+                />
               )}
 
               {/* Active Mode Banner / Lock Button */}
