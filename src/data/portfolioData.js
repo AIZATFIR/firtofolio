@@ -14,7 +14,7 @@ export const PORTFOLIO = {
     { name: "GitHub", handle: "@AIZATFIR", url: "https://github.com/AIZATFIR" },
     { name: "Vercel", handle: "aizatfir", url: "https://vercel.com/aizatfir" },
     { name: "Substack", handle: "@aizatfir", url: "https://substack.com/@aizatfir" },
-    { name: "Instagram", handle: "@aizatfir", url: "https://instagram.com/aizatfir" },
+    { name: "Instagram", handle: "@zafirre", url: "https://www.instagram.com/zafirre/" },
     { name: "Email", handle: "aizatfir@gmail.com", url: "mailto:aizatfir@gmail.com" }
   ],
   currentlyBuilding: [
