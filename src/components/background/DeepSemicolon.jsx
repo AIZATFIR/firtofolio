@@ -17,13 +17,13 @@ export default function DeepSemicolon({ className = '' }) {
 
   return (
     <div
-      className={`pointer-events-none absolute right-[5%] top-[10%] z-0 select-none opacity-4 transition-transform duration-75 ease-out ${className}`}
+      className={`pointer-events-none absolute right-[2%] md:right-[5%] top-[8%] z-0 select-none opacity-4 transition-transform duration-75 ease-out overflow-hidden max-w-[90vw] ${className}`}
       style={{
         transform: `translateY(${offsetY}px)`,
       }}
       aria-hidden="true"
     >
-      <span className="font-mono text-[420px] md:text-[680px] lg:text-[850px] font-black leading-none text-[var(--color-cocoa-ink)] tracking-tighter block">
+      <span className="font-mono text-[clamp(240px,42vw,800px)] font-black leading-none text-[var(--color-headline)] tracking-tighter block select-none">
         ;
       </span>
     </div>

@@ -13,30 +13,50 @@ import DeepSemicolon from './components/background/DeepSemicolon';
 import { Skiper8, Skiper8Text } from './components/ui/skiper8';
 
 export default function App() {
+  // Preloader with customized pacing per item
   const introWords = [
-    "Hello",
-    "AIZAT FAHIM FIRMANSYAH",
-    "ZAFIR;",
-    "Zephyr",
-    "Focus Clock",
-    "RYNC432",
-    "Qurabic",
-    "Terra Flow",
-    "Explore"
+    // Initial deliberate slow entry
+    { text: ";", duration: 850, sub: "ZAFIR;" },
+    { text: "AIZATFIR", duration: 600 },
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 800 },
+
+    // Playful / warm greetings (fast cadence)
+    { text: "Hi", duration: 180 },
+    { text: "Hello World", duration: 200 },
+    { text: "Alooo", duration: 180 },
+    { text: "^-^", duration: 180 },
+    { text: "^-^  !", duration: 190 },
+    { text: "Alooooo", duration: 200 },
+
+    // Complete portfolio project catalog
+    { text: "FOCUS CLOCK", duration: 280 },
+    { text: "7AUDIO", duration: 280 },
+    { text: "FITRAH LAUNCHER", duration: 280 },
+    { text: "SADAR", duration: 280 },
+    { text: "RYNC432", duration: 280 },
+    { text: "QURABIC", duration: 280 },
+    { text: "TERRA FLOW", duration: 280 },
+    { text: "SOCIAL AFFINITY", duration: 280 },
+
+    // High-impact slow closing cadence
+    { text: "AIZATFIR", duration: 700 },
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 850 },
+    { text: "Building Solutions", duration: 950 },
+    { text: 'Turning problems into "Manfaat"', duration: 1500 }
   ];
 
   return (
     <SmoothScrollProvider>
-      {/* Skiper8 Words Preloader */}
-      <Skiper8 words={introWords} duration={2600} />
+      {/* Skiper8 Words Preloader with Dennis Snellenberg curved SVG exit */}
+      <Skiper8 words={introWords} />
 
-      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-hidden transition-colors duration-400">
-        {/* Minimal Transparent Static Top Header (Does not follow scroll) */}
+      <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-400">
+        {/* Minimal Transparent Static Top Header (Desktop + Mobile Drawer Nav on Left) */}
         <MinimalHeader />
 
         {/* HERO SECTION — 100vw × 100svh Pure Minimal Atmospheric Canvas */}
         <section
-          className="hero-section relative w-full min-h-[100svh] flex flex-col justify-between pt-28 pb-10 px-6 md:px-16 overflow-hidden z-10"
+          className="hero-section relative w-full min-h-[100svh] flex flex-col justify-between pt-24 sm:pt-28 pb-10 px-4 sm:px-6 md:px-16 overflow-hidden z-10"
           id="intro"
         >
           {/* Subtle Flowing Vector Wave Canvas */}
@@ -45,15 +65,15 @@ export default function App() {
           {/* Deep Architectural Background Semicolon Glyph */}
           <DeepSemicolon />
 
-          {/* Hero Core Identity (Centered in Viewport) */}
-          <div className="relative z-10 my-auto text-center max-w-[1500px] mx-auto w-full select-none">
+          {/* Hero Core Identity (Centered in Viewport, fully responsive and never clipping) */}
+          <div className="relative z-10 my-auto text-center max-w-[1400px] mx-auto w-full px-2 sm:px-4 select-none">
             {/* Primary Name: AIZAT FAHIM FIRMANSYAH with Skiper8 Animated Text */}
-            <h1 className="display-headline text-5xl sm:text-7xl md:text-8xl lg:text-[110px] xl:text-[135px] font-black tracking-tighter leading-none mb-3 text-[var(--color-headline)]">
+            <h1 className="display-headline font-bold text-center mx-auto mb-3 text-[var(--color-headline)] leading-[0.98] max-w-full">
               <Skiper8Text text="AIZAT FAHIM FIRMANSYAH" />
             </h1>
 
             {/* Sub-Identity */}
-            <p className="font-mono text-sm md:text-base tracking-widest text-[var(--color-muted)] uppercase">
+            <p className="font-mono text-xs sm:text-sm md:text-base tracking-widest text-[var(--color-muted)] uppercase mt-2">
               ZAFIR<SemicolonGlitch className="text-[var(--color-orange)] inline-block font-mono" /> • Zafir / Zephyr
             </p>
           </div>
@@ -69,7 +89,7 @@ export default function App() {
 
         {/* WORK — FULLSCREEN IMMERSIVE PROJECT SHOWCASE */}
         <div id="work" className="pt-8 pb-16">
-          {/* Project List with Continuous Perspective Tilt & 95vw Width */}
+          {/* Project List with Real Live Viewports & Clickable Case Study Pop-ups */}
           {PROJECTS.map((project, idx) => (
             <ProjectCard key={project.id} project={project} index={idx} />
           ))}
@@ -91,7 +111,7 @@ export default function App() {
               DIRECT CHANNEL
             </span>
 
-            <h2 className="text-5xl md:text-8xl font-bold font-display text-[var(--color-headline)] max-w-3xl mx-auto leading-tight mb-8">
+            <h2 className="text-4xl sm:text-6xl md:text-8xl font-bold font-display text-[var(--color-headline)] max-w-3xl mx-auto leading-tight mb-8">
               have an interesting problem? <br />
               <span className="text-[var(--color-orange)]">let's build.</span>
             </h2>
@@ -106,7 +126,7 @@ export default function App() {
               </a>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-8 text-xs font-mono text-[var(--color-muted)]">
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-8 text-xs font-mono text-[var(--color-muted)]">
               {PORTFOLIO.socials.map((s, idx) => (
                 <a
                   key={idx}
@@ -125,8 +145,8 @@ export default function App() {
         {/* FOOTER BRAND BAND */}
         <footer className="w-full py-12 border-t border-[var(--color-border)] select-none bg-[var(--color-surface-tint)]">
           <div className="w-[96vw] max-w-[1600px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-baseline gap-3">
-              <span className="font-mono text-2xl font-bold tracking-widest text-[var(--color-headline)]">
+            <div className="flex flex-wrap items-baseline justify-center md:justify-start gap-2 sm:gap-3 text-center md:text-left">
+              <span className="font-mono text-xl sm:text-2xl font-bold tracking-widest text-[var(--color-headline)]">
                 AIZAT FAHIM FIRMANSYAH
               </span>
               <span className="text-xs font-mono text-[var(--color-muted)]">
