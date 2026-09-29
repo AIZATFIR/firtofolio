@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { ArrowDown, Mail } from 'lucide-react';
 import { PORTFOLIO, PROJECTS } from './data/portfolioData';
 import SemicolonGlitch from './components/SemicolonGlitch';
@@ -13,42 +14,44 @@ import DeepSemicolon from './components/background/DeepSemicolon';
 import { Skiper8, Skiper8Text } from './components/ui/skiper8';
 
 export default function App() {
-  // Preloader with customized pacing per item
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Preloader words catalog with custom pacing
   const introWords = [
-    // Initial deliberate slow entry
-    { text: ";", duration: 800 },
-    { text: "AIZATFIR", duration: 550 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 750 },
-
-    // Playful / warm greetings
-    { text: "Hi", duration: 160 },
-    { text: "Hello World", duration: 180 },
-    { text: "Alooo", duration: 160 },
-    { text: "^-^", duration: 160 },
-    { text: "^-^  !", duration: 170 },
-    { text: "Alooooo", duration: 180 },
-
-    // Project catalog
-    { text: "FOCUS CLOCK", duration: 250 },
-    { text: "7AUDIO", duration: 250 },
-    { text: "RYNC432", duration: 250 },
-    { text: "QURABIC", duration: 250 },
-    { text: "TERRA FLOW", duration: 250 },
-    { text: "SOCIAL AFFINITY", duration: 250 },
-    { text: "FITRAH LAUNCHER", duration: 250 },
-    { text: "SADAR", duration: 250 },
-
-    // High-impact slow closing cadence
-    { text: "AIZATFIR", duration: 650 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 800 },
-    { text: "Building Solutions", duration: 900 },
-    { text: 'Turning problems into "Manfaat"', duration: 1400 }
+    ";",
+    "AIZATFIR",
+    "AIZAT FAHIM FIRMANSYAH",
+    "Hi",
+    "Hello World",
+    "Alooo",
+    "^-^",
+    "^-^  !",
+    "Alooooo",
+    "FOCUS CLOCK",
+    "7AUDIO",
+    "RYNC432",
+    "QURABIC",
+    "TERRA FLOW",
+    "SOCIAL AFFINITY",
+    "FITRAH LAUNCHER",
+    "SADAR",
+    "AIZATFIR",
+    "AIZAT FAHIM FIRMANSYAH",
+    "Building Solutions",
+    'Turning problems into "Manfaat"'
   ];
 
   return (
     <SmoothScrollProvider>
-      {/* Skiper8 Words Preloader with Dennis Snellenberg curved SVG exit */}
-      <Skiper8 words={introWords} />
+      {/* Official Skiper8 Words Preloader wrapped in AnimatePresence for official slideUp & curve exit */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Skiper8
+            words={introWords}
+            onComplete={() => setIsLoading(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-400">
         {/* Minimal Transparent Static Top Header (Desktop + Mobile Drawer Nav on Left) */}
