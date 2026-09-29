@@ -36,16 +36,17 @@ export default function ProjectCard({ project, index }) {
     mouseY.set(0);
   };
 
-  // 3D Scroll Physics: Starts angled at 20deg, maintains immersive large scale (1.0), and smoothly flattens if interacted
+  // 3D Scroll Physics: Starts curled at 24deg like paper unrolling, flattens smoothly in view
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
   });
 
-  // Base resting 3D desk perspective angle like in the screenshot (~18deg)
-  const baseRotateX = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [22, 16, 16, 8]);
-  const translateY = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [50, 0, 0, -30]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.8, 1, 1, 0.85]);
+  // Authentic paper roll-up & fold curve physics
+  const baseRotateX = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [24, 14, 4, -8]);
+  const scale = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [0.94, 1, 1, 0.96]);
+  const translateY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [60, 0, 0, -30]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.85, 1, 1, 0.85]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -79,7 +80,7 @@ export default function ProjectCard({ project, index }) {
         onMouseLeave={handleMouseLeave}
         className="project-scene relative min-h-screen py-16 sm:py-20 flex flex-col justify-center border-b border-[var(--color-border)] overflow-visible"
         id={`project-${project.id}`}
-        style={{ perspective: 1200 }}
+        style={{ perspective: 1400 }}
       >
         <div className="w-[96vw] max-w-[1600px] mx-auto px-2 md:px-6 relative z-10">
           {/* Project Header Info */}
@@ -143,13 +144,14 @@ export default function ProjectCard({ project, index }) {
           <div className="relative w-full group">
             {/* Ambient Warm Underglow beneath the 3D plane */}
             <div
-              className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-[var(--color-orange)]/15 via-transparent to-transparent blur-3xl pointer-events-none rounded-full"
+              className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-[var(--color-orange)]/20 via-transparent to-transparent blur-3xl pointer-events-none rounded-full"
             />
 
             <motion.div
               style={{
                 rotateX: isInteractive ? 0 : baseRotateX,
                 rotateY: isInteractive ? 0 : mouseTiltY,
+                scale: isInteractive ? 1 : scale,
                 translateY: isInteractive ? 0 : translateY,
                 opacity,
                 transformOrigin: '50% 100%',
@@ -217,13 +219,15 @@ export default function ProjectCard({ project, index }) {
                       <Smartphone size={13} />
                       <span className="hidden md:inline">Mobile</span>
                     </button>
-                    <button
-                      onClick={handleReload}
-                      className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
-                      title="Reload Live App"
-                    >
-                      <RotateCcw size={13} />
-                    </button>
+                    {isInteractive && (
+                      <button
+                        onClick={handleReload}
+                        className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
+                        title="Reload Live App"
+                      >
+                        <RotateCcw size={13} />
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
@@ -240,37 +244,63 @@ export default function ProjectCard({ project, index }) {
                 className="bg-[var(--color-surface-tint)] p-3 md:p-8 flex justify-center items-center overflow-hidden relative"
               >
                 {!project.isNativeApp ? (
-                  /* Real Live Web Iframe Container — Full Size Immersive */
+                  /* Real Live Web Iframe / Launch Container */
                   <div
-                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white shadow-2xl relative"
+                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg)] shadow-2xl relative"
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? '90vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
-                      minHeight: viewportMode === 'desktop' ? '860px' : '550px',
+                      height: viewportMode === 'desktop' ? '85vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
+                      minHeight: viewportMode === 'desktop' ? '720px' : '550px',
                       maxWidth: '100%',
                     }}
                   >
-                    <iframe
-                      key={iframeKey}
-                      src={project.liveUrl}
-                      title={`${project.title} Application`}
-                      className="w-full h-full border-0"
-                      loading="lazy"
-                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                      style={{
-                        pointerEvents: isInteractive ? 'auto' : 'none',
-                      }}
-                    />
-
-                    {!isInteractive && (
+                    {isInteractive ? (
+                      /* Mounted Live Interactive Web App */
+                      <iframe
+                        key={iframeKey}
+                        src={project.liveUrl}
+                        title={`${project.title} Application`}
+                        className="w-full h-full border-0"
+                        loading="lazy"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                        style={{
+                          pointerEvents: 'auto',
+                        }}
+                      />
+                    ) : (
+                      /* Fast 60fps Launcher State (Click to Activate Live Sandbox) */
                       <div
                         onClick={() => setIsInteractive(true)}
-                        className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
-                        title="Click to interact with full app"
+                        className="w-full h-full flex flex-col items-center justify-center p-8 text-center cursor-pointer relative group/launch select-none bg-gradient-to-b from-[var(--color-card-bg)] to-[var(--color-surface-tint)]"
                       >
-                        <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
-                          <span>Click to interact & flatten view</span>
+                        {/* Background Decorative Grid */}
+                        <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] [background-size:24px_24px]" />
+
+                        <div className="relative z-10 flex flex-col items-center max-w-lg">
+                          <div className="w-16 h-16 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-5 shadow-lg group-hover/launch:scale-110 group-hover/launch:border-[var(--color-orange)] transition-all">
+                            <Monitor size={30} className="text-[var(--color-orange)]" />
+                          </div>
+
+                          <span className="font-mono text-xs font-bold text-[var(--color-orange)] uppercase tracking-widest px-3 py-1 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] mb-3">
+                            {project.category}
+                          </span>
+
+                          <h4 className="font-display text-2xl sm:text-3xl font-bold text-[var(--color-headline)] mb-2">
+                            {project.title}
+                          </h4>
+
+                          <p className="font-serif italic text-xs sm:text-sm text-[var(--color-muted)] mb-8">
+                            "{project.tagline}"
+                          </p>
+
+                          <div className="px-6 py-3 rounded-full bg-[var(--color-text)] text-[var(--color-bg)] font-mono text-xs font-bold flex items-center gap-2.5 shadow-xl group-hover/launch:bg-[var(--color-orange)] group-hover/launch:text-white transition-all transform group-hover/launch:scale-105">
+                            <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] group-hover/launch:bg-white animate-ping" />
+                            <span>CLICK TO ACTIVATE LIVE SANDBOX</span>
+                          </div>
+
+                          <span className="font-mono text-[10px] text-[var(--color-muted)] mt-4">
+                            Instant 60fps Web Sandbox • {project.liveUrl}
+                          </span>
                         </div>
                       </div>
                     )}

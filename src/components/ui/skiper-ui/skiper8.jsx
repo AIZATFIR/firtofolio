@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 /**
  * Skiper8 - Official Skiper UI Pro Words Preloader
- * 100% faithful to Dennis Snellenberg / Skiper UI curved SVG morphing & luxurious pacing
+ * High-contrast white glow, snappy cadence, and Dennis Snellenberg SVG curve curtain
  */
 const defaultWords = [
   "Hello",
@@ -20,14 +20,17 @@ const defaultWords = [
 export const opacity = {
   initial: {
     opacity: 0,
+    y: 12,
   },
   enter: {
     opacity: 1,
-    transition: { duration: 0.6, delay: 0.1 },
+    y: 0,
+    transition: { duration: 0.2, ease: [0.33, 1, 0.68, 1] },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] },
+    y: -12,
+    transition: { duration: 0.15, ease: [0.76, 0, 0.24, 1] },
   },
 };
 
@@ -36,8 +39,8 @@ export const slideUp = {
     top: 0,
   },
   exit: {
-    top: "calc(-100vh - 350px)",
-    transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+    top: "calc(-100vh - 400px)",
+    transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.05 },
   },
 };
 
@@ -67,31 +70,29 @@ export function Skiper8({
     };
   }, []);
 
-  // Word Cycling Logic with measured, immersive pacing
+  // Word Cycling Logic with snappy, lively pacing
   useEffect(() => {
     if (index === words.length - 1) {
       const exitTimer = setTimeout(() => {
         if (onComplete) onComplete();
-      }, 1300);
+      }, 500);
       return () => clearTimeout(exitTimer);
     }
 
-    // Dynamic pacing: Calm opening -> steady project cadence -> grand slow closing
-    let delay = 420;
+    // Snappy, energetic cadence
+    let delay = 180;
     if (index === 0) {
-      delay = 900; // First punctuation ";"
+      delay = 340; // First punctuation ";"
     } else if (index === 1 || index === 2) {
-      delay = 800; // Initial AIZATFIR / Full name
+      delay = 280; // AIZATFIR / Full name
     } else if (index >= 3 && index <= 8) {
-      delay = 440; // Playful greetings
+      delay = 170; // Playful greetings
     } else if (index >= 9 && index <= 16) {
-      delay = 380; // Project showcases
-    } else if (index === 17) {
-      delay = 750; // Final AIZATFIR
-    } else if (index === 18) {
-      delay = 850; // Final full name
-    } else if (index === 19) {
-      delay = 950; // Building Solutions
+      delay = 180; // Project showcases
+    } else if (index === 17 || index === 18) {
+      delay = 300; // AIZATFIR climax
+    } else if (index >= 19) {
+      delay = 380; // Final vision statement
     }
 
     const timeout = setTimeout(() => {
@@ -102,17 +103,17 @@ export function Skiper8({
   }, [index, words.length, onComplete]);
 
   // Synchronized SVG curve morph paths
-  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
+  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 400} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
 
   const curve = {
     initial: {
       d: initialPath,
-      transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1] },
+      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] },
     },
     exit: {
       d: targetPath,
-      transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.05 },
     },
   };
 
@@ -121,24 +122,25 @@ export function Skiper8({
       variants={slideUp}
       initial="initial"
       exit="exit"
-      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#141516] text-white select-none pointer-events-auto ${className}`}
+      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#0d0e10] text-white select-none pointer-events-auto ${className}`}
     >
       {dimension.width > 0 && (
         <>
-          {/* Authentic Skiper8 Text with White Indicator Dot */}
+          {/* Authentic Skiper8 Text with Bright Glowing Dot & Sharp Contrast */}
           <motion.p
+            key={index}
             variants={opacity}
             initial="initial"
             animate="enter"
             exit="exit"
-            className="z-10 flex items-center justify-center font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white px-6 text-center"
+            className="z-10 flex items-center justify-center font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white px-6 text-center drop-shadow-[0_0_24px_rgba(255,255,255,0.7)]"
           >
-            <span className="mr-3 sm:mr-4 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-white shrink-0 inline-block shadow-[0_0_10px_rgba(255,255,255,0.6)]" />
+            <span className="mr-3 sm:mr-4 h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-full bg-white shrink-0 inline-block shadow-[0_0_14px_#ffffff,0_0_28px_#ffffff]" />
             <span>{words[index]}</span>
           </motion.p>
 
           {/* Dennis Snellenberg Mathematical SVG Curve Mask */}
-          <svg className="pointer-events-none absolute top-0 h-[calc(100%+300px)] w-full fill-[#141516]">
+          <svg className="pointer-events-none absolute top-0 h-[calc(100%+400px)] w-full fill-[#0d0e10]">
             <motion.path variants={curve} initial="initial" exit="exit" />
           </svg>
         </>
