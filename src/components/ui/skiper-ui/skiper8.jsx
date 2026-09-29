@@ -2,33 +2,36 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Skiper8 - Atmospheric Words Preloader
- * Inspired by Dennis Snellenberg portfolio & Skiper UI
- * Supports dynamic per-word durations and rich website typography
+ * Authentic Skiper8 / Dennis Snellenberg Words Preloader
+ * Features:
+ * - Multi-stage cycling words
+ * - Mathematical SVG curve morph exit (bezier ease [0.76, 0, 0.24, 1])
+ * - Clean minimal dot indicator
+ * - Dynamic per-word pacing
  */
 export function Skiper8({
   words = [
-    { text: ";", duration: 900 },
+    { text: ";", duration: 800 },
+    { text: "AIZATFIR", duration: 550 },
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 750 },
+    { text: "Hi", duration: 160 },
+    { text: "Hello World", duration: 180 },
+    { text: "Alooo", duration: 160 },
+    { text: "^-^", duration: 160 },
+    { text: "^-^  !", duration: 170 },
+    { text: "Alooooo", duration: 180 },
+    { text: "FOCUS CLOCK", duration: 250 },
+    { text: "7AUDIO", duration: 250 },
+    { text: "FITRAH LAUNCHER", duration: 250 },
+    { text: "SADAR", duration: 250 },
+    { text: "RYNC432", duration: 250 },
+    { text: "QURABIC", duration: 250 },
+    { text: "TERRA FLOW", duration: 250 },
+    { text: "SOCIAL AFFINITY", duration: 250 },
     { text: "AIZATFIR", duration: 650 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 850 },
-    { text: "Hi", duration: 180 },
-    { text: "Hello World", duration: 200 },
-    { text: "Alooo", duration: 180 },
-    { text: "^-^", duration: 180 },
-    { text: "^-^  !", duration: 190 },
-    { text: "Alooooo", duration: 200 },
-    { text: "FOCUS CLOCK", duration: 300 },
-    { text: "7AUDIO", duration: 300 },
-    { text: "FITRAH LAUNCHER", duration: 300 },
-    { text: "SADAR", duration: 300 },
-    { text: "RYNC432", duration: 300 },
-    { text: "QURABIC", duration: 300 },
-    { text: "TERRA FLOW", duration: 300 },
-    { text: "SOCIAL AFFINITY", duration: 300 },
-    { text: "AIZATFIR", duration: 700 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 900 },
-    { text: "Building Solutions", duration: 1000 },
-    { text: 'Turning problems into "Manfaat"', duration: 1600 }
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 800 },
+    { text: "Building Solutions", duration: 900 },
+    { text: 'Turning problems into "Manfaat"', duration: 1400 }
   ],
   onComplete,
   className = ""
@@ -39,7 +42,7 @@ export function Skiper8({
 
   // Normalize words into uniform objects
   const normalizedWords = words.map((item) =>
-    typeof item === "string" ? { text: item, duration: 240 } : item
+    typeof item === "string" ? { text: item, duration: 220 } : item
   );
 
   useEffect(() => {
@@ -53,15 +56,27 @@ export function Skiper8({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Prevent scroll during preloader
+  useEffect(() => {
+    if (isActive) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isActive]);
+
   // Per-word dynamic pacing
   useEffect(() => {
     if (!isActive) return;
 
     const currentWord = normalizedWords[index];
-    const duration = currentWord?.duration || 260;
+    const duration = currentWord?.duration || 240;
 
     if (index >= normalizedWords.length - 1) {
-      // Final word finished, close preloader after its duration
+      // Final word finished, trigger exit curve
       const exitTimer = setTimeout(() => {
         setIsActive(false);
         if (onComplete) onComplete();
@@ -76,17 +91,17 @@ export function Skiper8({
     return () => clearTimeout(nextTimer);
   }, [index, normalizedWords, isActive, onComplete]);
 
-  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height}  L0 0`;
-  const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height}  L0 0`;
+  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
+  const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
 
   const curveVariants = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] }
+      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] }
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1], delay: 0.25 }
+      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 }
     }
   };
 
@@ -96,7 +111,17 @@ export function Skiper8({
     },
     exit: {
       top: "-100vh",
-      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 }
+      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 }
+    }
+  };
+
+  const opacity = {
+    initial: {
+      opacity: 0
+    },
+    enter: {
+      opacity: 1,
+      transition: { duration: 0.2, delay: 0.05 }
     }
   };
 
@@ -109,37 +134,25 @@ export function Skiper8({
           variants={slideUp}
           initial="initial"
           exit="exit"
-          className={`fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-[#0d0d0e] text-[#fdfbf9] select-none ${className}`}
+          className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#141516] text-[#ffffff] select-none ${className}`}
         >
           {dimension.width > 0 && (
             <>
-              {/* Dynamic Center Word with Web Typography & Glowing Accent */}
-              <div className="z-10 flex flex-col items-center justify-center max-w-[90vw] px-4 text-center">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -14, scale: 1.02 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap text-center"
-                  >
-                    <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#ff6f1e] shadow-[0_0_12px_#ff6f1e] shrink-0" />
-                    <span className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white leading-tight">
-                      {currentItem.text}
-                    </span>
-                  </motion.div>
-                </AnimatePresence>
-
-                {currentItem.sub && (
-                  <span className="font-mono text-xs sm:text-sm tracking-widest text-[#ff6f1e] uppercase mt-3">
-                    {currentItem.sub}
-                  </span>
-                )}
-              </div>
+              {/* Authentic Dennis Snellenberg / Skiper8 Center Word */}
+              <motion.div
+                variants={opacity}
+                initial="initial"
+                animate="enter"
+                className="z-10 flex items-center justify-center gap-3 md:gap-4 max-w-[90vw] px-4 text-center"
+              >
+                <span className="w-3.5 h-3.5 rounded-full bg-[#ff6f1e] shadow-[0_0_14px_#ff6f1e] shrink-0" />
+                <p className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-none">
+                  {currentItem.text}
+                </p>
+              </motion.div>
 
               {/* Dennis Snellenberg Bottom SVG Curve Mask */}
-              <svg className="pointer-events-none absolute top-0 h-[calc(100%+300px)] w-full fill-[#0d0d0e]">
+              <svg className="pointer-events-none absolute top-0 h-[calc(100%+300px)] w-full fill-[#141516]">
                 <motion.path
                   variants={curveVariants}
                   initial="initial"
