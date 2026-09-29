@@ -4,6 +4,7 @@ import { ArrowDown, Mail } from 'lucide-react';
 import { PORTFOLIO, PROJECTS } from './data/portfolioData';
 import SemicolonGlitch from './components/SemicolonGlitch';
 import MinimalHeader from './components/navigation/MinimalHeader';
+import TactileSideScrubber from './components/navigation/TactileSideScrubber';
 import ProjectCard from './components/projects/ProjectCard';
 import ArtSection from './components/art/ArtSection';
 import WritingSection from './components/writing/WritingSection';
@@ -56,6 +57,9 @@ export default function App() {
       <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-400">
         {/* Minimal Transparent Static Top Header (Desktop + Mobile Drawer Nav on Left) */}
         <MinimalHeader />
+
+        {/* Physical Trackball Side Slider Navigation on Left Screen Edge */}
+        <TactileSideScrubber />
 
         {/* HERO SECTION — 100vw × 100svh Pure Minimal Atmospheric Canvas */}
         <section
