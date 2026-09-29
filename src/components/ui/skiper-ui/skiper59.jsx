@@ -47,17 +47,20 @@ export function Skiper59({
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    const addPoint = (x, y) => {
+    const addPoint = (clientX, clientY) => {
+      const docX = clientX + window.scrollX;
+      const docY = clientY + window.scrollY;
+
       if (isDoodleMode) {
         if (mouseRef.current.isDown) {
-          currentStrokeRef.current.push({ x, y, width: lineWidth * 1.2 });
+          currentStrokeRef.current.push({ x: docX, y: docY, width: lineWidth * 1.3 });
           setHasDoodles(true);
         }
       } else {
-        // Standard Glide Trail
+        // Standard Glide Trail (Transient viewport ink)
         pointsRef.current.push({
-          x,
-          y,
+          x: clientX,
+          y: clientY,
           alpha: 1,
           width: lineWidth,
         });
@@ -78,7 +81,9 @@ export function Skiper59({
     const handleMouseDown = (e) => {
       if (e.button === 0) {
         mouseRef.current.isDown = true;
-        currentStrokeRef.current = [{ x: e.clientX, y: e.clientY, width: lineWidth * 1.2 }];
+        const docX = e.clientX + window.scrollX;
+        const docY = e.clientY + window.scrollY;
+        currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3 }];
       }
     };
 
@@ -97,8 +102,10 @@ export function Skiper59({
         mouseRef.current.x = t.clientX;
         mouseRef.current.y = t.clientY;
         mouseRef.current.isDown = true;
+        const docX = t.clientX + window.scrollX;
+        const docY = t.clientY + window.scrollY;
         if (isDoodleMode) {
-          currentStrokeRef.current = [{ x: t.clientX, y: t.clientY, width: lineWidth * 1.2 }];
+          currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3 }];
           setHasDoodles(true);
         } else {
           addPoint(t.clientX, t.clientY);
@@ -140,8 +147,13 @@ export function Skiper59({
     const render = () => {
       ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
-      // 1. Draw Persistent Doodle Strokes
+      const scrollX = window.scrollX || 0;
+      const scrollY = window.scrollY || 0;
+
+      // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
       if (persistentStrokesRef.current.length > 0) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
         ctx.strokeStyle = color;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -161,12 +173,15 @@ export function Skiper59({
             ctx.stroke();
           }
         }
+        ctx.restore();
       }
 
-      // Draw Current Active Stroke in Doodle Mode
+      // Draw Current Active Stroke in Doodle Mode (Document Offset)
       if (currentStrokeRef.current.length > 1) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
         ctx.strokeStyle = color;
-        ctx.lineWidth = lineWidth * 1.2;
+        ctx.lineWidth = lineWidth * 1.3;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.globalAlpha = 1;
@@ -180,9 +195,10 @@ export function Skiper59({
         }
         ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
         ctx.stroke();
+        ctx.restore();
       }
 
-      // 2. Draw Transient Glide Trail (Trail Mode)
+      // 2. Draw Transient Glide Trail (Trail Mode in Viewport Coordinates)
       if (!isDoodleMode) {
         const points = pointsRef.current;
 

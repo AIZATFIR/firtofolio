@@ -70,29 +70,35 @@ export function Skiper8({
     };
   }, []);
 
-  // Word Cycling Logic with snappy, lively pacing
+  // Word Cycling Logic with rhythmic, immersive sweet spot pacing
   useEffect(() => {
     if (index === words.length - 1) {
       const exitTimer = setTimeout(() => {
         if (onComplete) onComplete();
-      }, 500);
+      }, 700);
       return () => clearTimeout(exitTimer);
     }
 
-    // Snappy, energetic cadence
-    let delay = 180;
+    // Sweet Spot Pacing: Important identities slow & grand, projects & greetings steady & rhythmic
+    let delay = 360;
     if (index === 0) {
-      delay = 340; // First punctuation ";"
-    } else if (index === 1 || index === 2) {
-      delay = 280; // AIZATFIR / Full name
+      delay = 650; // Opening ";"
+    } else if (index === 1) {
+      delay = 750; // First AIZATFIR
+    } else if (index === 2) {
+      delay = 850; // First Full Name
     } else if (index >= 3 && index <= 8) {
-      delay = 170; // Playful greetings
+      delay = 340; // Playful greetings
     } else if (index >= 9 && index <= 16) {
-      delay = 180; // Project showcases
-    } else if (index === 17 || index === 18) {
-      delay = 300; // AIZATFIR climax
-    } else if (index >= 19) {
-      delay = 380; // Final vision statement
+      delay = 380; // Project showcases
+    } else if (index === 17) {
+      delay = 750; // Climax AIZATFIR
+    } else if (index === 18) {
+      delay = 850; // Climax Full Name
+    } else if (index === 19) {
+      delay = 750; // Building Solutions
+    } else if (index >= 20) {
+      delay = 1000; // Final Turning problems into "Manfaat"
     }
 
     const timeout = setTimeout(() => {

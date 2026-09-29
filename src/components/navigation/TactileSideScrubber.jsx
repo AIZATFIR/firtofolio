@@ -213,8 +213,22 @@ export default function TactileSideScrubber() {
           />
 
           {/* ============ LAYER 1: BASE UNFILLED STATE (Dark/Muted Text) ============ */}
-          <div className="relative z-10 w-full h-full flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-[var(--color-muted)]">
-            <span className="tracking-tighter">{activeShort}</span>
+          <div className="relative z-10 w-full h-full flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-[var(--color-muted)] overflow-hidden">
+            {/* Curved Arc Rolling Wheel Indicator */}
+            <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={activeShort}
+                  initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
+                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                  className="tracking-tighter inline-block text-center font-bold"
+                >
+                  {activeShort}
+                </motion.span>
+              </AnimatePresence>
+            </div>
 
             {/* Tactical Glider Arc Ribs */}
             <div className="flex flex-col gap-1.5 items-center my-auto opacity-75">
@@ -232,12 +246,25 @@ export default function TactileSideScrubber() {
 
           {/* ============ LAYER 2: INVERTED WHITE TEXT VIA CLIP-PATH ============ */}
           <motion.div
-            className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none"
+            className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none overflow-hidden"
             style={{
               clipPath: useTransform(clipBottomTransform, (val) => `inset(0 0 ${val} 0)`),
             }}
           >
-            <span className="tracking-tighter drop-shadow-xs">{activeShort}</span>
+            <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={activeShort}
+                  initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
+                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                  exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                  className="tracking-tighter drop-shadow-xs inline-block text-center font-bold"
+                >
+                  {activeShort}
+                </motion.span>
+              </AnimatePresence>
+            </div>
 
             <div className="flex flex-col gap-1.5 items-center my-auto opacity-95">
               <span className="w-3.5 h-[1.5px] rounded-full bg-white drop-shadow-xs" />

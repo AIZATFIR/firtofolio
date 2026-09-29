@@ -82,8 +82,9 @@ export function Skiper26({ className = "" }) {
         layout
         transition={{
           type: "spring",
-          stiffness: 500,
-          damping: 30,
+          stiffness: 180,
+          damping: 22,
+          mass: 0.8,
         }}
         className={`absolute w-5 h-5 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-orange)]/40 flex items-center justify-center shadow-xs ${
           theme === "dark" ? "right-1" : "left-1"
@@ -96,7 +97,7 @@ export function Skiper26({ className = "" }) {
               initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
               animate={{ rotate: 0, scale: 1, opacity: 1 }}
               exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
             >
               <Sun size={12} className="text-[var(--color-orange)]" />
             </motion.div>
@@ -106,7 +107,7 @@ export function Skiper26({ className = "" }) {
               initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
               animate={{ rotate: 0, scale: 1, opacity: 1 }}
               exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
             >
               <Moon size={12} className="text-[var(--color-orange)]" />
             </motion.div>

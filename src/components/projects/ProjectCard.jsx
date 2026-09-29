@@ -108,9 +108,9 @@ export default function ProjectCard({ project, index }) {
               <button
                 onClick={() => handleOpenCaseStudy(0)}
                 className="pill-btn text-xs md:text-sm font-bold bg-[var(--color-surface-tint)] border-[var(--color-border)] hover:border-[var(--color-orange)] hover:text-[var(--color-orange)] transition-all cursor-pointer"
-                title="Read Deep Case Study"
+                title="Read Case Study"
               >
-                <Sparkles size={13} className="text-[var(--color-orange)]" />
+                <BookOpen size={13} className="text-[var(--color-orange)]" />
                 <span>case study</span>
               </button>
 
@@ -219,15 +219,13 @@ export default function ProjectCard({ project, index }) {
                       <Smartphone size={13} />
                       <span className="hidden md:inline">Mobile</span>
                     </button>
-                    {isInteractive && (
-                      <button
-                        onClick={handleReload}
-                        className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
-                        title="Reload Live App"
-                      >
-                        <RotateCcw size={13} />
-                      </button>
-                    )}
+                    <button
+                      onClick={handleReload}
+                      className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
+                      title="Reload Live App"
+                    >
+                      <RotateCcw size={13} />
+                    </button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
@@ -244,63 +242,37 @@ export default function ProjectCard({ project, index }) {
                 className="bg-[var(--color-surface-tint)] p-3 md:p-8 flex justify-center items-center overflow-hidden relative"
               >
                 {!project.isNativeApp ? (
-                  /* Real Live Web Iframe / Launch Container */
+                  /* Real Live Web Iframe Container — Full Size Immersive */
                   <div
-                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg)] shadow-2xl relative"
+                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white shadow-2xl relative"
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? '85vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
-                      minHeight: viewportMode === 'desktop' ? '720px' : '550px',
+                      height: viewportMode === 'desktop' ? '90vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
+                      minHeight: viewportMode === 'desktop' ? '860px' : '550px',
                       maxWidth: '100%',
                     }}
                   >
-                    {isInteractive ? (
-                      /* Mounted Live Interactive Web App */
-                      <iframe
-                        key={iframeKey}
-                        src={project.liveUrl}
-                        title={`${project.title} Application`}
-                        className="w-full h-full border-0"
-                        loading="lazy"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                        style={{
-                          pointerEvents: 'auto',
-                        }}
-                      />
-                    ) : (
-                      /* Fast 60fps Launcher State (Click to Activate Live Sandbox) */
+                    <iframe
+                      key={iframeKey}
+                      src={project.liveUrl}
+                      title={`${project.title} Application`}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                      style={{
+                        pointerEvents: isInteractive ? 'auto' : 'none',
+                      }}
+                    />
+
+                    {!isInteractive && (
                       <div
                         onClick={() => setIsInteractive(true)}
-                        className="w-full h-full flex flex-col items-center justify-center p-8 text-center cursor-pointer relative group/launch select-none bg-gradient-to-b from-[var(--color-card-bg)] to-[var(--color-surface-tint)]"
+                        className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
+                        title="Click to interact with full app"
                       >
-                        {/* Background Decorative Grid */}
-                        <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] [background-size:24px_24px]" />
-
-                        <div className="relative z-10 flex flex-col items-center max-w-lg">
-                          <div className="w-16 h-16 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-5 shadow-lg group-hover/launch:scale-110 group-hover/launch:border-[var(--color-orange)] transition-all">
-                            <Monitor size={30} className="text-[var(--color-orange)]" />
-                          </div>
-
-                          <span className="font-mono text-xs font-bold text-[var(--color-orange)] uppercase tracking-widest px-3 py-1 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] mb-3">
-                            {project.category}
-                          </span>
-
-                          <h4 className="font-display text-2xl sm:text-3xl font-bold text-[var(--color-headline)] mb-2">
-                            {project.title}
-                          </h4>
-
-                          <p className="font-serif italic text-xs sm:text-sm text-[var(--color-muted)] mb-8">
-                            "{project.tagline}"
-                          </p>
-
-                          <div className="px-6 py-3 rounded-full bg-[var(--color-text)] text-[var(--color-bg)] font-mono text-xs font-bold flex items-center gap-2.5 shadow-xl group-hover/launch:bg-[var(--color-orange)] group-hover/launch:text-white transition-all transform group-hover/launch:scale-105">
-                            <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] group-hover/launch:bg-white animate-ping" />
-                            <span>CLICK TO ACTIVATE LIVE SANDBOX</span>
-                          </div>
-
-                          <span className="font-mono text-[10px] text-[var(--color-muted)] mt-4">
-                            Instant 60fps Web Sandbox • {project.liveUrl}
-                          </span>
+                        <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
+                          <span>Click to interact & flatten view</span>
                         </div>
                       </div>
                     )}
@@ -362,8 +334,8 @@ export default function ProjectCard({ project, index }) {
                         onClick={() => handleOpenCaseStudy(0)}
                         className="pill-btn text-xs sm:text-sm font-bold"
                       >
-                        <Sparkles size={13} className="text-[var(--color-orange)]" />
-                        <span>Read Deep Architecture</span>
+                        <BookOpen size={13} className="text-[var(--color-orange)]" />
+                        <span>Read Architecture</span>
                       </button>
                     </div>
                   </div>
@@ -383,7 +355,7 @@ export default function ProjectCard({ project, index }) {
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy.problem}
+                {project.caseStudy?.id?.problem || project.caseStudy?.problem}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
                 Click to expand →
@@ -399,7 +371,7 @@ export default function ProjectCard({ project, index }) {
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy.approach}
+                {project.caseStudy?.id?.approach || project.caseStudy?.approach}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
                 Click to expand →
@@ -415,7 +387,7 @@ export default function ProjectCard({ project, index }) {
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy.architecture}
+                {project.caseStudy?.id?.architecture || project.caseStudy?.architecture}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
                 Click to expand →
@@ -431,7 +403,7 @@ export default function ProjectCard({ project, index }) {
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy.result}
+                {project.caseStudy?.id?.result || project.caseStudy?.result}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
                 Click to expand →
