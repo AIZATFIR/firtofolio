@@ -13,6 +13,7 @@ import SmoothScrollProvider from './components/ui/SmoothScrollProvider';
 import AgentWaveBackground from './components/background/AgentWaveBackground';
 import DeepSemicolon from './components/background/DeepSemicolon';
 import { Skiper8, Skiper8Text } from './components/ui/skiper8';
+import { Skiper59 } from './components/ui/skiper59';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +54,9 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Skiper59 - Fluid Drawing Cursor Trail Canvas Layer */}
+      <Skiper59 color="#ff6f1e" lineWidth={2.5} pointCount={24} decaySpeed={0.045} />
 
       <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-400">
         {/* Minimal Transparent Static Top Header (Desktop + Mobile Drawer Nav on Left) */}
