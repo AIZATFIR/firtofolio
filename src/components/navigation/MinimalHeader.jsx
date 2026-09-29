@@ -83,11 +83,8 @@ export default function MinimalHeader() {
               ))}
             </nav>
 
-            {/* Skiper25 Music Toggle Button with Lyn - No More What Ifs */}
-            <Skiper25
-              audioSrc="/audio/lyn-no-more-what-ifs.mp3"
-              trackTitle="Lyn - No More What Ifs"
-            />
+            {/* Skiper25 Music Toggle Button with Complete Arch BGM Playlist (27 tracks) */}
+            <Skiper25 />
 
             {/* Animated Theme Toggle */}
             <ThemeToggle />
@@ -157,12 +154,9 @@ export default function MinimalHeader() {
               <div className="pt-6 mt-6 border-t border-[var(--color-border)]">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-mono text-[10px] text-[var(--color-muted)] uppercase tracking-wider">
-                    Background Track
+                    Arch BGM Playlist
                   </span>
-                  <Skiper25
-                    audioSrc="/audio/lyn-no-more-what-ifs.mp3"
-                    trackTitle="Lyn - No More What Ifs"
-                  />
+                  <Skiper25 />
                 </div>
 
                 <span className="font-mono text-[10px] text-[var(--color-muted)] uppercase tracking-wider block mb-2">

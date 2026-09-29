@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 /**
  * Skiper8 - Official Skiper UI Pro Words Preloader
- * 100% faithful to the official Skiper UI / Dennis Snellenberg component architecture
+ * 100% faithful to Dennis Snellenberg / Skiper UI curved SVG morphing & synchronous exit
  */
 const defaultWords = [
   "Hello",
@@ -23,7 +23,11 @@ export const opacity = {
   },
   enter: {
     opacity: 0.95,
-    transition: { duration: 0.8, delay: 0.1 },
+    transition: { duration: 0.5, delay: 0.1 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.35, ease: [0.76, 0, 0.24, 1] },
   },
 };
 
@@ -32,8 +36,8 @@ export const slideUp = {
     top: 0,
   },
   exit: {
-    top: "-100vh",
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+    top: "calc(-100vh - 350px)",
+    transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
   },
 };
 
@@ -80,17 +84,18 @@ export function Skiper8({
     return () => clearTimeout(timeout);
   }, [index, words.length, onComplete]);
 
+  // Synchronized SVG curve morph paths
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
 
   const curve = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
+      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] },
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
+      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
     },
   };
 
@@ -99,7 +104,7 @@ export function Skiper8({
       variants={slideUp}
       initial="initial"
       exit="exit"
-      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#141516] text-white select-none ${className}`}
+      className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#141516] text-white select-none pointer-events-auto ${className}`}
     >
       {dimension.width > 0 && (
         <>
@@ -108,6 +113,7 @@ export function Skiper8({
             variants={opacity}
             initial="initial"
             animate="enter"
+            exit="exit"
             className="z-10 flex items-center justify-center font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white px-6 text-center"
           >
             <span className="mr-3 sm:mr-4 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-white shrink-0 inline-block shadow-[0_0_10px_rgba(255,255,255,0.6)]" />
