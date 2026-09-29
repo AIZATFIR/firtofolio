@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Sparkles, Download, Terminal, Smartphone as MobileIcon } from 'lucide-react';
+import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Sparkles, Terminal, Smartphone as MobileIcon, Layers, Scroll } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
@@ -14,20 +14,42 @@ export default function ProjectCard({ project, index }) {
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
 
+  // 3D Scroll-Driven Unrolling Paper / Rolled Canvas Physics
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ['start end', 'center center'],
+    offset: ['start end', 'end start'],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [4, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.96, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [0.85, 1]);
+  // Dynamic 3D Curvature & Unrolling Morphing
+  const rotateX = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [24, 0, 0, -20]);
+  const rotateZ = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [-1.5, 0, 0, 1.2]);
+  const scale = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [0.86, 1, 1, 0.92]);
+  const translateY = useTransform(scrollYProgress, [0, 0.35, 0.75, 1], [90, 0, 0, -70]);
+  const opacity = useTransform(scrollYProgress, [0, 0.18, 0.85, 1], [0.6, 1, 1, 0.75]);
+
+  // Dynamic Cylindrical Paper Shadow & Specular Gradient
+  const paperShadow = useTransform(
+    scrollYProgress,
+    [0, 0.35, 0.75, 1],
+    [
+      '0 45px 90px -20px rgba(0,0,0,0.5), inset 0 2px 6px rgba(255,255,255,0.3)',
+      '0 16px 40px -10px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.1)',
+      '0 16px 40px -10px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.1)',
+      '0 35px 75px -15px rgba(0,0,0,0.4), inset 0 -2px 6px rgba(255,255,255,0.2)'
+    ]
+  );
+
+  const rollSpecularOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.22, 0.35, 0.75, 0.9, 1],
+    [0.75, 0.3, 0, 0, 0.3, 0.7]
+  );
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
   };
 
-  // Listen for Escape key to exit interactive mode across capture phases
+  // Listen for Escape key to exit interactive mode
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.key === 'Escape' || e.keyCode === 27) && isInteractive) {
@@ -51,8 +73,9 @@ export default function ProjectCard({ project, index }) {
     <>
       <section
         ref={cardRef}
-        className="project-scene relative min-h-screen py-16 flex flex-col justify-center border-b border-[var(--color-border)]"
+        className="project-scene relative min-h-screen py-16 flex flex-col justify-center border-b border-[var(--color-border)] overflow-visible"
         id={`project-${project.id}`}
+        style={{ perspective: 1400 }}
       >
         <div className="w-[96vw] max-w-[1600px] mx-auto px-2 md:px-6 relative z-10">
           {/* Project Header Info */}
@@ -112,28 +135,45 @@ export default function ProjectCard({ project, index }) {
             </div>
           </div>
 
-          {/* FULLSCREEN PROJECT VIEWPORT FRAME */}
+          {/* 3D TACTILE UNROLLING PAPER / ROLLED SCREEN CANVAS */}
           <motion.div
             style={{
               rotateX,
+              rotateZ,
               scale,
+              translateY,
               opacity,
-              transformPerspective: 1000,
+              boxShadow: paperShadow,
+              transformOrigin: '50% 100%',
+              transformStyle: 'preserve-3d',
             }}
-            className="w-full border-[1.5px] border-[var(--color-text)] rounded-[20px] bg-[var(--color-card-bg)] overflow-hidden shadow-lg mb-8 will-change-transform relative"
+            className="w-full border-[1.5px] border-[var(--color-text)] rounded-[22px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative transition-shadow duration-300"
           >
-            {/* Browser / Application Header Bar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
+            {/* Cylindrical Paper Roll Curvature & Specular Highlight */}
+            <motion.div
+              style={{ opacity: rollSpecularOpacity }}
+              className="pointer-events-none absolute inset-0 z-30 bg-gradient-to-b from-white/25 via-transparent to-black/35 mix-blend-overlay transition-opacity"
+            />
+
+            {/* Tactile Architectural Blueprint / Rollable Display Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-bg)] border-b border-[var(--color-border)] relative z-20 select-none">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
-                <span className="ml-3 text-xs font-mono text-[var(--color-muted)] truncate max-w-xs md:max-w-md hidden sm:inline-block">
-                  {project.isNativeApp ? `Native Application • ${project.platform || 'Cross-Platform'}` : project.liveUrl}
-                </span>
+                {/* Paper Roll Indicator Beads */}
+                <div className="flex items-center gap-1.5 mr-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)] shadow-[0_0_6px_#ff6f1e]" />
+                  <span className="w-2 h-2 rounded-full bg-[var(--color-text)] opacity-30" />
+                  <span className="w-2 h-2 rounded-full bg-[var(--color-text)] opacity-30" />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Scroll size={13} className="text-[var(--color-orange)] hidden sm:inline-block" />
+                  <span className="text-xs font-mono text-[var(--color-headline)] font-bold truncate max-w-xs md:max-w-md">
+                    {project.isNativeApp ? `NATIVE OS // ${project.platform || 'CROSS-PLATFORM'}` : project.liveUrl}
+                  </span>
+                </div>
               </div>
 
-              {/* Viewport Mode Switchers (only for Web Apps) */}
+              {/* Viewport Mode Switchers (for Web Apps) */}
               {!project.isNativeApp ? (
                 <div className="flex items-center gap-2">
                   <button
@@ -183,7 +223,7 @@ export default function ProjectCard({ project, index }) {
               ) : (
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)]">
-                    Native App
+                    Native Architecture
                   </span>
                 </div>
               )}
@@ -197,7 +237,7 @@ export default function ProjectCard({ project, index }) {
               {!project.isNativeApp ? (
                 /* Real Live Web Iframe Container */
                 <div
-                  className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md relative"
+                  className="transition-all duration-300 ease-out rounded-[14px] overflow-hidden border border-[var(--color-border)] bg-white shadow-xl relative"
                   style={{
                     width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
                     height: viewportMode === 'desktop' ? '88vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
@@ -247,8 +287,8 @@ export default function ProjectCard({ project, index }) {
                 </div>
               ) : (
                 /* Native Application Hub Deck (For Fitrah Launcher & Sadar) */
-                <div className="w-full max-w-4xl py-12 px-6 sm:px-10 rounded-[16px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-md flex flex-col items-center text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-4">
+                <div className="w-full max-w-4xl py-12 px-6 sm:px-10 rounded-[18px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-xl flex flex-col items-center text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-4 shadow-sm">
                     <MobileIcon size={28} className="text-[var(--color-orange)]" />
                   </div>
 
@@ -260,7 +300,7 @@ export default function ProjectCard({ project, index }) {
                     "{project.tagline}"
                   </p>
 
-                  <div className="p-4 rounded-xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-mono text-xs text-[var(--color-text)] mb-8 max-w-lg w-full flex items-center justify-between gap-3">
+                  <div className="p-4 rounded-xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-mono text-xs text-[var(--color-text)] mb-8 max-w-lg w-full flex items-center justify-between gap-3 shadow-inner">
                     <div className="flex items-center gap-2">
                       <Terminal size={14} className="text-[var(--color-orange)] shrink-0" />
                       <span className="truncate">{project.platform}</span>
@@ -291,7 +331,7 @@ export default function ProjectCard({ project, index }) {
             </div>
           </motion.div>
 
-          {/* 4-Stage Clickable Case Study Grid (Consistent Monochromatic Palette) */}
+          {/* 4-Stage Clickable Case Study Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
               onClick={() => handleOpenCaseStudy(0)}
