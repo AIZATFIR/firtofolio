@@ -153,7 +153,8 @@ export function Skiper8({
 }
 
 /**
- * Animated rolling text effect for titles and headlines
+ * Animated rolling text effect for titles and headlines.
+ * Guaranteed visible and smoothly animated.
  */
 export function Skiper8Text({ text, className = "" }) {
   if (!text) return null;
@@ -168,18 +169,17 @@ export function Skiper8Text({ text, className = "" }) {
           .reduce((acc, w) => acc + w.length + 1, 0);
 
         return (
-          <span key={wordIdx} className="inline-block whitespace-nowrap overflow-hidden">
+          <span key={wordIdx} className="inline-block whitespace-nowrap">
             {word.split("").map((char, charIdx) => {
               const totalIdx = prevCharsCount + charIdx;
               return (
                 <motion.span
                   key={charIdx}
-                  initial={{ y: "105%", opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: "-10px" }}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{
                     duration: 0.5,
-                    delay: totalIdx * 0.022,
+                    delay: totalIdx * 0.02,
                     ease: [0.33, 1, 0.68, 1]
                   }}
                   className="inline-block"
