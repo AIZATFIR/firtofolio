@@ -36,17 +36,27 @@ export default function ProjectCard({ project, index }) {
     mouseY.set(0);
   };
 
-  // 3D Scroll Physics: Starts curled at 24deg like paper unrolling, flattens smoothly in view
+  // 100% Scroll-Driven Paper Unroll & Fold Physics (Triggered purely by mouse scroll)
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
   });
 
-  // Authentic paper roll-up & fold curve physics
-  const baseRotateX = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [24, 14, 4, -8]);
-  const scale = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [0.94, 1, 1, 0.96]);
-  const translateY = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [60, 0, 0, -30]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.85, 1, 1, 0.85]);
+  // Ultra-responsive spring that tracks mouse wheel directly with zero delay
+  const smoothScroll = useSpring(scrollYProgress, {
+    stiffness: 300,
+    damping: 35,
+    mass: 0.15,
+  });
+
+  // 1:1 Mouse Scroll Dependent Transformations
+  // 0.0: Card enters bottom of screen -> curled at 36deg (folded upward from bottom edge)
+  // 0.45 - 0.55: Card centered in screen -> completely flat (0deg, scale 1.0)
+  // 1.0: Card exits top of screen -> folds upward (-22deg)
+  const baseRotateX = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [36, 0, 0, -22]);
+  const scale = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [0.88, 1, 1, 0.94]);
+  const translateY = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [100, 0, 0, -60]);
+  const opacity = useTransform(smoothScroll, [0, 0.18, 0.82, 1], [0.6, 1, 1, 0.6]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -157,7 +167,7 @@ export default function ProjectCard({ project, index }) {
                 transformOrigin: '50% 100%',
                 transformStyle: 'preserve-3d',
               }}
-              className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-[0_35px_80px_-15px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)] transition-all duration-300"
+              className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-[0_35px_80px_-15px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)]"
             >
               {/* Top Glass Rim Specular Highlight */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent z-30 pointer-events-none" />
