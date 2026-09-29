@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Sparkles, CheckCircle2, Layers, Compass, Target } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 
-export default function CaseStudyModal({ project, isOpen, initialStage = 0, onClose }) {
+export default function CaseStudyModal({ project, isOpen, onClose }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -33,28 +33,24 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
       title: 'Problem & Friction',
       icon: Target,
       content: project.caseStudy.problem,
-      badgeColor: 'text-rose-500 bg-rose-500/10 border-rose-500/20'
     },
     {
       num: '02',
       title: 'Approach & Philosophy',
       icon: Compass,
       content: project.caseStudy.approach,
-      badgeColor: 'text-amber-500 bg-amber-500/10 border-amber-500/20'
     },
     {
       num: '03',
       title: 'Architecture & Engine',
       icon: Layers,
       content: project.caseStudy.architecture,
-      badgeColor: 'text-cyan-500 bg-cyan-500/10 border-cyan-500/20'
     },
     {
       num: '04',
       title: 'Result & Impact',
       icon: CheckCircle2,
       content: project.caseStudy.result,
-      badgeColor: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
     }
   ];
 
@@ -68,15 +64,15 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/75 backdrop-blur-md"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
           />
 
           {/* Expanded Case Study Pop-up Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 20 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            exit={{ opacity: 0, scale: 0.95, y: 16 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
             className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-[var(--color-bg)] border border-[var(--color-border)] rounded-[24px] shadow-2xl p-6 sm:p-8 md:p-10 text-[var(--color-text)] select-text"
           >
             {/* Top Bar Header */}
@@ -105,11 +101,11 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
                 className="p-2.5 rounded-full bg-[var(--color-surface-tint)] text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[var(--color-orange)] hover:text-white transition-colors cursor-pointer shrink-0"
                 title="Close (Esc)"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
-            {/* Deep Dive Summary (if available) */}
+            {/* Deep Dive Summary */}
             {project.deepDive?.summary && (
               <div className="my-6 p-4 sm:p-5 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)]">
                 <div className="flex items-center gap-2 font-mono text-xs font-bold text-[var(--color-orange)] uppercase tracking-wider mb-2">
@@ -122,8 +118,8 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
               </div>
             )}
 
-            {/* 4-Stage Deep Architecture Grid (Large, Readable Typography) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-6">
+            {/* 4-Stage Architecture Grid (Monochromatic, Consistent Tone) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 my-6">
               {stages.map((st, idx) => {
                 const IconComponent = st.icon;
                 return (
@@ -133,7 +129,7 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded-md border ${st.badgeColor}`}>
+                        <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded-md bg-[var(--color-surface-tint)] text-[var(--color-orange)] border border-[var(--color-border)]">
                           {st.num} / {st.title}
                         </span>
                         <IconComponent size={16} className="text-[var(--color-muted)]" />
@@ -158,9 +154,9 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
                   {project.deepDive.highlights.map((hl, hIdx) => (
                     <li
                       key={hIdx}
-                      className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--color-text)] leading-relaxed p-2.5 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-border)]"
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--color-text)] leading-relaxed p-3 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-border)]"
                     >
-                      <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-orange)] mt-2 shrink-0" />
                       <span>{hl}</span>
                     </li>
                   ))}

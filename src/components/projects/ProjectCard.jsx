@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Sparkles } from 'lucide-react';
+import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Sparkles, Download, Terminal, Smartphone as MobileIcon } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
@@ -79,14 +79,14 @@ export default function ProjectCard({ project, index }) {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <button
                 onClick={() => handleOpenCaseStudy(0)}
-                className="pill-btn text-xs md:text-sm font-bold bg-[var(--color-surface-tint)] border-[var(--color-orange)] hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer"
+                className="pill-btn text-xs md:text-sm font-bold bg-[var(--color-surface-tint)] border-[var(--color-border)] hover:border-[var(--color-orange)] hover:text-[var(--color-orange)] transition-all cursor-pointer"
                 title="Read Deep Case Study"
               >
-                <Sparkles size={13} className="text-[var(--color-orange)] group-hover:text-white" />
+                <Sparkles size={13} className="text-[var(--color-orange)]" />
                 <span>case study</span>
               </button>
 
-              {project.liveUrl && (
+              {!project.isNativeApp && project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
@@ -106,13 +106,13 @@ export default function ProjectCard({ project, index }) {
                   className="pill-btn text-xs md:text-sm font-bold"
                 >
                   <GithubIcon size={14} />
-                  <span>code</span>
+                  <span>{project.isNativeApp ? 'repository & releases' : 'code'}</span>
                 </a>
               )}
             </div>
           </div>
 
-          {/* FULLSCREEN PROJECT VIEWPORT FRAME (With Lazy Click-to-Interact to prevent scroll hijacking) */}
+          {/* FULLSCREEN PROJECT VIEWPORT FRAME */}
           <motion.div
             style={{
               rotateX,
@@ -122,126 +122,176 @@ export default function ProjectCard({ project, index }) {
             }}
             className="w-full border-[1.5px] border-[var(--color-text)] rounded-[20px] bg-[var(--color-card-bg)] overflow-hidden shadow-lg mb-8 will-change-transform relative"
           >
-            {/* Browser Header Bar */}
+            {/* Browser / Application Header Bar */}
             <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-40" />
-                <span className="w-2.5 h-2.5 rounded-full border border-[var(--color-text)] opacity-40" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-30" />
                 <span className="ml-3 text-xs font-mono text-[var(--color-muted)] truncate max-w-xs md:max-w-md hidden sm:inline-block">
-                  {project.liveUrl || project.githubUrl}
+                  {project.isNativeApp ? `Native Application • ${project.platform || 'Cross-Platform'}` : project.liveUrl}
                 </span>
               </div>
 
-              {/* Viewport Mode Switchers & Interactive Toggle */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setViewportMode('desktop')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
-                    viewportMode === 'desktop'
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
-                  }`}
-                  title="Desktop View"
-                >
-                  <Monitor size={13} />
-                  <span className="hidden md:inline">Desktop</span>
-                </button>
-                <button
-                  onClick={() => setViewportMode('tablet')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
-                    viewportMode === 'tablet'
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
-                  }`}
-                  title="Tablet View"
-                >
-                  <Tablet size={13} />
-                  <span className="hidden md:inline">Tablet</span>
-                </button>
-                <button
-                  onClick={() => setViewportMode('mobile')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
-                    viewportMode === 'mobile'
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
-                  }`}
-                  title="Mobile View"
-                >
-                  <Smartphone size={13} />
-                  <span className="hidden md:inline">Mobile</span>
-                </button>
-                <button
-                  onClick={handleReload}
-                  className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
-                  title="Reload Live App"
-                >
-                  <RotateCcw size={13} />
-                </button>
-              </div>
+              {/* Viewport Mode Switchers (only for Web Apps) */}
+              {!project.isNativeApp ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setViewportMode('desktop')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
+                      viewportMode === 'desktop'
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
+                    }`}
+                    title="Desktop View"
+                  >
+                    <Monitor size={13} />
+                    <span className="hidden md:inline">Desktop</span>
+                  </button>
+                  <button
+                    onClick={() => setViewportMode('tablet')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
+                      viewportMode === 'tablet'
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
+                    }`}
+                    title="Tablet View"
+                  >
+                    <Tablet size={13} />
+                    <span className="hidden md:inline">Tablet</span>
+                  </button>
+                  <button
+                    onClick={() => setViewportMode('mobile')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-[16px] text-xs font-mono font-medium transition-all cursor-pointer ${
+                      viewportMode === 'mobile'
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
+                    }`}
+                    title="Mobile View"
+                  >
+                    <Smartphone size={13} />
+                    <span className="hidden md:inline">Mobile</span>
+                  </button>
+                  <button
+                    onClick={handleReload}
+                    className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors rounded-full cursor-pointer"
+                    title="Reload Live App"
+                  >
+                    <RotateCcw size={13} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)]">
+                    Native App
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Iframe Viewport Container (88vh height) with Click-To-Interact Protection */}
+            {/* Viewport Container */}
             <div
               ref={iframeContainerRef}
-              className="bg-[var(--color-surface-tint)] p-2 md:p-6 flex justify-center items-center overflow-hidden relative"
+              className="bg-[var(--color-surface-tint)] p-3 md:p-8 flex justify-center items-center overflow-hidden relative"
             >
-              <div
-                className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md relative"
-                style={{
-                  width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                  height: viewportMode === 'desktop' ? '88vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
-                  minHeight: viewportMode === 'desktop' ? '850px' : '550px',
-                  maxWidth: '100%',
-                }}
-              >
-                {/* Real Live Iframe (pointer-events disabled when not active to prevent scroll trap) */}
-                <iframe
-                  key={iframeKey}
-                  src={project.liveUrl || project.githubUrl}
-                  title={`${project.title} Application`}
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+              {!project.isNativeApp ? (
+                /* Real Live Web Iframe Container */
+                <div
+                  className="transition-all duration-300 ease-out rounded-[12px] overflow-hidden border border-[var(--color-border)] bg-white shadow-md relative"
                   style={{
-                    pointerEvents: isInteractive ? 'auto' : 'none',
+                    width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
+                    height: viewportMode === 'desktop' ? '88vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
+                    minHeight: viewportMode === 'desktop' ? '850px' : '550px',
+                    maxWidth: '100%',
                   }}
-                />
-
-                {/* Pure Transparent Click-to-Interact Layer (Zero visual shadow/badge, pure immersive live visual) */}
-                {!isInteractive && (
-                  <div
-                    onClick={() => setIsInteractive(true)}
-                    className="absolute inset-0 z-20 cursor-pointer bg-transparent"
-                    title="Click to interact"
+                >
+                  <iframe
+                    key={iframeKey}
+                    src={project.liveUrl}
+                    title={`${project.title} Application`}
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                    style={{
+                      pointerEvents: isInteractive ? 'auto' : 'none',
+                    }}
                   />
-                )}
 
-                {/* Active Mode Banner / Exit Button */}
-                <AnimatePresence>
-                  {isInteractive && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="absolute top-4 right-4 z-30 flex items-center gap-2"
-                    >
-                      <button
-                        onClick={() => setIsInteractive(false)}
-                        className="px-4 py-2 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none group"
-                        title="Exit interaction mode"
-                      >
-                        <X size={13} className="text-[var(--color-orange)] group-hover:text-white transition-colors" />
-                        <span>Exit Esc</span>
-                      </button>
-                    </motion.div>
+                  {!isInteractive && (
+                    <div
+                      onClick={() => setIsInteractive(true)}
+                      className="absolute inset-0 z-20 cursor-pointer bg-transparent"
+                      title="Click to interact"
+                    />
                   )}
-                </AnimatePresence>
-              </div>
+
+                  <AnimatePresence>
+                    {isInteractive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="absolute top-4 right-4 z-30 flex items-center gap-2"
+                      >
+                        <button
+                          onClick={() => setIsInteractive(false)}
+                          className="px-4 py-2 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none group"
+                          title="Exit interaction mode"
+                        >
+                          <X size={13} className="text-[var(--color-orange)] group-hover:text-white transition-colors" />
+                          <span>Exit Esc</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                /* Native Application Hub Deck (For Fitrah Launcher & Sadar) */
+                <div className="w-full max-w-4xl py-12 px-6 sm:px-10 rounded-[16px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-md flex flex-col items-center text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-4">
+                    <MobileIcon size={28} className="text-[var(--color-orange)]" />
+                  </div>
+
+                  <h4 className="font-display text-2xl sm:text-4xl font-bold text-[var(--color-headline)] mb-2">
+                    {project.title} — Native Workspace
+                  </h4>
+
+                  <p className="font-serif italic text-sm sm:text-base text-[var(--color-muted)] max-w-xl mb-6">
+                    "{project.tagline}"
+                  </p>
+
+                  <div className="p-4 rounded-xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-mono text-xs text-[var(--color-text)] mb-8 max-w-lg w-full flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <Terminal size={14} className="text-[var(--color-orange)] shrink-0" />
+                      <span className="truncate">{project.platform}</span>
+                    </div>
+                    <span className="text-[var(--color-muted)] shrink-0">Open Source</span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-center gap-4">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pill-btn text-xs sm:text-sm font-bold bg-[var(--color-text)] text-[var(--color-bg)] hover:bg-[var(--color-orange)] hover:text-white transition-all"
+                    >
+                      <GithubIcon size={14} />
+                      <span>View GitHub Repository</span>
+                    </a>
+                    <button
+                      onClick={() => handleOpenCaseStudy(0)}
+                      className="pill-btn text-xs sm:text-sm font-bold"
+                    >
+                      <Sparkles size={13} className="text-[var(--color-orange)]" />
+                      <span>Read Deep Architecture</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
 
-          {/* 4-Stage Clickable Case Study Grid (Click to Expand Modal with Large Readability) */}
+          {/* 4-Stage Clickable Case Study Grid (Consistent Monochromatic Palette) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
               onClick={() => handleOpenCaseStudy(0)}

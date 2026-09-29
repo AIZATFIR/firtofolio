@@ -19,9 +19,9 @@ export const PORTFOLIO = {
   ],
   currentlyBuilding: [
     { num: "01", title: "7Audio — Audiophile 5D Spatial Audio Engine", status: "Active" },
-    { num: "02", title: "Fitrah Launcher — Digital Minimalism OS Workspace", status: "Active" },
-    { num: "03", title: "Sadar — Conscious Habit Awareness Companion", status: "Active" },
-    { num: "04", title: "Focus Clock 2.0 — Circadian Time-Blocking Engine", status: "Active" }
+    { num: "02", title: "Focus Clock 2.0 — Circadian Time-Blocking Engine", status: "Active" },
+    { num: "03", title: "Fitrah Launcher — Digital Minimalism OS Workspace", status: "Active" },
+    { num: "04", title: "Sadar — Conscious Habit Awareness Companion", status: "Active" }
   ]
 };
 
@@ -35,7 +35,7 @@ export const PROJECTS = [
     year: "2026",
     liveUrl: "https://focus-clock-web.vercel.app/",
     githubUrl: "https://github.com/AIZATFIR/focus-clock",
-    technologies: ["Flutter 3", "Riverpod 2.6", "Isar DB", "OpenAI API", "WebAssembly", "Circadian UI"],
+    isNativeApp: false,
     caseStudy: {
       problem: "Traditional pomodoro timers disrupt deep cognitive flow by treating focus as mechanical slices rather than biological waves.",
       approach: "Built around 90-minute Ultradian cycles and Eisenhower matrix task mapping with circadian day/night color temperature shifting.",
@@ -61,7 +61,7 @@ export const PROJECTS = [
     year: "2026",
     liveUrl: "https://7audio.vercel.app/",
     githubUrl: "https://github.com/AIZATFIR/7Audio",
-    technologies: ["Web Audio API", "HRTF Spatializer", "Vite + TypeScript", "Web Worker Clock", "Canvas 2D"],
+    isNativeApp: false,
     caseStudy: {
       problem: "Typical 8D audio tools rely on crude stereo panning and muddy reverbs that collapse phase integrity and muffle low frequencies.",
       approach: "Engineered a pristine 32-bit float Web Audio core with HRTF binaural spatialization, linear-phase 5-band crossover, and morphable continuous ribbon geometry.",
@@ -79,15 +79,115 @@ export const PROJECTS = [
     }
   },
   {
-    id: "fitrah-launcher",
+    id: "rync432",
     number: "03",
+    title: "RYNC432",
+    tagline: "Ultra-low latency mesh audio synchronizer across distributed devices",
+    category: "Distributed Systems & Audio",
+    year: "2026",
+    liveUrl: "https://rync432.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/rync432",
+    isNativeApp: false,
+    caseStudy: {
+      problem: "Multi-room audio setups typically require expensive proprietary hardware or suffer severe Wi-Fi buffer drift.",
+      approach: "Implemented lightweight NTP-style time offsets over WebSocket MQTT to synchronize Web Audio oscillators and audio buffers down to sub-10ms phase alignment.",
+      architecture: "Decentralized room topology with master clock consensus and real-time frequency FFT visualizer.",
+      result: "Zero-install spatial audio mesh running seamlessly inside modern browser tabs."
+    },
+    deepDive: {
+      summary: "RYNC432 turns any collection of browser tabs and smartphones into a synchronized multi-room audio mesh without requiring cables or proprietary hardware.",
+      highlights: [
+        "Sub-10ms Clock Sync: Microsecond NTP timestamp calibration over WebSocket MQTT.",
+        "Real-Time FFT Visualizer: 60fps high-resolution spectral analysis rendered on HTML5 Canvas.",
+        "Mesh Room Topology: Dynamically negotiates master/client clock consensus."
+      ]
+    }
+  },
+  {
+    id: "qurabic",
+    number: "04",
+    title: "QURABIC (INDO)",
+    tagline: "High-precision Arabic morphological NLP & root taxonomy corpus",
+    category: "Linguistics NLP & Taxonomy",
+    year: "2026",
+    liveUrl: "https://qurabic-indo-corpus.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/qurabic-indo-corpus",
+    isNativeApp: false,
+    caseStudy: {
+      problem: "Navigating classical Arabic lemma roots and contextual semantic nuance in Indonesian translations lacks interactive graph tools.",
+      approach: "Engineered a tri-literal root exploration engine that breaks down verse morphology into lemmas, pos-tags, and grammatical syntax trees.",
+      architecture: "Client-side indexed lemma search with interactive syntactic highlighting and phoneme breakdown.",
+      result: "Instant morphological lookup and root breakdown for researchers and learners."
+    },
+    deepDive: {
+      summary: "Qurabic provides researchers and students with a high-precision morphological exploration tool for classical Arabic and Indonesian semantic nuance.",
+      highlights: [
+        "Tri-Literal Root Indexing: Interactive decomposition from root lemmas to derived grammatical forms.",
+        "Zero-Latency Client Search: SQLite WASM engine running entirely in the user's browser.",
+        "Visual Syntax Trees: Real-time morphological dependency highlighting."
+      ]
+    }
+  },
+  {
+    id: "terraflow",
+    number: "05",
+    title: "TERRA FLOW",
+    tagline: "Stoic decision engine converting complex dilemmas into executable ASTs",
+    category: "Cognitive Architecture",
+    year: "2026",
+    liveUrl: "https://seamless-problem-solver.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
+    isNativeApp: false,
+    caseStudy: {
+      problem: "Cognitive overwhelm and analysis paralysis during ambiguous architectural and life decisions.",
+      approach: "Applied Dichotomy of Control heuristics to transform fuzzy problems into directed acyclic decision trees with probabilistic branch weighing.",
+      architecture: "Interactive step-by-step flowchart evaluator with exportable markdown action plans.",
+      result: "Structured clarity from chaos in under 3 minutes."
+    },
+    deepDive: {
+      summary: "Terra Flow applies Stoic decision theory and directed acyclic graphs to break overwhelming dilemmas into clear, actionable decision steps.",
+      highlights: [
+        "Dichotomy of Control Filter: Separates controllable actions from external uncontrollable factors.",
+        "Directed Acyclic Tree: Computes probabilistic paths and expected outcomes.",
+        "Markdown Action Plans: Exports clear execution checklists directly to your workspace."
+      ]
+    }
+  },
+  {
+    id: "social-affinity",
+    number: "06",
+    title: "SOCIAL AFFINITY",
+    tagline: "Visual relationship orbit graphs based on Dunbar's cognitive layers",
+    category: "Graph Visualization & Ergonomics",
+    year: "2026",
+    liveUrl: "https://social-affinity-network.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/social-affinity-network",
+    isNativeApp: false,
+    caseStudy: {
+      problem: "Modern contact lists treat all connections as a flat infinite list, violating human Dunbar capacity limits.",
+      approach: "Visualized personal social spheres as concentric gravitational orbits (Support Clique of 5, Sympathy Group of 15, Affinity Layer of 50).",
+      architecture: "Physics-based collision-avoidance orbit simulation with recency decay algorithms.",
+      result: "Mindful relationship maintenance without algorithmic feed addiction."
+    },
+    deepDive: {
+      summary: "Social Affinity visualizes interpersonal relationships as gravitational orbits structured by Dunbar's cognitive numbers (5 / 15 / 50 / 150).",
+      highlights: [
+        "Dunbar Layer Orbits: Concentric visual rings representing true human emotional capacity.",
+        "Physics Orbit Canvas: Interactive force-directed node simulation.",
+        "Recency Decay: Highlights connections that need mindful intentional outreach."
+      ]
+    }
+  },
+  {
+    id: "fitrah-launcher",
+    number: "07",
     title: "FITRAH LAUNCHER",
     tagline: "Distraction-free digital minimalism home launcher for Android, Linux & Windows",
-    category: "Digital Minimalism & Systems",
+    category: "Digital Minimalism & Native OS",
     year: "2026",
-    liveUrl: "https://github.com/AIZATFIR/Fitrah-Launcher/releases",
     githubUrl: "https://github.com/AIZATFIR/Fitrah-Launcher",
-    technologies: ["Flutter 3", "Native Platform Channels", "Analog Dial Canvas", "Offline Storage"],
+    isNativeApp: true,
+    platform: "Android APK • Linux x64 • Windows",
     caseStudy: {
       problem: "Modern mobile OS interfaces are engineered as dopamine extraction traps with high-saturation visual clutter, recommendation feeds, and red badge counters.",
       approach: "Redesigns device interaction into a calm 3-screen spatial model: Focus Clock Face (analog dial) + Fitrah Dashboard + Niagara-style Minimalist A-Z Drawer.",
@@ -106,14 +206,14 @@ export const PROJECTS = [
   },
   {
     id: "sadar",
-    number: "04",
+    number: "08",
     title: "SADAR",
     tagline: "Conscious habit awareness and daily fulfillment companion — Flutter",
-    category: "Human Awareness & Philosophy",
+    category: "Human Awareness & Native OS",
     year: "2026",
-    liveUrl: "https://github.com/AIZATFIR/Sadar/releases/latest",
     githubUrl: "https://github.com/AIZATFIR/Sadar",
-    technologies: ["Flutter", "SQLite Persistence", "YPT Focus Engine", "Circadian UI"],
+    isNativeApp: true,
+    platform: "Android APK • Linux • Windows",
     caseStudy: {
       problem: "Traditional habit trackers obsess over fragile numerical streaks, inducing anxiety, guilt, and total abandonment when a streak breaks.",
       approach: "Built around 'Did I live today in a way I can be proud of?' Turns meaningful daily actions into visible accumulated evidence of mindful living.",
@@ -127,106 +227,6 @@ export const PROJECTS = [
         "7-Day Horizontal Timeline: 1-tap completion recording in under 5 seconds without friction.",
         "What I Repeat (Repetisi): Visual aggregations of real practiced identity over months.",
         "Reflection & Introspection: End-of-day mindfulness check-ins tracking emotional fulfillment."
-      ]
-    }
-  },
-  {
-    id: "rync432",
-    number: "05",
-    title: "RYNC432",
-    tagline: "Ultra-low latency mesh audio synchronizer across distributed devices",
-    category: "Distributed Systems & Audio",
-    year: "2026",
-    liveUrl: "https://rync432.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/rync432",
-    technologies: ["Web Audio API", "MQTT PubSub", "Canvas 2D", "NTP Clock Sync", "TypeScript"],
-    caseStudy: {
-      problem: "Multi-room audio setups typically require expensive proprietary hardware or suffer severe Wi-Fi buffer drift.",
-      approach: "Implemented lightweight NTP-style time offsets over WebSocket MQTT to synchronize Web Audio oscillators and audio buffers down to sub-10ms phase alignment.",
-      architecture: "Decentralized room topology with master clock consensus and real-time frequency FFT visualizer.",
-      result: "Zero-install spatial audio mesh running seamlessly inside modern browser tabs."
-    },
-    deepDive: {
-      summary: "RYNC432 turns any collection of browser tabs and smartphones into a synchronized multi-room audio mesh without requiring cables or proprietary hardware.",
-      highlights: [
-        "Sub-10ms Clock Sync: Microsecond NTP timestamp calibration over WebSocket MQTT.",
-        "Real-Time FFT Visualizer: 60fps high-resolution spectral analysis rendered on HTML5 Canvas.",
-        "Mesh Room Topology: Dynamically negotiates master/client clock consensus."
-      ]
-    }
-  },
-  {
-    id: "qurabic",
-    number: "06",
-    title: "QURABIC (INDO)",
-    tagline: "High-precision Arabic morphological NLP & root taxonomy corpus",
-    category: "Linguistics NLP & Taxonomy",
-    year: "2026",
-    liveUrl: "https://qurabic-indo-corpus.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/qurabic-indo-corpus",
-    technologies: ["Next.js 14", "TypeScript", "TailwindCSS", "Arabic NLP", "SQLite WASM"],
-    caseStudy: {
-      problem: "Navigating classical Arabic lemma roots and contextual semantic nuance in Indonesian translations lacks interactive graph tools.",
-      approach: "Engineered a tri-literal root exploration engine that breaks down verse morphology into lemmas, pos-tags, and grammatical syntax trees.",
-      architecture: "Client-side indexed lemma search with interactive syntactic highlighting and phoneme breakdown.",
-      result: "Instant morphological lookup and root breakdown for researchers and learners."
-    },
-    deepDive: {
-      summary: "Qurabic provides researchers and students with a high-precision morphological exploration tool for classical Arabic and Indonesian semantic nuance.",
-      highlights: [
-        "Tri-Literal Root Indexing: Interactive decomposition from root lemmas to derived grammatical forms.",
-        "Zero-Latency Client Search: SQLite WASM engine running entirely in the user's browser.",
-        "Visual Syntax Trees: Real-time morphological dependency highlighting."
-      ]
-    }
-  },
-  {
-    id: "terraflow",
-    number: "07",
-    title: "TERRA FLOW",
-    tagline: "Stoic decision engine converting complex dilemmas into executable ASTs",
-    category: "Cognitive Architecture",
-    year: "2026",
-    liveUrl: "https://seamless-problem-solver.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
-    technologies: ["JavaScript ES6+", "TailwindCSS", "AST Flowchart", "Local Storage"],
-    caseStudy: {
-      problem: "Cognitive overwhelm and analysis paralysis during ambiguous architectural and life decisions.",
-      approach: "Applied Dichotomy of Control heuristics to transform fuzzy problems into directed acyclic decision trees with probabilistic branch weighing.",
-      architecture: "Interactive step-by-step flowchart evaluator with exportable markdown action plans.",
-      result: "Structured clarity from chaos in under 3 minutes."
-    },
-    deepDive: {
-      summary: "Terra Flow applies Stoic decision theory and directed acyclic graphs to break overwhelming dilemmas into clear, actionable decision steps.",
-      highlights: [
-        "Dichotomy of Control Filter: Separates controllable actions from external uncontrollable factors.",
-        "Directed Acyclic Tree: Computes probabilistic paths and expected outcomes.",
-        "Markdown Action Plans: Exports clear execution checklists directly to your workspace."
-      ]
-    }
-  },
-  {
-    id: "social-affinity",
-    number: "08",
-    title: "SOCIAL AFFINITY",
-    tagline: "Visual relationship orbit graphs based on Dunbar's cognitive layers",
-    category: "Graph Visualization & Ergonomics",
-    year: "2026",
-    liveUrl: "https://social-affinity-network.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/social-affinity-network",
-    technologies: ["JavaScript ES6+", "HTML5 Canvas", "Force-Directed Graph", "Dunbar Scale"],
-    caseStudy: {
-      problem: "Modern contact lists treat all connections as a flat infinite list, violating human Dunbar capacity limits.",
-      approach: "Visualized personal social spheres as concentric gravitational orbits (Support Clique of 5, Sympathy Group of 15, Affinity Layer of 50).",
-      architecture: "Physics-based collision-avoidance orbit simulation with recency decay algorithms.",
-      result: "Mindful relationship maintenance without algorithmic feed addiction."
-    },
-    deepDive: {
-      summary: "Social Affinity visualizes interpersonal relationships as gravitational orbits structured by Dunbar's cognitive numbers (5 / 15 / 50 / 150).",
-      highlights: [
-        "Dunbar Layer Orbits: Concentric visual rings representing true human emotional capacity.",
-        "Physics Orbit Canvas: Interactive force-directed node simulation.",
-        "Recency Decay: Highlights connections that need mindful intentional outreach."
       ]
     }
   }

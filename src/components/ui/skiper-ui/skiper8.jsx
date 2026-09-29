@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
  * Features:
  * - Multi-stage cycling words
  * - Mathematical SVG curve morph exit (bezier ease [0.76, 0, 0.24, 1])
- * - Clean minimal dot indicator
+ * - Massive centered typography (pure & minimal, without dot clutter)
  * - Dynamic per-word pacing
  */
 export function Skiper8({
@@ -138,15 +138,14 @@ export function Skiper8({
         >
           {dimension.width > 0 && (
             <>
-              {/* Authentic Dennis Snellenberg / Skiper8 Center Word */}
+              {/* Massive Centered Text (Clean, Bold, Without Dot) */}
               <motion.div
                 variants={opacity}
                 initial="initial"
                 animate="enter"
-                className="z-10 flex items-center justify-center gap-3 md:gap-4 max-w-[90vw] px-4 text-center"
+                className="z-10 flex items-center justify-center max-w-[92vw] px-4 text-center"
               >
-                <span className="w-3.5 h-3.5 rounded-full bg-[#ff6f1e] shadow-[0_0_14px_#ff6f1e] shrink-0" />
-                <p className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-none">
+                <p className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-white leading-none">
                   {currentItem.text}
                 </p>
               </motion.div>

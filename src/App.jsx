@@ -16,33 +16,33 @@ export default function App() {
   // Preloader with customized pacing per item
   const introWords = [
     // Initial deliberate slow entry
-    { text: ";", duration: 850, sub: "ZAFIR;" },
-    { text: "AIZATFIR", duration: 600 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 800 },
+    { text: ";", duration: 800 },
+    { text: "AIZATFIR", duration: 550 },
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 750 },
 
-    // Playful / warm greetings (fast cadence)
-    { text: "Hi", duration: 180 },
-    { text: "Hello World", duration: 200 },
-    { text: "Alooo", duration: 180 },
-    { text: "^-^", duration: 180 },
-    { text: "^-^  !", duration: 190 },
-    { text: "Alooooo", duration: 200 },
+    // Playful / warm greetings
+    { text: "Hi", duration: 160 },
+    { text: "Hello World", duration: 180 },
+    { text: "Alooo", duration: 160 },
+    { text: "^-^", duration: 160 },
+    { text: "^-^  !", duration: 170 },
+    { text: "Alooooo", duration: 180 },
 
-    // Complete portfolio project catalog
-    { text: "FOCUS CLOCK", duration: 280 },
-    { text: "7AUDIO", duration: 280 },
-    { text: "FITRAH LAUNCHER", duration: 280 },
-    { text: "SADAR", duration: 280 },
-    { text: "RYNC432", duration: 280 },
-    { text: "QURABIC", duration: 280 },
-    { text: "TERRA FLOW", duration: 280 },
-    { text: "SOCIAL AFFINITY", duration: 280 },
+    // Project catalog
+    { text: "FOCUS CLOCK", duration: 250 },
+    { text: "7AUDIO", duration: 250 },
+    { text: "RYNC432", duration: 250 },
+    { text: "QURABIC", duration: 250 },
+    { text: "TERRA FLOW", duration: 250 },
+    { text: "SOCIAL AFFINITY", duration: 250 },
+    { text: "FITRAH LAUNCHER", duration: 250 },
+    { text: "SADAR", duration: 250 },
 
     // High-impact slow closing cadence
-    { text: "AIZATFIR", duration: 700 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 850 },
-    { text: "Building Solutions", duration: 950 },
-    { text: 'Turning problems into "Manfaat"', duration: 1500 }
+    { text: "AIZATFIR", duration: 650 },
+    { text: "AIZAT FAHIM FIRMANSYAH", duration: 800 },
+    { text: "Building Solutions", duration: 900 },
+    { text: 'Turning problems into "Manfaat"', duration: 1400 }
   ];
 
   return (
@@ -65,20 +65,25 @@ export default function App() {
           {/* Deep Architectural Background Semicolon Glyph */}
           <DeepSemicolon />
 
-          {/* Hero Core Identity (Centered in Viewport, fully responsive and never clipping) */}
+          {/* Hero Core Identity: AIZATFIR Largest + Full Name Below + Single Clean Semicolon */}
           <div className="relative z-10 my-auto text-center max-w-[1400px] mx-auto w-full px-2 sm:px-4 select-none">
-            {/* Primary Name: AIZAT FAHIM FIRMANSYAH with Skiper8 Animated Text */}
-            <h1 className="display-headline font-bold text-center mx-auto mb-3 text-[var(--color-headline)] leading-[0.98] max-w-full">
-              <Skiper8Text text="AIZAT FAHIM FIRMANSYAH" />
+            {/* Primary Display Identity: AIZATFIR (Biggest) */}
+            <h1 className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[125px] xl:text-[145px] font-black tracking-tighter text-center mx-auto text-[var(--color-headline)] leading-[0.92] max-w-full mb-3">
+              <Skiper8Text text="AIZATFIR" />
             </h1>
 
-            {/* Sub-Identity */}
-            <p className="font-mono text-xs sm:text-sm md:text-base tracking-widest text-[var(--color-muted)] uppercase mt-2">
-              ZAFIR<SemicolonGlitch className="text-[var(--color-orange)] inline-block font-mono" /> • Zafir / Zephyr
+            {/* Full Name Below (Large, Elegant & Prominent) */}
+            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--color-headline)] max-w-full mx-auto mb-3">
+              <Skiper8Text text="AIZAT FAHIM FIRMANSYAH" />
+            </h2>
+
+            {/* Single Clean Sub-Identity (No duplicate Zafirs) */}
+            <p className="font-mono text-xs sm:text-sm tracking-widest text-[var(--color-muted)] uppercase mt-2">
+              ZAFIR<SemicolonGlitch className="text-[var(--color-orange)] inline-block font-mono font-bold" />
             </p>
           </div>
 
-          {/* Bottom Ambient Cue (Without "- 2026") */}
+          {/* Bottom Ambient Cue */}
           <div className="relative z-10 pt-4 flex items-center justify-center text-xs font-mono text-[var(--color-muted)]">
             <a href="#work" className="hover:text-[var(--color-orange)] transition-colors flex items-center gap-1.5 font-bold">
               <span>EXPLORE</span>
@@ -147,10 +152,10 @@ export default function App() {
           <div className="w-[96vw] max-w-[1600px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-wrap items-baseline justify-center md:justify-start gap-2 sm:gap-3 text-center md:text-left">
               <span className="font-mono text-xl sm:text-2xl font-bold tracking-widest text-[var(--color-headline)]">
-                AIZAT FAHIM FIRMANSYAH
+                AIZATFIR
               </span>
               <span className="text-xs font-mono text-[var(--color-muted)]">
-                [ZAFIR; / Zephyr]
+                [AIZAT FAHIM FIRMANSYAH • ZAFIR;]
               </span>
             </div>
 
