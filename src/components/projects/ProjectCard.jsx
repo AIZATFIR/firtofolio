@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Sparkles, Terminal, Smartphone as MobileIcon, Scroll } from 'lucide-react';
+import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Terminal, Smartphone as MobileIcon, Scroll, BookOpen } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
