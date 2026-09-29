@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { PenTool, Trash2, X, RotateCcw } from "lucide-react";
+import { PenTool, RotateCcw, Undo2, Redo2, X } from "lucide-react";
 
 /**
- * Skiper59 - Drawing Cursor & Mobile Touch Canvas
- * 
+ * Skiper59 - Drawing Cursor & Mobile Touch Paper Canvas with Undo/Redo (@skiper-ui/skiper59)
  * Features:
- * - Fluid quadratic bezier trailing ink on mouse and mobile touch
- * - Doodle Mode: Double-click anywhere (or click floating pen button) to toggle persistent drawing mode
- * - Reset / Clear canvas functionality
- * - Non-intrusive pointer-events: none during standard navigation
+ * - Persistent ink glued 1:1 to paper document coordinates on scroll
+ * - Undo / Redo / Clear / Exit mini toolbar
+ * - Super-minimal floating pen icon when idle (no distracting text)
+ * - Dynamic color synchronization with active palette token
  */
 export function Skiper59({
   color = "#ff6f1e",
@@ -20,12 +19,14 @@ export function Skiper59({
   const canvasRef = useRef(null);
   const pointsRef = useRef([]);
   const persistentStrokesRef = useRef([]); // Stores finished doodle lines in Paint Mode
+  const redoStackRef = useRef([]); // Undo/Redo history stack
   const currentStrokeRef = useRef([]);
   const mouseRef = useRef({ x: -100, y: -100, isDown: false });
   const animFrameRef = useRef(null);
 
   const [isDoodleMode, setIsDoodleMode] = useState(false);
-  const [hasDoodles, setHasDoodles] = useState(false);
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -47,14 +48,19 @@ export function Skiper59({
     handleResize();
     window.addEventListener("resize", handleResize);
 
+    const getActiveColor = () => {
+      return getComputedStyle(document.documentElement).getPropertyValue("--color-orange").trim() || color;
+    };
+
     const addPoint = (clientX, clientY) => {
       const docX = clientX + window.scrollX;
       const docY = clientY + window.scrollY;
 
       if (isDoodleMode) {
         if (mouseRef.current.isDown) {
-          currentStrokeRef.current.push({ x: docX, y: docY, width: lineWidth * 1.3 });
-          setHasDoodles(true);
+          const currentColor = getActiveColor();
+          currentStrokeRef.current.push({ x: docX, y: docY, width: lineWidth * 1.3, color: currentColor });
+          setCanUndo(true);
         }
       } else {
         // Standard Glide Trail (Transient viewport ink)
@@ -83,14 +89,18 @@ export function Skiper59({
         mouseRef.current.isDown = true;
         const docX = e.clientX + window.scrollX;
         const docY = e.clientY + window.scrollY;
-        currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3 }];
+        const currentColor = getActiveColor();
+        currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3, color: currentColor }];
       }
     };
 
     const handleMouseUp = () => {
       if (mouseRef.current.isDown && currentStrokeRef.current.length > 0) {
         persistentStrokesRef.current.push([...currentStrokeRef.current]);
+        redoStackRef.current = []; // Clear redo on new stroke
         currentStrokeRef.current = [];
+        setCanUndo(true);
+        setCanRedo(false);
       }
       mouseRef.current.isDown = false;
     };
@@ -105,8 +115,9 @@ export function Skiper59({
         const docX = t.clientX + window.scrollX;
         const docY = t.clientY + window.scrollY;
         if (isDoodleMode) {
-          currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3 }];
-          setHasDoodles(true);
+          const currentColor = getActiveColor();
+          currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3, color: currentColor }];
+          setCanUndo(true);
         } else {
           addPoint(t.clientX, t.clientY);
         }
@@ -125,7 +136,10 @@ export function Skiper59({
     const handleTouchEnd = () => {
       if (mouseRef.current.isDown && currentStrokeRef.current.length > 0) {
         persistentStrokesRef.current.push([...currentStrokeRef.current]);
+        redoStackRef.current = [];
         currentStrokeRef.current = [];
+        setCanUndo(true);
+        setCanRedo(false);
       }
       mouseRef.current.isDown = false;
     };
@@ -149,12 +163,12 @@ export function Skiper59({
 
       const scrollX = window.scrollX || 0;
       const scrollY = window.scrollY || 0;
+      const dynamicColor = getActiveColor();
 
       // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
       if (persistentStrokesRef.current.length > 0) {
         ctx.save();
         ctx.translate(-scrollX, -scrollY);
-        ctx.strokeStyle = color;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.globalAlpha = 0.95;
@@ -162,6 +176,7 @@ export function Skiper59({
         for (const stroke of persistentStrokesRef.current) {
           if (stroke.length > 1) {
             ctx.beginPath();
+            ctx.strokeStyle = stroke[0].color || dynamicColor;
             ctx.lineWidth = stroke[0].width || lineWidth;
             ctx.moveTo(stroke[0].x, stroke[0].y);
             for (let i = 1; i < stroke.length - 1; i++) {
@@ -180,7 +195,7 @@ export function Skiper59({
       if (currentStrokeRef.current.length > 1) {
         ctx.save();
         ctx.translate(-scrollX, -scrollY);
-        ctx.strokeStyle = color;
+        ctx.strokeStyle = dynamicColor;
         ctx.lineWidth = lineWidth * 1.3;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -219,7 +234,7 @@ export function Skiper59({
             ctx.moveTo(points[i - 1].x, points[i - 1].y);
             ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
 
-            ctx.strokeStyle = color;
+            ctx.strokeStyle = dynamicColor;
             ctx.globalAlpha = Math.max(0, points[i].alpha);
             ctx.lineWidth = points[i].width * (points[i].alpha * 0.8 + 0.2);
             ctx.lineCap = "round";
@@ -249,11 +264,31 @@ export function Skiper59({
     };
   }, [color, lineWidth, pointCount, decaySpeed, isDoodleMode]);
 
+  const undo = () => {
+    if (persistentStrokesRef.current.length > 0) {
+      const popped = persistentStrokesRef.current.pop();
+      redoStackRef.current.push(popped);
+      setCanUndo(persistentStrokesRef.current.length > 0);
+      setCanRedo(true);
+    }
+  };
+
+  const redo = () => {
+    if (redoStackRef.current.length > 0) {
+      const popped = redoStackRef.current.pop();
+      persistentStrokesRef.current.push(popped);
+      setCanUndo(true);
+      setCanRedo(redoStackRef.current.length > 0);
+    }
+  };
+
   const clearCanvas = () => {
     persistentStrokesRef.current = [];
+    redoStackRef.current = [];
     currentStrokeRef.current = [];
     pointsRef.current = [];
-    setHasDoodles(false);
+    setCanUndo(false);
+    setCanRedo(false);
   };
 
   return (
@@ -266,32 +301,76 @@ export function Skiper59({
         aria-hidden="true"
       />
 
-      {/* Floating Doodle Controller Badge on Bottom Left */}
-      <div className="fixed bottom-6 left-6 z-50 select-none flex items-center gap-2">
-        <button
-          onClick={() => setIsDoodleMode((prev) => !prev)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-lg font-mono text-xs font-bold transition-all cursor-pointer ${
-            isDoodleMode
-              ? "bg-[var(--color-orange)] text-white border-[var(--color-orange)] shadow-[0_0_16px_rgba(255,111,30,0.4)]"
-              : "bg-[var(--color-card-bg)] text-[var(--color-muted)] hover:text-[var(--color-text)] border-[var(--color-border)] hover:border-[var(--color-orange)]"
-          }`}
-          title="Toggle Doodle Paint Mode (or Double-Click screen)"
-        >
-          <PenTool size={12} className={isDoodleMode ? "animate-bounce" : ""} />
-          <span className="hidden sm:inline">
-            {isDoodleMode ? "Doodle Mode: ON" : "Draw"}
-          </span>
-        </button>
+      {/* Floating Doodle Controller on Bottom Right for Clean Ergonomics */}
+      <div className="fixed bottom-6 right-6 z-50 select-none flex items-center">
+        {isDoodleMode ? (
+          /* Active Draw Mode Toolbar */
+          <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-[var(--color-card-bg)]/95 border border-[var(--color-orange)] shadow-2xl backdrop-blur-xl">
+            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-orange)] text-white font-mono text-xs font-bold shadow-xs">
+              <PenTool size={12} className="animate-bounce" />
+              <span>Draw</span>
+            </span>
 
-        {/* Clear Canvas Button if there are drawings */}
-        {(isDoodleMode || hasDoodles) && (
+            {/* Undo */}
+            <button
+              onClick={undo}
+              disabled={!canUndo}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                canUndo
+                  ? "text-[var(--color-text)] hover:bg-[var(--color-surface-tint)]"
+                  : "text-[var(--color-muted)] opacity-40 cursor-not-allowed"
+              }`}
+              title="Undo Stroke"
+            >
+              <Undo2 size={13} />
+            </button>
+
+            {/* Redo */}
+            <button
+              onClick={redo}
+              disabled={!canRedo}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                canRedo
+                  ? "text-[var(--color-text)] hover:bg-[var(--color-surface-tint)]"
+                  : "text-[var(--color-muted)] opacity-40 cursor-not-allowed"
+              }`}
+              title="Redo Stroke"
+            >
+              <Redo2 size={13} />
+            </button>
+
+            {/* Clear */}
+            <button
+              onClick={clearCanvas}
+              disabled={!canUndo && !canRedo}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                canUndo || canRedo
+                  ? "text-[var(--color-muted)] hover:text-red-500 hover:bg-[var(--color-surface-tint)]"
+                  : "text-[var(--color-muted)] opacity-40 cursor-not-allowed"
+              }`}
+              title="Clear Canvas"
+            >
+              <RotateCcw size={12} />
+            </button>
+
+            {/* Close / Exit Draw Mode */}
+            <button
+              onClick={() => setIsDoodleMode(false)}
+              className="p-1.5 rounded-full text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-tint)] transition-colors cursor-pointer ml-0.5"
+              title="Exit Draw Mode"
+            >
+              <X size={13} />
+            </button>
+          </div>
+        ) : (
+          /* Inactive Minimal Clean Icon Button (No distracting text) */
           <button
-            onClick={clearCanvas}
-            className="p-1.5 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-border)] text-[var(--color-muted)] hover:text-red-500 hover:border-red-500 transition-colors shadow-xs cursor-pointer"
-            title="Clear Drawing"
-            aria-label="Clear Canvas"
+            onClick={() => setIsDoodleMode(true)}
+            className="w-8 h-8 rounded-full border border-[var(--color-border)] bg-[var(--color-card-bg)] text-[var(--color-muted)] hover:text-[var(--color-orange)] hover:border-[var(--color-orange)] shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer backdrop-blur-md"
+            title="Draw on page (or double-click screen)"
+            aria-label="Toggle Draw Mode"
           >
-            <RotateCcw size={12} />
+            <PenTool size={13} />
           </button>
         )}
       </div>

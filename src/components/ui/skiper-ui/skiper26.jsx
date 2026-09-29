@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 
 /**
- * Skiper26 - Animated Sliding & View-Transition Circular Theme Toggle
+ * Skiper26 - Animated Sliding & View-Transition Theme Toggle (@skiper-ui/skiper26)
  * 
  * Features:
- * - Circular expanding clip-path transition on theme change
- * - Smooth sliding spring-animated Sun/Moon toggle pill
- * - Touch & Click coordinates targeting for circular reveal wave
+ * - Ultra-smooth circular clip-path transition on theme change (relaxed 650ms easing)
+ * - Tactile spring-animated Sun/Moon toggle pill
+ * - Smooth CSS token transitions to prevent choppy flickers
  */
 export function Skiper26({ className = "" }) {
   const [theme, setTheme] = useState("light");
@@ -52,8 +52,8 @@ export function Skiper26({ className = "" }) {
             ],
           },
           {
-            duration: 500,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            duration: 650,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
             pseudoElement: "::view-transition-new(root)",
           }
         );
@@ -74,16 +74,16 @@ export function Skiper26({ className = "" }) {
       whileTap={{ scale: 0.94 }}
       onClick={toggleTheme}
       className={`relative flex items-center justify-between p-1 w-14 h-7 rounded-full border border-[var(--color-border)] bg-[var(--color-card-bg)] shadow-xs transition-colors cursor-pointer select-none ${className}`}
-      title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+      title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode (@skiper-ui/skiper26)`}
       aria-label="Toggle Theme"
     >
-      {/* Sliding Active Pill */}
+      {/* Sliding Active Pill with Smooth Relaxed Spring */}
       <motion.div
         layout
         transition={{
           type: "spring",
-          stiffness: 180,
-          damping: 22,
+          stiffness: 150,
+          damping: 20,
           mass: 0.8,
         }}
         className={`absolute w-5 h-5 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-orange)]/40 flex items-center justify-center shadow-xs ${
@@ -94,20 +94,20 @@ export function Skiper26({ className = "" }) {
           {theme === "light" ? (
             <motion.div
               key="sun"
-              initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+              initial={{ rotate: -90, scale: 0.4, opacity: 0 }}
               animate={{ rotate: 0, scale: 1, opacity: 1 }}
-              exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+              exit={{ rotate: 90, scale: 0.4, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               <Sun size={12} className="text-[var(--color-orange)]" />
             </motion.div>
           ) : (
             <motion.div
               key="moon"
-              initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
+              initial={{ rotate: 90, scale: 0.4, opacity: 0 }}
               animate={{ rotate: 0, scale: 1, opacity: 1 }}
-              exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+              exit={{ rotate: -90, scale: 0.4, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
               <Moon size={12} className="text-[var(--color-orange)]" />
             </motion.div>

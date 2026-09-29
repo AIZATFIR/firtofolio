@@ -30,7 +30,10 @@ export const PROJECTS = [
     id: "focus-clock",
     number: "01",
     title: "FOCUS CLOCK",
-    tagline: "Time-blocking analog clock app — Flutter + Riverpod + Isar + AI",
+    tagline: {
+      id: "Aplikasi jam analog penataan waktu fokus — Flutter + Riverpod + Isar + AI",
+      en: "Time-blocking analog clock app — Flutter + Riverpod + Isar + AI"
+    },
     category: "Cognitive Ergonomics & AI",
     year: "2026",
     liveUrl: "https://focus-clock-web.vercel.app/",
@@ -75,7 +78,10 @@ export const PROJECTS = [
     id: "7audio",
     number: "02",
     title: "7AUDIO",
-    tagline: "Audiophile-grade 5D spatial audio player & binaural geometry engine",
+    tagline: {
+      id: "Pemutar audio spasial 5D kualitas audiophile & mesin akustik binaural",
+      en: "Audiophile-grade 5D spatial audio player & binaural geometry engine"
+    },
     category: "Web Audio & Spatial Acoustics",
     year: "2026",
     liveUrl: "https://7audio.vercel.app/",
@@ -120,7 +126,10 @@ export const PROJECTS = [
     id: "rync432",
     number: "03",
     title: "RYNC432",
-    tagline: "Ultra-low latency mesh audio synchronizer across distributed devices",
+    tagline: {
+      id: "Sinkronisasi audio multi-perangkat real-time berlatensi ultra rendah",
+      en: "Ultra-low latency mesh audio synchronizer across distributed devices"
+    },
     category: "Distributed Systems & Audio",
     year: "2026",
     liveUrl: "https://rync432.vercel.app/",
@@ -163,7 +172,10 @@ export const PROJECTS = [
     id: "qurabic",
     number: "04",
     title: "QURABIC (INDO)",
-    tagline: "High-precision Arabic morphological NLP & root taxonomy corpus",
+    tagline: {
+      id: "Korpus morfologi & taksonomi akar kata bahasa Arab presisi tinggi",
+      en: "High-precision Arabic morphological NLP & root taxonomy corpus"
+    },
     category: "Linguistics NLP & Taxonomy",
     year: "2026",
     liveUrl: "https://qurabic-indo-corpus.vercel.app/",
@@ -206,7 +218,10 @@ export const PROJECTS = [
     id: "terraflow",
     number: "05",
     title: "TERRA FLOW",
-    tagline: "Stoic decision engine converting complex dilemmas into executable ASTs",
+    tagline: {
+      id: "Mesin keputusan Stoik mengubah dilema rumit menjadi graf aksi terstruktur",
+      en: "Stoic decision engine converting complex dilemmas into executable ASTs"
+    },
     category: "Cognitive Architecture",
     year: "2026",
     liveUrl: "https://seamless-problem-solver.vercel.app/",
@@ -249,7 +264,10 @@ export const PROJECTS = [
     id: "social-affinity",
     number: "06",
     title: "SOCIAL AFFINITY",
-    tagline: "Visual relationship orbit graphs based on Dunbar's cognitive layers",
+    tagline: {
+      id: "Graf orbit relasi manusia berdasarkan lapisan kapasitas kognitif Dunbar",
+      en: "Visual relationship orbit graphs based on Dunbar's cognitive layers"
+    },
     category: "Graph Visualization & Ergonomics",
     year: "2026",
     liveUrl: "https://social-affinity-network.vercel.app/",
@@ -292,7 +310,10 @@ export const PROJECTS = [
     id: "fitrah-launcher",
     number: "07",
     title: "FITRAH LAUNCHER",
-    tagline: "Distraction-free digital minimalism home launcher for Android, Linux & Windows",
+    tagline: {
+      id: "Peluncur beranda minimalis digital bebas distraksi untuk Android, Linux & Windows",
+      en: "Distraction-free digital minimalism home launcher for Android, Linux & Windows"
+    },
     category: "Digital Minimalism & Native OS",
     year: "2026",
     githubUrl: "https://github.com/AIZATFIR/Fitrah-Launcher",
@@ -337,7 +358,10 @@ export const PROJECTS = [
     id: "sadar",
     number: "08",
     title: "SADAR",
-    tagline: "Conscious habit awareness and daily fulfillment companion — Flutter",
+    tagline: {
+      id: "Pendamping kesadaran kebiasaan harian & kepuasan batin sadar — Flutter",
+      en: "Conscious habit awareness and daily fulfillment companion — Flutter"
+    },
     category: "Human Awareness & Native OS",
     year: "2026",
     githubUrl: "https://github.com/AIZATFIR/Sadar",

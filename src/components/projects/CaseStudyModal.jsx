@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, CheckCircle2, Layers, Compass, Target, BookOpen, Globe } from 'lucide-react';
+import { X, ExternalLink, CheckCircle2, Layers, Compass, Target, BookOpen } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
+import { useLanguage } from '../../utils/useLanguage';
+import { Skiper41 } from '../ui/skiper41';
 
 export default function CaseStudyModal({ project, isOpen, initialStage = 0, onClose }) {
-  const [lang, setLang] = useState('id'); // 'id' or 'en'
+  const { lang, setLang } = useLanguage();
   const [activeStage, setActiveStage] = useState(initialStage);
 
   useEffect(() => {
@@ -34,26 +36,85 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
 
   if (!project) return null;
 
-  // Bilingual text resolver
-  const getProblem = () => (typeof project.caseStudy.problem === 'object' ? project.caseStudy.problem[lang] : project.caseStudy.id?.problem || project.caseStudy.en?.problem || project.caseStudy.problem);
-  const getApproach = () => (typeof project.caseStudy.approach === 'object' ? project.caseStudy.approach[lang] : project.caseStudy.id?.approach || project.caseStudy.en?.approach || project.caseStudy.approach);
-  const getArchitecture = () => (typeof project.caseStudy.architecture === 'object' ? project.caseStudy.architecture[lang] : project.caseStudy.id?.architecture || project.caseStudy.en?.architecture || project.caseStudy.architecture);
-  const getResult = () => (typeof project.caseStudy.result === 'object' ? project.caseStudy.result[lang] : project.caseStudy.id?.result || project.caseStudy.en?.result || project.caseStudy.result);
+  // Bilingual text resolver helpers
+  const getTagline = () => {
+    if (!project.tagline) return '';
+    if (typeof project.tagline === 'object') {
+      return project.tagline[lang] || project.tagline.id || project.tagline.en || '';
+    }
+    return project.tagline;
+  };
+
+  const getProblem = () => {
+    if (!project.caseStudy) return '';
+    if (typeof project.caseStudy.problem === 'object') {
+      return project.caseStudy.problem[lang] || project.caseStudy.problem.id || '';
+    }
+    if (project.caseStudy[lang]?.problem) return project.caseStudy[lang].problem;
+    if (project.caseStudy.id?.problem) return project.caseStudy.id.problem;
+    if (project.caseStudy.en?.problem) return project.caseStudy.en.problem;
+    return project.caseStudy.problem || '';
+  };
+
+  const getApproach = () => {
+    if (!project.caseStudy) return '';
+    if (typeof project.caseStudy.approach === 'object') {
+      return project.caseStudy.approach[lang] || project.caseStudy.approach.id || '';
+    }
+    if (project.caseStudy[lang]?.approach) return project.caseStudy[lang].approach;
+    if (project.caseStudy.id?.approach) return project.caseStudy.id.approach;
+    if (project.caseStudy.en?.approach) return project.caseStudy.en.approach;
+    return project.caseStudy.approach || '';
+  };
+
+  const getArchitecture = () => {
+    if (!project.caseStudy) return '';
+    if (typeof project.caseStudy.architecture === 'object') {
+      return project.caseStudy.architecture[lang] || project.caseStudy.architecture.id || '';
+    }
+    if (project.caseStudy[lang]?.architecture) return project.caseStudy[lang].architecture;
+    if (project.caseStudy.id?.architecture) return project.caseStudy.id.architecture;
+    if (project.caseStudy.en?.architecture) return project.caseStudy.en.architecture;
+    return project.caseStudy.architecture || '';
+  };
+
+  const getResult = () => {
+    if (!project.caseStudy) return '';
+    if (typeof project.caseStudy.result === 'object') {
+      return project.caseStudy.result[lang] || project.caseStudy.result.id || '';
+    }
+    if (project.caseStudy[lang]?.result) return project.caseStudy[lang].result;
+    if (project.caseStudy.id?.result) return project.caseStudy.id.result;
+    if (project.caseStudy.en?.result) return project.caseStudy.en.result;
+    return project.caseStudy.result || '';
+  };
 
   const getSummary = () => {
-    if (!project.deepDive?.summary) return null;
-    if (typeof project.deepDive.summary === 'object') return project.deepDive.summary[lang];
+    if (!project.deepDive) return null;
+    if (typeof project.deepDive.summary === 'object') {
+      return project.deepDive.summary[lang] || project.deepDive.summary.id || project.deepDive.summary;
+    }
     if (project.deepDive[lang]?.summary) return project.deepDive[lang].summary;
-    return project.deepDive.summary;
+    if (project.deepDive.id?.summary) return project.deepDive.id.summary;
+    if (project.deepDive.en?.summary) return project.deepDive.en.summary;
+    return project.deepDive.summary || null;
   };
 
   const getHighlights = () => {
-    if (!project.deepDive?.highlights) {
-      if (project.deepDive?.[lang]?.highlights) return project.deepDive[lang].highlights;
-      return [];
+    if (!project.deepDive) return [];
+    if (project.deepDive[lang]?.highlights && Array.isArray(project.deepDive[lang].highlights)) {
+      return project.deepDive[lang].highlights;
     }
-    if (Array.isArray(project.deepDive.highlights)) return project.deepDive.highlights;
-    if (project.deepDive.highlights[lang]) return project.deepDive.highlights[lang];
+    if (project.deepDive.id?.highlights && Array.isArray(project.deepDive.id.highlights) && lang === 'id') {
+      return project.deepDive.id.highlights;
+    }
+    if (project.deepDive.en?.highlights && Array.isArray(project.deepDive.en.highlights) && lang === 'en') {
+      return project.deepDive.en.highlights;
+    }
+    if (project.deepDive.highlights) {
+      if (Array.isArray(project.deepDive.highlights)) return project.deepDive.highlights;
+      if (project.deepDive.highlights[lang]) return project.deepDive.highlights[lang];
+    }
     return [];
   };
 
@@ -132,14 +193,14 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
                   {project.title}
                 </h2>
                 <p className="font-serif italic text-base sm:text-lg text-[var(--color-muted)] mt-1.5 max-w-2xl">
-                  "{project.tagline}"
+                  "{getTagline()}"
                 </p>
               </div>
 
               {/* Controls: Language Toggle + Close Button */}
               <div className="flex items-center gap-2 shrink-0">
                 {/* Language Switcher */}
-                <div className="flex items-center rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)] p-1">
+                <div className="flex items-center rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)] p-1 shadow-xs">
                   <button
                     onClick={() => setLang('id')}
                     className={`px-3 py-1 rounded-full font-mono text-xs font-bold transition-all cursor-pointer ${
@@ -246,7 +307,7 @@ export default function CaseStudyModal({ project, isOpen, initialStage = 0, onCl
             {/* Bottom Actions */}
             <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[var(--color-border)] mt-8">
               <span className="font-mono text-xs text-[var(--color-muted)]">
-                Press <kbd className="px-2 py-1 rounded bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-semibold">Esc</kbd> or click outside to dismiss
+                {lang === 'id' ? 'Tekan' : 'Press'} <kbd className="px-2 py-1 rounded bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-semibold">Esc</kbd> {lang === 'id' ? 'atau klik di luar untuk menutup' : 'or click outside to dismiss'}
               </span>
 
               <div className="flex items-center gap-3">

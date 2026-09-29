@@ -4,8 +4,10 @@ import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Ter
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
+import { useLanguage } from '../../utils/useLanguage';
 
 export default function ProjectCard({ project, index }) {
+  const { lang } = useLanguage();
   const [viewportMode, setViewportMode] = useState('desktop');
   const [iframeKey, setIframeKey] = useState(0);
   const [isInteractive, setIsInteractive] = useState(false);
@@ -14,7 +16,7 @@ export default function ProjectCard({ project, index }) {
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
 
-  // Mouse Parallax 3D Spring Tilt for deep tactile immersion
+  // Mouse Parallax 3D Spring Tilt for tactile responsiveness
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -36,27 +38,28 @@ export default function ProjectCard({ project, index }) {
     mouseY.set(0);
   };
 
-  // 100% Scroll-Driven Paper Unroll & Fold Physics (Triggered purely by mouse scroll)
+  // 100% Scroll-Driven Domino 3D Vertical Tilt Physics
+  // Tracks mouse wheel scroll progress through the viewport directly
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
   });
 
-  // Ultra-responsive spring that tracks mouse wheel directly with zero delay
+  // Responsive spring with high stiffness for direct, lag-free mouse response
   const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 300,
-    damping: 35,
-    mass: 0.15,
+    stiffness: 280,
+    damping: 32,
+    mass: 0.18,
   });
 
-  // 1:1 Mouse Scroll Dependent Transformations
-  // 0.0: Card enters bottom of screen -> curled at 36deg (folded upward from bottom edge)
-  // 0.45 - 0.55: Card centered in screen -> completely flat (0deg, scale 1.0)
-  // 1.0: Card exits top of screen -> folds upward (-22deg)
-  const baseRotateX = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [36, 0, 0, -22]);
-  const scale = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [0.88, 1, 1, 0.94]);
-  const translateY = useTransform(smoothScroll, [0, 0.45, 0.55, 1], [100, 0, 0, -60]);
-  const opacity = useTransform(smoothScroll, [0, 0.18, 0.82, 1], [0.6, 1, 1, 0.6]);
+  // Vertical Domino 3D Physics Curve:
+  // 0.0 -> enters bottom: tilts backward/upward (rotateX: 40deg)
+  // 0.40 - 0.60 -> screen center: stands straight & flat (rotateX: 0deg, scale: 1.0, translateY: 0)
+  // 1.0 -> exits top: tilts forward/downward (rotateX: -38deg, translateY: -80px)
+  const baseRotateX = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [40, 0, 0, -38]);
+  const scale = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [0.88, 1, 1, 0.92]);
+  const translateY = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [90, 0, 0, -80]);
+  const opacity = useTransform(smoothScroll, [0, 0.15, 0.85, 1], [0.65, 1, 1, 0.65]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -82,6 +85,28 @@ export default function ProjectCard({ project, index }) {
     setIsCaseStudyOpen(true);
   };
 
+  // Bilingual text resolver helpers
+  const currentTagline = typeof project.tagline === 'object'
+    ? (project.tagline[lang] || project.tagline.id)
+    : project.tagline;
+
+  const getStageContent = (key) => {
+    if (!project.caseStudy) return '';
+    if (typeof project.caseStudy[key] === 'object') {
+      return project.caseStudy[key][lang] || project.caseStudy[key].id || '';
+    }
+    if (project.caseStudy[lang]?.[key]) {
+      return project.caseStudy[lang][key];
+    }
+    if (project.caseStudy.id?.[key]) {
+      return project.caseStudy.id[key];
+    }
+    if (project.caseStudy.en?.[key]) {
+      return project.caseStudy.en[key];
+    }
+    return project.caseStudy[key] || '';
+  };
+
   return (
     <>
       <section
@@ -90,7 +115,7 @@ export default function ProjectCard({ project, index }) {
         onMouseLeave={handleMouseLeave}
         className="project-scene relative min-h-screen py-16 sm:py-20 flex flex-col justify-center border-b border-[var(--color-border)] overflow-visible"
         id={`project-${project.id}`}
-        style={{ perspective: 1400 }}
+        style={{ perspective: 1300 }}
       >
         <div className="w-[96vw] max-w-[1600px] mx-auto px-2 md:px-6 relative z-10">
           {/* Project Header Info */}
@@ -109,7 +134,7 @@ export default function ProjectCard({ project, index }) {
                 <Skiper8Text text={project.title} />
               </h3>
               <p className="text-base sm:text-lg md:text-xl text-[var(--color-muted)] font-serif italic mt-1.5 max-w-3xl">
-                "{project.tagline}"
+                "{currentTagline}"
               </p>
             </div>
 
@@ -121,7 +146,7 @@ export default function ProjectCard({ project, index }) {
                 title="Read Case Study"
               >
                 <BookOpen size={13} className="text-[var(--color-orange)]" />
-                <span>case study</span>
+                <span>{lang === 'id' ? 'studi kasus' : 'case study'}</span>
               </button>
 
               {!project.isNativeApp && project.liveUrl && (
@@ -131,7 +156,7 @@ export default function ProjectCard({ project, index }) {
                   rel="noopener noreferrer"
                   className="pill-btn text-xs md:text-sm font-bold"
                 >
-                  <span>open live</span>
+                  <span>{lang === 'id' ? 'buka langsung' : 'open live'}</span>
                   <ExternalLink size={13} />
                 </a>
               )}
@@ -144,13 +169,17 @@ export default function ProjectCard({ project, index }) {
                   className="pill-btn text-xs md:text-sm font-bold"
                 >
                   <GithubIcon size={14} />
-                  <span>{project.isNativeApp ? 'repository & releases' : 'code'}</span>
+                  <span>
+                    {lang === 'id'
+                      ? (project.isNativeApp ? 'repositori & rilis' : 'kode')
+                      : (project.isNativeApp ? 'repository & releases' : 'code')}
+                  </span>
                 </a>
               )}
             </div>
           </div>
 
-          {/* 3D IMMERSIVE PERSPECTIVE SHOWCASE CARD */}
+          {/* 3D IMMERSIVE VERTICAL DOMINO PERSPECTIVE SHOWCASE CARD */}
           <div className="relative w-full group">
             {/* Ambient Warm Underglow beneath the 3D plane */}
             <div
@@ -164,7 +193,7 @@ export default function ProjectCard({ project, index }) {
                 scale: isInteractive ? 1 : scale,
                 translateY: isInteractive ? 0 : translateY,
                 opacity,
-                transformOrigin: '50% 100%',
+                transformOrigin: '50% 50%',
                 transformStyle: 'preserve-3d',
               }}
               className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-[0_35px_80px_-15px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)]"
@@ -177,7 +206,7 @@ export default function ProjectCard({ project, index }) {
                 <div className="flex items-center gap-3">
                   {/* Status Indicator Beads */}
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)] shadow-[0_0_8px_#ff6f1e]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)] shadow-[0_0_8px_var(--color-orange)]" />
                     <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-25" />
                     <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-text)] opacity-25" />
                   </div>
@@ -240,7 +269,7 @@ export default function ProjectCard({ project, index }) {
                 ) : (
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)]">
-                      Native Architecture
+                      {lang === 'id' ? 'Arsitektur Native' : 'Native Architecture'}
                     </span>
                   </div>
                 )}
@@ -282,7 +311,7 @@ export default function ProjectCard({ project, index }) {
                       >
                         <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
-                          <span>Click to interact & flatten view</span>
+                          <span>{lang === 'id' ? 'Klik untuk interaksi langsung & ratakan tampilan' : 'Click to interact & flatten view'}</span>
                         </div>
                       </div>
                     )}
@@ -301,7 +330,7 @@ export default function ProjectCard({ project, index }) {
                             title="Exit interaction mode (Esc)"
                           >
                             <X size={13} className="text-[var(--color-orange)] group-hover:text-white transition-colors" />
-                            <span>Exit Esc</span>
+                            <span>{lang === 'id' ? 'Keluar Esc' : 'Exit Esc'}</span>
                           </button>
                         </motion.div>
                       )}
@@ -315,11 +344,11 @@ export default function ProjectCard({ project, index }) {
                     </div>
 
                     <h4 className="font-display text-2xl sm:text-4xl font-bold text-[var(--color-headline)] mb-2">
-                      {project.title} — Native Workspace
+                      {project.title} — {lang === 'id' ? 'Ruang Kerja Native' : 'Native Workspace'}
                     </h4>
 
                     <p className="font-serif italic text-sm sm:text-base text-[var(--color-muted)] max-w-xl mb-6">
-                      "{project.tagline}"
+                      "{currentTagline}"
                     </p>
 
                     <div className="p-4 rounded-xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] font-mono text-xs text-[var(--color-text)] mb-8 max-w-lg w-full flex items-center justify-between gap-3 shadow-inner">
@@ -338,14 +367,14 @@ export default function ProjectCard({ project, index }) {
                         className="pill-btn text-xs sm:text-sm font-bold bg-[var(--color-text)] text-[var(--color-bg)] hover:bg-[var(--color-orange)] hover:text-white transition-all"
                       >
                         <GithubIcon size={14} />
-                        <span>View GitHub Repository</span>
+                        <span>{lang === 'id' ? 'Buka Repositori GitHub' : 'View GitHub Repository'}</span>
                       </a>
                       <button
                         onClick={() => handleOpenCaseStudy(0)}
                         className="pill-btn text-xs sm:text-sm font-bold"
                       >
                         <BookOpen size={13} className="text-[var(--color-orange)]" />
-                        <span>Read Architecture</span>
+                        <span>{lang === 'id' ? 'Baca Arsitektur' : 'Read Architecture'}</span>
                       </button>
                     </div>
                   </div>
@@ -361,14 +390,16 @@ export default function ProjectCard({ project, index }) {
               className="p-4 rounded-[14px] bg-[var(--color-card-bg)] border border-[var(--color-border)] hover:border-[var(--color-orange)] transition-all shadow-xs text-left group cursor-pointer relative"
             >
               <div className="flex items-center justify-between gap-1 mb-1.5">
-                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">01 / Problem</span>
+                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">
+                  01 / {lang === 'id' ? 'Masalah' : 'Problem'}
+                </span>
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy?.id?.problem || project.caseStudy?.problem}
+                {getStageContent('problem')}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
-                Click to expand →
+                {lang === 'id' ? 'Klik untuk rincian →' : 'Click to expand →'}
               </span>
             </button>
 
@@ -377,14 +408,16 @@ export default function ProjectCard({ project, index }) {
               className="p-4 rounded-[14px] bg-[var(--color-card-bg)] border border-[var(--color-border)] hover:border-[var(--color-orange)] transition-all shadow-xs text-left group cursor-pointer relative"
             >
               <div className="flex items-center justify-between gap-1 mb-1.5">
-                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">02 / Approach</span>
+                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">
+                  02 / {lang === 'id' ? 'Pendekatan' : 'Approach'}
+                </span>
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy?.id?.approach || project.caseStudy?.approach}
+                {getStageContent('approach')}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
-                Click to expand →
+                {lang === 'id' ? 'Klik untuk rincian →' : 'Click to expand →'}
               </span>
             </button>
 
@@ -393,14 +426,16 @@ export default function ProjectCard({ project, index }) {
               className="p-4 rounded-[14px] bg-[var(--color-card-bg)] border border-[var(--color-border)] hover:border-[var(--color-orange)] transition-all shadow-xs text-left group cursor-pointer relative"
             >
               <div className="flex items-center justify-between gap-1 mb-1.5">
-                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">03 / Architecture</span>
+                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">
+                  03 / {lang === 'id' ? 'Arsitektur' : 'Architecture'}
+                </span>
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy?.id?.architecture || project.caseStudy?.architecture}
+                {getStageContent('architecture')}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
-                Click to expand →
+                {lang === 'id' ? 'Klik untuk rincian →' : 'Click to expand →'}
               </span>
             </button>
 
@@ -409,14 +444,16 @@ export default function ProjectCard({ project, index }) {
               className="p-4 rounded-[14px] bg-[var(--color-card-bg)] border border-[var(--color-border)] hover:border-[var(--color-orange)] transition-all shadow-xs text-left group cursor-pointer relative"
             >
               <div className="flex items-center justify-between gap-1 mb-1.5">
-                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">04 / Result</span>
+                <span className="font-mono text-[10px] uppercase font-bold text-[var(--color-orange)] block">
+                  04 / {lang === 'id' ? 'Hasil' : 'Result'}
+                </span>
                 <Maximize2 size={12} className="text-[var(--color-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <p className="text-xs text-[var(--color-text)] leading-relaxed line-clamp-3 group-hover:text-[var(--color-headline)] transition-colors">
-                {project.caseStudy?.id?.result || project.caseStudy?.result}
+                {getStageContent('result')}
               </p>
               <span className="font-mono text-[10px] text-[var(--color-orange)] font-semibold mt-2 inline-block opacity-75 group-hover:opacity-100">
-                Click to expand →
+                {lang === 'id' ? 'Klik untuk rincian →' : 'Click to expand →'}
               </span>
             </button>
           </div>
