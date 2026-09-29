@@ -4,6 +4,7 @@ import { Menu, X, ArrowUpRight, Mail } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import SemicolonGlitch from '../SemicolonGlitch';
 import ThemeToggle from './ThemeToggle';
+import { Skiper25 } from '../ui/skiper25';
 import { PORTFOLIO } from '../../data/portfolioData';
 
 export default function MinimalHeader() {
@@ -66,8 +67,8 @@ export default function MinimalHeader() {
             </a>
           </div>
 
-          {/* Right Controls: Desktop Nav & Animated Theme Toggle */}
-          <div className="flex items-center gap-4 md:gap-7">
+          {/* Right Controls: Desktop Nav, Music Toggle (@skiper-ui/skiper25), & Theme Toggle */}
+          <div className="flex items-center gap-3 sm:gap-5 md:gap-6">
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-mono tracking-wider uppercase text-[var(--color-muted)]">
               {navLinks.map((link) => (
@@ -82,6 +83,13 @@ export default function MinimalHeader() {
               ))}
             </nav>
 
+            {/* Skiper25 Music Toggle Button with Lyn - No More What Ifs */}
+            <Skiper25
+              audioSrc="/audio/lyn-no-more-what-ifs.mp3"
+              trackTitle="Lyn - No More What Ifs"
+            />
+
+            {/* Animated Theme Toggle */}
             <ThemeToggle />
           </div>
         </div>
@@ -147,7 +155,17 @@ export default function MinimalHeader() {
 
               {/* Drawer Bottom Info & Channels */}
               <div className="pt-6 mt-6 border-t border-[var(--color-border)]">
-                <span className="font-mono text-[10px] text-[var(--color-muted)] uppercase tracking-wider block mb-3">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-mono text-[10px] text-[var(--color-muted)] uppercase tracking-wider">
+                    Background Track
+                  </span>
+                  <Skiper25
+                    audioSrc="/audio/lyn-no-more-what-ifs.mp3"
+                    trackTitle="Lyn - No More What Ifs"
+                  />
+                </div>
+
+                <span className="font-mono text-[10px] text-[var(--color-muted)] uppercase tracking-wider block mb-2">
                   Direct Channels
                 </span>
                 <div className="flex flex-col gap-2">
