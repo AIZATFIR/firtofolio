@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
+import { Skiper8Text } from '../ui/skiper8';
 
 export default function ProjectCard({ project, index }) {
   const [viewportMode, setViewportMode] = useState('desktop');
@@ -49,7 +50,7 @@ export default function ProjectCard({ project, index }) {
         <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-6">
           <div>
             <h3 className="display-headline text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-              {project.title}
+              <Skiper8Text text={project.title} />
             </h3>
             <p className="text-base md:text-xl text-[var(--color-muted)] font-serif italic mt-1 max-w-3xl">
               "{project.tagline}"

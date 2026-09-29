@@ -10,10 +10,26 @@ import LifeGallery from './components/gallery/LifeGallery';
 import SmoothScrollProvider from './components/ui/SmoothScrollProvider';
 import AgentWaveBackground from './components/background/AgentWaveBackground';
 import DeepSemicolon from './components/background/DeepSemicolon';
+import { Skiper8, Skiper8Text } from './components/ui/skiper8';
 
 export default function App() {
+  const introWords = [
+    "Hello",
+    "AIZAT FAHIM FIRMANSYAH",
+    "ZAFIR;",
+    "Zephyr",
+    "Focus Clock",
+    "RYNC432",
+    "Qurabic",
+    "Terra Flow",
+    "Explore"
+  ];
+
   return (
     <SmoothScrollProvider>
+      {/* Skiper8 Words Preloader */}
+      <Skiper8 words={introWords} duration={2600} />
+
       <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-hidden transition-colors duration-400">
         {/* Minimal Transparent Static Top Header (Does not follow scroll) */}
         <MinimalHeader />
@@ -31,9 +47,9 @@ export default function App() {
 
           {/* Hero Core Identity (Centered in Viewport) */}
           <div className="relative z-10 my-auto text-center max-w-[1500px] mx-auto w-full select-none">
-            {/* Primary Name: AIZAT FAHIM FIRMANSYAH */}
+            {/* Primary Name: AIZAT FAHIM FIRMANSYAH with Skiper8 Animated Text */}
             <h1 className="display-headline text-5xl sm:text-7xl md:text-8xl lg:text-[110px] xl:text-[135px] font-black tracking-tighter leading-none mb-3 text-[var(--color-headline)]">
-              AIZAT FAHIM FIRMANSYAH
+              <Skiper8Text text="AIZAT FAHIM FIRMANSYAH" />
             </h1>
 
             {/* Sub-Identity */}
