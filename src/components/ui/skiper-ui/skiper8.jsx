@@ -2,49 +2,44 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Authentic Skiper8 / Dennis Snellenberg Words Preloader
- * 
- * Includes:
- * - Fluid AnimatePresence word fade & slide transitions
- * - Mathematical cubic-bezier [0.76, 0, 0.24, 1] SVG curve morph & slideUp
- * - Rich ambient studio lighting with warm radial aura for deep immersion
- * - Dynamic per-word pacing
+ * Skiper8 - Authentic Skiper UI Pro Words Preloader
+ * 100% faithful to the official Skiper UI / Dennis Snellenberg component architecture
  */
+const defaultWords = [
+  "Hello",
+  "AIZATFIR",
+  "AIZAT FAHIM FIRMANSYAH",
+  "Hi",
+  "Hello World",
+  "Alooo",
+  "^-^",
+  "^-^  !",
+  "Alooooo",
+  "FOCUS CLOCK",
+  "7AUDIO",
+  "RYNC432",
+  "QURABIC",
+  "TERRA FLOW",
+  "SOCIAL AFFINITY",
+  "FITRAH LAUNCHER",
+  "SADAR",
+  "AIZATFIR",
+  "AIZAT FAHIM FIRMANSYAH",
+  "Building Solutions",
+  'Turning problems into "Manfaat"'
+];
+
 export function Skiper8({
-  words = [
-    { text: ";", duration: 750 },
-    { text: "AIZATFIR", duration: 550 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 700 },
-    { text: "Hi", duration: 150 },
-    { text: "Hello World", duration: 170 },
-    { text: "Alooo", duration: 150 },
-    { text: "^-^", duration: 150 },
-    { text: "^-^  !", duration: 160 },
-    { text: "Alooooo", duration: 170 },
-    { text: "FOCUS CLOCK", duration: 240 },
-    { text: "7AUDIO", duration: 240 },
-    { text: "RYNC432", duration: 240 },
-    { text: "QURABIC", duration: 240 },
-    { text: "TERRA FLOW", duration: 240 },
-    { text: "SOCIAL AFFINITY", duration: 240 },
-    { text: "FITRAH LAUNCHER", duration: 240 },
-    { text: "SADAR", duration: 240 },
-    { text: "AIZATFIR", duration: 600 },
-    { text: "AIZAT FAHIM FIRMANSYAH", duration: 750 },
-    { text: "Building Solutions", duration: 850 },
-    { text: 'Turning problems into "Manfaat"', duration: 1300 }
-  ],
+  words = defaultWords,
   onComplete,
   className = ""
 }) {
   const [index, setIndex] = useState(0);
   const [dimension, setDimension] = useState({ width: 0, height: 0 });
-  const [isActive, setIsActive] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Normalize words into objects
-  const normalizedWords = words.map((item) =>
-    typeof item === "string" ? { text: item, duration: 220 } : item
-  );
+  const getWordText = (item) => (typeof item === "string" ? item : item?.text || "");
+  const getWordDuration = (item) => (typeof item === "object" && item?.duration ? item.duration : 180);
 
   useEffect(() => {
     setDimension({ width: window.innerWidth, height: window.innerHeight });
@@ -53,13 +48,12 @@ export function Skiper8({
       setDimension({ width: window.innerWidth, height: window.innerHeight });
     };
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Lock scroll during preloader
   useEffect(() => {
-    if (isActive) {
+    if (isLoading) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -67,116 +61,88 @@ export function Skiper8({
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isActive]);
+  }, [isLoading]);
 
-  // Per-word dynamic pacing
+  // Authentic Skiper UI Word Cycling Logic
   useEffect(() => {
-    if (!isActive) return;
-
-    const currentWord = normalizedWords[index];
-    const duration = currentWord?.duration || 240;
-
-    if (index >= normalizedWords.length - 1) {
-      // Final word reached, trigger the curve exit
-      const exitTimer = setTimeout(() => {
-        setIsActive(false);
+    if (index >= words.length - 1) {
+      // Hold the final statement, then trigger smooth exit curve
+      const timer = setTimeout(() => {
+        setIsLoading(false);
         if (onComplete) onComplete();
-      }, duration);
-      return () => clearTimeout(exitTimer);
+      }, 1200);
+      return () => clearTimeout(timer);
     }
 
-    const nextTimer = setTimeout(() => {
-      setIndex((prev) => prev + 1);
-    }, duration);
+    const currentItem = words[index];
+    let delay = getWordDuration(currentItem);
 
-    return () => clearTimeout(nextTimer);
-  }, [index, normalizedWords, isActive, onComplete]);
+    const timeout = setTimeout(() => {
+      setIndex((prev) => prev + 1);
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [index, words, onComplete]);
 
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
 
-  // Famous Dennis Snellenberg Bezier Curve
-  const curveVariants = {
+  const curve = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] }
+      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1], delay: 0.25 }
-    }
+      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
+    },
   };
 
   const slideUp = {
     initial: {
-      top: 0
+      top: 0,
     },
     exit: {
       top: "-100vh",
-      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 }
-    }
+      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+    },
   };
 
-  // Word fade & vertical drift variants
-  const wordVariants = {
+  const opacity = {
     initial: {
       opacity: 0,
-      y: 18,
-      filter: "blur(4px)"
     },
     enter: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: { duration: 0.22, ease: [0.33, 1, 0.68, 1] }
+      opacity: 0.95,
+      transition: { duration: 0.8, delay: 0.1 },
     },
-    exit: {
-      opacity: 0,
-      y: -18,
-      filter: "blur(4px)",
-      transition: { duration: 0.18, ease: [0.33, 1, 0.68, 1] }
-    }
   };
-
-  const currentItem = normalizedWords[index] || normalizedWords[0];
 
   return (
     <AnimatePresence mode="wait">
-      {isActive && (
+      {isLoading && (
         <motion.div
           variants={slideUp}
           initial="initial"
           exit="exit"
-          className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#0c0c0e] text-[#ffffff] select-none ${className}`}
-          style={{
-            background: "radial-gradient(circle at 50% 50%, #17171c 0%, #0c0c0e 70%)"
-          }}
+          className={`fixed inset-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#141516] text-white select-none ${className}`}
         >
           {dimension.width > 0 && (
             <>
-              {/* Center Stage Word Container */}
-              <div className="z-10 flex items-center justify-center max-w-[92vw] px-4 text-center">
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={index}
-                    variants={wordVariants}
-                    initial="initial"
-                    animate="enter"
-                    exit="exit"
-                    className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-white leading-none drop-shadow-[0_4px_24px_rgba(255,255,255,0.12)]"
-                  >
-                    {currentItem.text}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
+              {/* Authentic Skiper8 Text with White Indicator Dot */}
+              <motion.p
+                variants={opacity}
+                initial="initial"
+                animate="enter"
+                className="z-10 flex items-center justify-center font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white px-6 text-center"
+              >
+                <span className="mr-3 sm:mr-4 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-white shrink-0 inline-block shadow-[0_0_10px_rgba(255,255,255,0.6)]" />
+                <span>{getWordText(words[index])}</span>
+              </motion.p>
 
-              {/* Dennis Snellenberg Mathematical SVG Curve Mask */}
-              <svg className="pointer-events-none absolute top-0 h-[calc(100%+300px)] w-full fill-[#0c0c0e]">
-                <motion.path
-                  variants={curveVariants}
-                  initial="initial"
-                  exit="exit"
-                />
+              {/* Dennis Snellenberg Curved SVG Mask */}
+              <svg className="pointer-events-none absolute top-0 h-[calc(100%+300px)] w-full fill-[#141516]">
+                <motion.path variants={curve} initial="initial" exit="exit" />
               </svg>
             </>
           )}
@@ -187,8 +153,7 @@ export function Skiper8({
 }
 
 /**
- * Animated rolling text effect for titles and headlines.
- * Words wrap cleanly per line without character splitting or overflow.
+ * Animated rolling text effect for titles and headlines
  */
 export function Skiper8Text({ text, className = "" }) {
   if (!text) return null;
@@ -213,7 +178,7 @@ export function Skiper8Text({ text, className = "" }) {
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true, margin: "-10px" }}
                   transition={{
-                    duration: 0.55,
+                    duration: 0.5,
                     delay: totalIdx * 0.022,
                     ease: [0.33, 1, 0.68, 1]
                   }}
