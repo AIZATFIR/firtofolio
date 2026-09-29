@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 /**
  * Skiper8 - Official Skiper UI Pro Words Preloader
- * 100% faithful to Dennis Snellenberg / Skiper UI curved SVG morphing & synchronous exit
+ * 100% faithful to Dennis Snellenberg / Skiper UI curved SVG morphing & luxurious pacing
  */
 const defaultWords = [
   "Hello",
@@ -22,12 +22,12 @@ export const opacity = {
     opacity: 0,
   },
   enter: {
-    opacity: 0.95,
-    transition: { duration: 0.5, delay: 0.1 },
+    opacity: 1,
+    transition: { duration: 0.6, delay: 0.1 },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.35, ease: [0.76, 0, 0.24, 1] },
+    transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] },
   },
 };
 
@@ -37,7 +37,7 @@ export const slideUp = {
   },
   exit: {
     top: "calc(-100vh - 350px)",
-    transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
+    transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
   },
 };
 
@@ -67,16 +67,33 @@ export function Skiper8({
     };
   }, []);
 
-  // Word Cycling Logic
+  // Word Cycling Logic with measured, immersive pacing
   useEffect(() => {
     if (index === words.length - 1) {
       const exitTimer = setTimeout(() => {
         if (onComplete) onComplete();
-      }, 1000);
+      }, 1300);
       return () => clearTimeout(exitTimer);
     }
 
-    const delay = index === 0 ? 800 : index < 3 ? 500 : index >= words.length - 4 ? 600 : 160;
+    // Dynamic pacing: Calm opening -> steady project cadence -> grand slow closing
+    let delay = 420;
+    if (index === 0) {
+      delay = 900; // First punctuation ";"
+    } else if (index === 1 || index === 2) {
+      delay = 800; // Initial AIZATFIR / Full name
+    } else if (index >= 3 && index <= 8) {
+      delay = 440; // Playful greetings
+    } else if (index >= 9 && index <= 16) {
+      delay = 380; // Project showcases
+    } else if (index === 17) {
+      delay = 750; // Final AIZATFIR
+    } else if (index === 18) {
+      delay = 850; // Final full name
+    } else if (index === 19) {
+      delay = 950; // Building Solutions
+    }
+
     const timeout = setTimeout(() => {
       setIndex((prev) => prev + 1);
     }, delay);
@@ -91,11 +108,11 @@ export function Skiper8({
   const curve = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] },
+      transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1] },
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 },
+      transition: { duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
     },
   };
 
