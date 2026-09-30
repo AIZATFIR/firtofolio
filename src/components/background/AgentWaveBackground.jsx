@@ -3,8 +3,7 @@ import React, { useRef, useEffect } from 'react';
 /**
  * AgentWaveBackground Component
  * Custom generative flowing vector wave system on Cream Paper canvas.
- * Renders multiple harmonic wave layers in Charcoal and Marker Orange ink lines.
- * Free of generic AI starfields or purple gradients.
+ * Optimized with IntersectionObserver to sleep when out of viewport.
  */
 export default function AgentWaveBackground({ className = '' }) {
   const canvasRef = useRef(null);
@@ -12,8 +11,11 @@ export default function AgentWaveBackground({ className = '' }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
     let animationId;
+    let isVisible = true;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
@@ -31,6 +33,18 @@ export default function AgentWaveBackground({ className = '' }) {
     };
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
+    // IntersectionObserver to pause loop when scrolled past Hero
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationId) {
+          animationId = requestAnimationFrame(draw);
+        }
+      },
+      { rootMargin: '100px' }
+    );
+    observer.observe(canvas);
+
     let step = 0;
     const lines = [
       { color: 'rgba(43, 26, 7, 0.08)', speed: 0.008, amplitude: 60, frequency: 0.002, offset: 0 },
@@ -41,6 +55,11 @@ export default function AgentWaveBackground({ className = '' }) {
     ];
 
     const draw = () => {
+      if (!isVisible) {
+        animationId = null;
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       // Smooth mouse interpolation
@@ -48,17 +67,17 @@ export default function AgentWaveBackground({ className = '' }) {
       mouse.y += (mouse.targetY - mouse.y) * 0.05;
 
       const mouseInfluence = (mouse.y - height / 2) * 0.15;
-
       step++;
 
-      lines.forEach((line, index) => {
+      for (let index = 0; index < lines.length; index++) {
+        const line = lines[index];
         ctx.beginPath();
         ctx.strokeStyle = line.color;
         ctx.lineWidth = index === 1 ? 2 : 1.2;
 
         const baseHeight = height * 0.55 + Math.sin(step * line.speed + line.offset) * 20 + mouseInfluence * (index * 0.2);
 
-        for (let x = 0; x <= width; x += 15) {
+        for (let x = 0; x <= width; x += 18) {
           const dx = x - mouse.x;
           const dy = baseHeight - mouse.y;
           const dist = Math.hypot(dx, dy);
@@ -77,7 +96,7 @@ export default function AgentWaveBackground({ className = '' }) {
           }
         }
         ctx.stroke();
-      });
+      }
 
       animationId = requestAnimationFrame(draw);
     };
@@ -85,7 +104,8 @@ export default function AgentWaveBackground({ className = '' }) {
     animationId = requestAnimationFrame(draw);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId) cancelAnimationFrame(animationId);
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
     };

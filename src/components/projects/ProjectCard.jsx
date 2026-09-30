@@ -13,8 +13,21 @@ export default function ProjectCard({ project, index }) {
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
+  const [isInView, setIsInView] = useState(false);
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: '350px' }
+    );
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Mouse Parallax 3D Spring Tilt for tactile responsiveness
   const mouseX = useMotionValue(0);
@@ -299,7 +312,7 @@ export default function ProjectCard({ project, index }) {
                   >
                     <iframe
                       key={iframeKey}
-                      src={project.liveUrl}
+                      src={isInView || isInteractive ? project.liveUrl : undefined}
                       title={`${project.title} Application`}
                       className="w-full h-full border-0"
                       loading="lazy"

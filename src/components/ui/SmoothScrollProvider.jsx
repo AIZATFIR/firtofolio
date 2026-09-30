@@ -3,23 +3,22 @@ import Lenis from 'lenis';
 
 /**
  * Global SmoothScrollProvider
- * Provides weighted, inertial, cinematic 60fps smooth scrolling with Lenis.
+ * Provides ultra-smooth, lightweight 60-120fps responsive scrolling with Lenis.
  */
 export default function SmoothScrollProvider({ children }) {
   useEffect(() => {
-    // Initialize heavy, cinematic Lenis smooth scroll
+    // Highly responsive, non-sluggish Lenis smooth scroll
     const lenis = new Lenis({
-      duration: 1.8, // heavier, slower, more intentional
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -9 * t)),
+      duration: 1.0, // snappy, natural tactile response
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.85, // prevents jarring jumps
-      touchMultiplier: 1.2,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.1,
       infinite: false,
     });
 
-    // RequestAnimationFrame Loop
     let rafId;
     function raf(time) {
       lenis.raf(time);
@@ -27,7 +26,6 @@ export default function SmoothScrollProvider({ children }) {
     }
     rafId = requestAnimationFrame(raf);
 
-    // Global Lenis expose
     window.__lenis = lenis;
 
     return () => {
