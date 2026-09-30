@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Disc, ChevronRight, Hash, Compass, MousePointer } from 'lucide-react';
+import { Disc, ChevronRight, Hash, Compass, MousePointer, X } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'intro', label: 'INTRO', short: '00' },
@@ -25,7 +25,7 @@ const SECTIONS = [
  * - Semicircular convex glider protruding from the left edge.
  * - Fused Skiper94 & Skiper95 real-time clip-path liquid progress fill & inverted percentage.
  * - Interactive slide-scrubbing: Drag up/down to slide the entire portfolio.
- * - Click to expand radial radar menu.
+ * - Animated expanding and collapsing radial radar menu with fluid spring physics.
  */
 export default function TactileSideScrubber() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -128,167 +128,188 @@ export default function TactileSideScrubber() {
   }, [isExpanded]);
 
   return (
-    <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40 select-none flex items-center">
-      {/* 1-Click Expandable Radar HUD Panel */}
+    <>
+      {/* Click outside backdrop to smoothly close radar */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ opacity: 0, x: -30, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -30, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="ml-9 py-4 px-3.5 rounded-[24px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-2xl backdrop-blur-xl w-56 max-h-[75vh] overflow-y-auto flex flex-col gap-1 z-50 text-[var(--color-text)]"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--color-border)] px-1">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--color-orange)] flex items-center gap-1.5">
-                <Compass size={12} className="animate-spin" />
-                <span>Scroll Radar • {String(percentageNumber).padStart(2, '0')}%</span>
-              </span>
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="font-mono text-[10px] text-[var(--color-muted)] hover:text-[var(--color-text)] cursor-pointer"
-                title="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Section Index list */}
-            <div className="flex flex-col gap-1">
-              {SECTIONS.map((sec) => {
-                const isActive = activeSection === sec.id;
-                return (
-                  <button
-                    key={sec.id}
-                    onClick={() => {
-                      scrollToSection(sec.id);
-                      setIsExpanded(false);
-                    }}
-                    className={`group flex items-center justify-between py-1.5 px-2.5 rounded-lg text-left transition-all cursor-pointer font-mono text-xs ${
-                      isActive
-                        ? 'bg-[var(--color-surface-tint)] text-[var(--color-orange)] font-bold border border-[var(--color-border)]'
-                        : 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-tint)]'
-                    }`}
-                  >
-                    <span className="truncate pr-2">{sec.label}</span>
-                    <span className="text-[10px] opacity-70 shrink-0 font-mono">
-                      {sec.short}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setIsExpanded(false)}
+            className="fixed inset-0 z-35 bg-black/15 backdrop-blur-[1px]"
+          />
         )}
       </AnimatePresence>
 
-      {/* Semicircular Convex Glider Arc Protruding from Left Edge */}
-      <div className="relative flex items-center">
-        <motion.div
-          ref={trackballRef}
-          onPointerDown={handlePointerDown}
-          onClick={() => {
-            if (!isDragging) setIsExpanded((prev) => !prev);
-          }}
-          whileHover={{ x: 8, scale: 1.02 }}
-          whileTap={{ scale: 0.96 }}
-          className={`relative cursor-grab active:cursor-grabbing flex flex-col items-center justify-between py-4 px-1.5 rounded-r-[48px] border-y-2 border-r-2 border-[var(--color-text)] shadow-2xl transition-all duration-300 overflow-hidden select-none ${
-            isExpanded
-              ? 'w-12 sm:w-14 h-48 bg-[var(--color-surface-tint)] shadow-[8px_0_30px_rgba(255,111,30,0.3)]'
-              : 'w-9 sm:w-11 h-44 bg-[var(--color-card-bg)] hover:w-12'
-          }`}
-          style={{
-            boxShadow: '8px 0 28px rgba(0,0,0,0.25), inset 3px 0 8px rgba(255,255,255,0.3)',
-          }}
-          title="Drag up/down to slide portfolio • Click to open radar"
-        >
-          {/* Dynamic Orange Liquid Progress Fill */}
-          <motion.div
-            className="absolute inset-x-0 bottom-0 bg-[var(--color-orange)] pointer-events-none origin-bottom"
-            style={{
-              height: fillHeightTransform,
-              boxShadow: '0 0 16px rgba(255, 111, 30, 0.8)',
-            }}
-          />
-
-          {/* ============ LAYER 1: BASE UNFILLED STATE (Dark/Muted Text) ============ */}
-          <div className="relative z-10 w-full h-full flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-[var(--color-muted)] overflow-hidden">
-            {/* Curved Arc Rolling Wheel Indicator */}
-            <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={activeShort}
-                  initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
-                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                  className="tracking-tighter inline-block text-center font-bold"
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40 select-none flex items-center">
+        {/* 1-Click Expandable Radar HUD Panel with Fluid Spring Close Animation */}
+        <AnimatePresence mode="wait">
+          {isExpanded && (
+            <motion.div
+              key="glider-radar"
+              initial={{ opacity: 0, x: -35, scale: 0.88, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: -35, scale: 0.88, filter: 'blur(4px)' }}
+              transition={{ type: 'spring', damping: 24, stiffness: 340 }}
+              className="ml-9 py-4 px-3.5 rounded-[24px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-2xl backdrop-blur-2xl w-56 max-h-[75vh] overflow-y-auto flex flex-col gap-1 z-50 text-[var(--color-text)]"
+            >
+              {/* Header with Animated Close Button */}
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--color-border)] px-1">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[var(--color-orange)] flex items-center gap-1.5">
+                  <Compass size={12} className="animate-spin" />
+                  <span>Scroll Radar • {String(percentageNumber).padStart(2, '0')}%</span>
+                </span>
+                <motion.button
+                  whileHover={{ rotate: 90, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsExpanded(false)}
+                  className="p-1 rounded-full text-[var(--color-muted)] hover:text-[var(--color-orange)] hover:bg-[var(--color-surface-tint)] transition-colors cursor-pointer"
+                  title="Close Radar (Esc)"
                 >
-                  {activeShort}
-                </motion.span>
-              </AnimatePresence>
-            </div>
+                  <X size={13} />
+                </motion.button>
+              </div>
 
-            {/* Tactical Glider Arc Ribs */}
-            <div className="flex flex-col gap-1.5 items-center my-auto opacity-75">
-              <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
-              <span className="w-2 h-[1px] rounded-full bg-current" />
-              <span className="w-4 h-[2px] rounded-full bg-current shadow-xs" />
-              <span className="w-2 h-[1px] rounded-full bg-current" />
-              <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
-            </div>
+              {/* Section Index list */}
+              <div className="flex flex-col gap-1">
+                {SECTIONS.map((sec) => {
+                  const isActive = activeSection === sec.id;
+                  return (
+                    <motion.button
+                      whileHover={{ x: 3 }}
+                      whileTap={{ scale: 0.98 }}
+                      key={sec.id}
+                      onClick={() => {
+                        scrollToSection(sec.id);
+                        setIsExpanded(false);
+                      }}
+                      className={`group flex items-center justify-between py-1.5 px-2.5 rounded-lg text-left transition-all cursor-pointer font-mono text-xs ${
+                        isActive
+                          ? 'bg-[var(--color-surface-tint)] text-[var(--color-orange)] font-bold border border-[var(--color-border)]'
+                          : 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-tint)]'
+                      }`}
+                    >
+                      <span className="truncate pr-2">{sec.label}</span>
+                      <span className="text-[10px] opacity-70 shrink-0 font-mono">
+                        {sec.short}
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            <span className="tracking-tighter font-mono">
-              {String(percentageNumber).padStart(2, '0')}%
-            </span>
-          </div>
-
-          {/* ============ LAYER 2: INVERTED WHITE TEXT VIA CLIP-PATH ============ */}
+        {/* Semicircular Convex Glider Arc Protruding from Left Edge */}
+        <div className="relative flex items-center">
           <motion.div
-            className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none overflow-hidden"
-            style={{
-              clipPath: useTransform(clipBottomTransform, (val) => `inset(0 0 ${val} 0)`),
+            ref={trackballRef}
+            onPointerDown={handlePointerDown}
+            onClick={() => {
+              if (!isDragging) setIsExpanded((prev) => !prev);
             }}
+            whileHover={{ x: 8, scale: 1.02 }}
+            whileTap={{ scale: 0.96 }}
+            className={`relative cursor-grab active:cursor-grabbing flex flex-col items-center justify-between py-4 px-1.5 rounded-r-[48px] border-y-2 border-r-2 border-[var(--color-text)] shadow-2xl transition-all duration-300 overflow-hidden select-none ${
+              isExpanded
+                ? 'w-12 sm:w-14 h-48 bg-[var(--color-surface-tint)] shadow-[8px_0_30px_rgba(255,111,30,0.3)]'
+                : 'w-9 sm:w-11 h-44 bg-[var(--color-card-bg)] hover:w-12'
+            }`}
+            style={{
+              boxShadow: '8px 0 28px rgba(0,0,0,0.25), inset 3px 0 8px rgba(255,255,255,0.3)',
+            }}
+            title={isExpanded ? "Click to close radar" : "Drag up/down to slide • Click to open radar"}
           >
-            <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={activeShort}
-                  initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
-                  animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                  exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                  className="tracking-tighter drop-shadow-xs inline-block text-center font-bold"
-                >
-                  {activeShort}
-                </motion.span>
-              </AnimatePresence>
+            {/* Dynamic Orange Liquid Progress Fill */}
+            <motion.div
+              className="absolute inset-x-0 bottom-0 bg-[var(--color-orange)] pointer-events-none origin-bottom"
+              style={{
+                height: fillHeightTransform,
+                boxShadow: '0 0 16px rgba(255, 111, 30, 0.8)',
+              }}
+            />
+
+            {/* ============ LAYER 1: BASE UNFILLED STATE (Dark/Muted Text) ============ */}
+            <div className="relative z-10 w-full h-full flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-[var(--color-muted)] overflow-hidden">
+              {/* Curved Arc Rolling Wheel Indicator */}
+              <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={activeShort}
+                    initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                    className="tracking-tighter inline-block text-center font-bold"
+                  >
+                    {activeShort}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+
+              {/* Tactical Glider Arc Ribs */}
+              <div className="flex flex-col gap-1.5 items-center my-auto opacity-75">
+                <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
+                <span className="w-2 h-[1px] rounded-full bg-current" />
+                <span className="w-4 h-[2px] rounded-full bg-current shadow-xs" />
+                <span className="w-2 h-[1px] rounded-full bg-current" />
+                <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
+              </div>
+
+              <span className="tracking-tighter font-mono">
+                {String(percentageNumber).padStart(2, '0')}%
+              </span>
             </div>
 
-            <div className="flex flex-col gap-1.5 items-center my-auto opacity-95">
-              <span className="w-3.5 h-[1.5px] rounded-full bg-white drop-shadow-xs" />
-              <span className="w-2 h-[1px] rounded-full bg-white" />
-              <span className="w-4 h-[2px] rounded-full bg-white drop-shadow-xs" />
-              <span className="w-2 h-[1px] rounded-full bg-white" />
-              <span className="w-3.5 h-[1.5px] rounded-full bg-white drop-shadow-xs" />
-            </div>
+            {/* ============ LAYER 2: INVERTED WHITE TEXT VIA CLIP-PATH ============ */}
+            <motion.div
+              className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none overflow-hidden"
+              style={{
+                clipPath: useTransform(clipBottomTransform, (val) => `inset(0 0 ${val} 0)`),
+              }}
+            >
+              <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={activeShort}
+                    initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                    className="tracking-tighter drop-shadow-xs inline-block text-center font-bold"
+                  >
+                    {activeShort}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
 
-            <span className="tracking-tighter drop-shadow-xs font-mono">
-              {String(percentageNumber).padStart(2, '0')}%
-            </span>
+              <div className="flex flex-col gap-1.5 items-center my-auto opacity-95">
+                <span className="w-3.5 h-[1.5px] rounded-full bg-white drop-shadow-xs" />
+                <span className="w-2 h-[1px] rounded-full bg-white" />
+                <span className="w-4 h-[2px] rounded-full bg-white drop-shadow-xs" />
+                <span className="w-2 h-[1px] rounded-full bg-white" />
+                <span className="w-3.5 h-[1.5px] rounded-full bg-white drop-shadow-xs" />
+              </div>
+
+              <span className="tracking-tighter drop-shadow-xs font-mono">
+                {String(percentageNumber).padStart(2, '0')}%
+              </span>
+            </motion.div>
           </motion.div>
-        </motion.div>
 
-        {/* Hover Hint */}
-        {!isExpanded && (
-          <div className="absolute left-full ml-2 pointer-events-none opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity">
-            <span className="font-mono text-[9px] text-[var(--color-muted)] bg-[var(--color-card-bg)] border border-[var(--color-border)] px-1.5 py-0.5 rounded shadow-xs">
-              GLIDER
-            </span>
-          </div>
-        )}
+          {/* Hover Hint */}
+          {!isExpanded && (
+            <div className="absolute left-full ml-2 pointer-events-none opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity">
+              <span className="font-mono text-[9px] text-[var(--color-muted)] bg-[var(--color-card-bg)] border border-[var(--color-border)] px-1.5 py-0.5 rounded shadow-xs">
+                GLIDER
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

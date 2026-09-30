@@ -304,9 +304,9 @@ export default function ProjectCard({ project, index }) {
                     className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white shadow-2xl relative"
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? '650px' : '520px',
-                      maxHeight: '75vh',
-                      minHeight: '420px',
+                      height: viewportMode === 'desktop' ? '780px' : viewportMode === 'tablet' ? '660px' : '600px',
+                      maxHeight: '86vh',
+                      minHeight: '500px',
                       maxWidth: '100%',
                     }}
                   >
