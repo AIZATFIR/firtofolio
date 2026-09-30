@@ -176,8 +176,14 @@ export default function ProjectCard({ project, index }) {
             </div>
           </div>
 
-          {/* 3D IMMERSIVE VERTICAL DOMINO PERSPECTIVE SHOWCASE CARD */}
-          <div className="relative w-full group">
+          {/* 3D IMMERSIVE PERSPECTIVE SHOWCASE CARD (SCROLLERFIR PATTERN) */}
+          <div
+            className="relative w-full group py-4 md:py-8"
+            style={{
+              perspective: '1000px',
+              transformStyle: 'preserve-3d',
+            }}
+          >
             {/* Ambient Warm Underglow beneath the 3D plane */}
             <div
               className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-[var(--color-orange)]/20 via-transparent to-transparent blur-3xl pointer-events-none rounded-full"
@@ -190,7 +196,7 @@ export default function ProjectCard({ project, index }) {
                 scale: isInteractive ? 1 : scale,
                 translateY: isInteractive ? 0 : translateY,
                 opacity,
-                transformOrigin: '50% 50%',
+                transformOrigin: '50% 0%',
                 transformStyle: 'preserve-3d',
                 boxShadow:
                   '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
@@ -285,8 +291,9 @@ export default function ProjectCard({ project, index }) {
                     className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white shadow-2xl relative"
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? '90vh' : viewportMode === 'tablet' ? '75vh' : '75vh',
-                      minHeight: viewportMode === 'desktop' ? '860px' : '550px',
+                      height: viewportMode === 'desktop' ? '650px' : '520px',
+                      maxHeight: '75vh',
+                      minHeight: '420px',
                       maxWidth: '100%',
                     }}
                   >
