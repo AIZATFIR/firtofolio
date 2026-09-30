@@ -52,14 +52,11 @@ export default function ProjectCard({ project, index }) {
     mass: 0.18,
   });
 
-  // Vertical Domino 3D Physics Curve:
-  // 0.0 -> enters bottom: tilts backward/upward (rotateX: 40deg)
-  // 0.40 - 0.60 -> screen center: stands straight & flat (rotateX: 0deg, scale: 1.0, translateY: 0)
-  // 1.0 -> exits top: tilts forward/downward (rotateX: -38deg, translateY: -80px)
-  const baseRotateX = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [40, 0, 0, -38]);
-  const scale = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [0.88, 1, 1, 0.92]);
-  const translateY = useTransform(smoothScroll, [0, 0.42, 0.58, 1], [90, 0, 0, -80]);
-  const opacity = useTransform(smoothScroll, [0, 0.15, 0.85, 1], [0.65, 1, 1, 0.65]);
+  // Exact Qurabic-Indo (Scrollerfir) 3D Tilt Scroll Curve
+  const baseRotateX = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [20, 0, 0, -18]);
+  const scale = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [1.03, 1, 1, 0.96]);
+  const translateY = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
+  const opacity = useTransform(smoothScroll, [0, 0.15, 0.85, 1], [0.75, 1, 1, 0.75]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -195,8 +192,10 @@ export default function ProjectCard({ project, index }) {
                 opacity,
                 transformOrigin: '50% 50%',
                 transformStyle: 'preserve-3d',
+                boxShadow:
+                  '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
               }}
-              className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-[0_35px_80px_-15px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)]"
+              className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-2xl"
             >
               {/* Top Glass Rim Specular Highlight */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent z-30 pointer-events-none" />
