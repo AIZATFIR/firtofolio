@@ -13,21 +13,8 @@ export default function ProjectCard({ project, index }) {
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
-  const [isInView, setIsInView] = useState(false);
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
-
-  useEffect(() => {
-    if (!cardRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { rootMargin: '120px' }
-    );
-    observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   // Direct Mouse Parallax 3D Tilt (Zero background physics loop overhead)
   const mouseX = useMotionValue(0);
@@ -297,10 +284,11 @@ export default function ProjectCard({ project, index }) {
                   >
                     <iframe
                       key={iframeKey}
-                      src={isInView || isInteractive ? project.liveUrl : undefined}
+                      src={project.liveUrl}
                       title={`${project.title} Application`}
                       className="w-full h-full border-0"
-                      loading="lazy"
+                      loading="eager"
+                      allow="autoplay; encrypted-media; fullscreen"
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
                       style={{
                         pointerEvents: isInteractive ? 'auto' : 'none',
