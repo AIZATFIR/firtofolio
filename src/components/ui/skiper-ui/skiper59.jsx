@@ -49,6 +49,110 @@ export function Skiper59({
     let dpr = window.devicePixelRatio || 1;
     let isRendering = false;
 
+    // High-performance animation render loop with self-sleeping RAF
+    function render() {
+      isRendering = false;
+      const scrollX = window.scrollX || 0;
+      const scrollY = window.scrollY || 0;
+      const dynamicColor = getActiveColor();
+      const hasDoodles = persistentStrokesRef.current.length > 0;
+      const hasActiveStroke = currentStrokeRef.current && currentStrokeRef.current.length > 1;
+      const hasGlidePoints = pointsRef.current.length > 0;
+
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+      // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
+      if (hasDoodles) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.globalAlpha = 0.95;
+
+        const strokes = persistentStrokesRef.current;
+        for (let s = 0; s < strokes.length; s++) {
+          const stroke = strokes[s];
+          if (stroke.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = stroke[0].color || dynamicColor;
+            ctx.lineWidth = stroke[0].width || lineWidth;
+            ctx.moveTo(stroke[0].x, stroke[0].y);
+            for (let i = 1; i < stroke.length - 1; i++) {
+              const xc = (stroke[i].x + stroke[i + 1].x) / 2;
+              const yc = (stroke[i].y + stroke[i + 1].y) / 2;
+              ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
+            }
+            ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      // Draw Current Active Stroke in Doodle Mode (Document Offset)
+      if (hasActiveStroke) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
+        ctx.strokeStyle = dynamicColor;
+        ctx.lineWidth = lineWidth * 1.3;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        const stroke = currentStrokeRef.current;
+        ctx.moveTo(stroke[0].x, stroke[0].y);
+        for (let i = 1; i < stroke.length - 1; i++) {
+          const xc = (stroke[i].x + stroke[i + 1].x) / 2;
+          const yc = (stroke[i].y + stroke[i + 1].y) / 2;
+          ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
+        }
+        ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 2. Draw Transient Glide Trail (Trail Mode in Viewport Coordinates)
+      if (!isDoodleModeRef.current && hasGlidePoints) {
+        const points = pointsRef.current;
+
+        // Alpha decay
+        for (let i = points.length - 1; i >= 0; i--) {
+          points[i].alpha -= decaySpeed;
+          if (points[i].alpha <= 0) {
+            points.splice(i, 1);
+          }
+        }
+
+        if (points.length > 2) {
+          for (let i = 1; i < points.length - 1; i++) {
+            const xc = (points[i].x + points[i + 1].x) / 2;
+            const yc = (points[i].y + points[i + 1].y) / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(points[i - 1].x, points[i - 1].y);
+            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+
+            ctx.strokeStyle = dynamicColor;
+            ctx.globalAlpha = Math.max(0, points[i].alpha);
+            ctx.lineWidth = points[i].width * (points[i].alpha * 0.8 + 0.2);
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Continue animation loop ONLY if active stroke or glide decay needs frames
+      const shouldKeepLooping =
+        (!isDoodleModeRef.current && pointsRef.current.length > 0) ||
+        (isDoodleModeRef.current && mouseRef.current.isDown);
+
+      if (shouldKeepLooping) {
+        isRendering = true;
+        animFrameRef.current = requestAnimationFrame(render);
+      }
+    }
+
     const requestRender = () => {
       if (!isRendering) {
         isRendering = true;
@@ -200,110 +304,6 @@ export function Skiper59({
     window.addEventListener("touchend", handleTouchEnd);
     window.addEventListener("dblclick", handleDblClick);
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // High-performance animation render loop with self-sleeping RAF
-    const render = () => {
-      isRendering = false;
-      const scrollX = window.scrollX || 0;
-      const scrollY = window.scrollY || 0;
-      const dynamicColor = getActiveColor();
-      const hasDoodles = persistentStrokesRef.current.length > 0;
-      const hasActiveStroke = currentStrokeRef.current && currentStrokeRef.current.length > 1;
-      const hasGlidePoints = pointsRef.current.length > 0;
-
-      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-
-      // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
-      if (hasDoodles) {
-        ctx.save();
-        ctx.translate(-scrollX, -scrollY);
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.globalAlpha = 0.95;
-
-        const strokes = persistentStrokesRef.current;
-        for (let s = 0; s < strokes.length; s++) {
-          const stroke = strokes[s];
-          if (stroke.length > 1) {
-            ctx.beginPath();
-            ctx.strokeStyle = stroke[0].color || dynamicColor;
-            ctx.lineWidth = stroke[0].width || lineWidth;
-            ctx.moveTo(stroke[0].x, stroke[0].y);
-            for (let i = 1; i < stroke.length - 1; i++) {
-              const xc = (stroke[i].x + stroke[i + 1].x) / 2;
-              const yc = (stroke[i].y + stroke[i + 1].y) / 2;
-              ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
-            }
-            ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
-            ctx.stroke();
-          }
-        }
-        ctx.restore();
-      }
-
-      // Draw Current Active Stroke in Doodle Mode (Document Offset)
-      if (hasActiveStroke) {
-        ctx.save();
-        ctx.translate(-scrollX, -scrollY);
-        ctx.strokeStyle = dynamicColor;
-        ctx.lineWidth = lineWidth * 1.3;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.globalAlpha = 1;
-        ctx.beginPath();
-        const stroke = currentStrokeRef.current;
-        ctx.moveTo(stroke[0].x, stroke[0].y);
-        for (let i = 1; i < stroke.length - 1; i++) {
-          const xc = (stroke[i].x + stroke[i + 1].x) / 2;
-          const yc = (stroke[i].y + stroke[i + 1].y) / 2;
-          ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
-        }
-        ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      // 2. Draw Transient Glide Trail (Trail Mode in Viewport Coordinates)
-      if (!isDoodleModeRef.current && hasGlidePoints) {
-        const points = pointsRef.current;
-
-        // Alpha decay
-        for (let i = points.length - 1; i >= 0; i--) {
-          points[i].alpha -= decaySpeed;
-          if (points[i].alpha <= 0) {
-            points.splice(i, 1);
-          }
-        }
-
-        if (points.length > 2) {
-          for (let i = 1; i < points.length - 1; i++) {
-            const xc = (points[i].x + points[i + 1].x) / 2;
-            const yc = (points[i].y + points[i + 1].y) / 2;
-
-            ctx.beginPath();
-            ctx.moveTo(points[i - 1].x, points[i - 1].y);
-            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-
-            ctx.strokeStyle = dynamicColor;
-            ctx.globalAlpha = Math.max(0, points[i].alpha);
-            ctx.lineWidth = points[i].width * (points[i].alpha * 0.8 + 0.2);
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Continue animation loop ONLY if active stroke or glide decay needs frames
-      const shouldKeepLooping =
-        (!isDoodleModeRef.current && pointsRef.current.length > 0) ||
-        (isDoodleModeRef.current && mouseRef.current.isDown);
-
-      if (shouldKeepLooping) {
-        isRendering = true;
-        animFrameRef.current = requestAnimationFrame(render);
-      }
-    };
 
     requestRender();
 
