@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
-import { Disc, ChevronRight, Hash, Compass, MousePointer, X } from 'lucide-react';
+import { Compass, X } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'intro', label: 'INTRO', short: '00' },
@@ -18,15 +18,6 @@ const SECTIONS = [
   { id: 'contact', label: 'CONTACT', short: '12' },
 ];
 
-/**
- * TactileSideScrubber Component
- * 
- * Physical 3/4 Circular Glider Trackball slider on the left screen edge.
- * - Semicircular convex glider protruding from the left edge.
- * - Fused Skiper94 & Skiper95 real-time clip-path liquid progress fill & inverted percentage.
- * - Interactive slide-scrubbing: Drag up/down to slide the entire portfolio.
- * - Animated expanding and collapsing radial radar menu with fluid spring physics.
- */
 export default function TactileSideScrubber() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState('intro');
@@ -37,41 +28,50 @@ export default function TactileSideScrubber() {
   const startYRef = useRef(0);
   const startScrollRef = useRef(0);
   const trackballRef = useRef(null);
+  const lastPercentRef = useRef(0);
 
   // Framer Motion Scroll Progress
   const { scrollYProgress } = useScroll();
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 24,
-    restDelta: 0.001,
+    stiffness: 160,
+    damping: 26,
+    mass: 0.1,
   });
 
-  // Track numerical percentage
+  // Track numerical percentage with integer throttling (prevents unnecessary re-renders)
   useEffect(() => {
     const unsubscribe = smoothProgress.on('change', (latest) => {
       const p = Math.max(0, Math.min(100, Math.round(latest * 100)));
-      setPercentageNumber(p);
+      if (p !== lastPercentRef.current) {
+        lastPercentRef.current = p;
+        setPercentageNumber(p);
+      }
     });
     return () => unsubscribe();
   }, [smoothProgress]);
 
-  // Monitor active section
+  // High-performance IntersectionObserver for active section tracking
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-      for (let i = SECTIONS.length - 1; i >= 0; i--) {
-        const el = document.getElementById(SECTIONS[i].id);
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(SECTIONS[i].id);
-          setActiveShort(SECTIONS[i].short);
-          break;
-        }
-      }
-    };
+    const sectionElements = SECTIONS.map(s => document.getElementById(s.id)).filter(Boolean);
+    if (!sectionElements.length) return;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const found = SECTIONS.find(s => s.id === entry.target.id);
+            if (found) {
+              setActiveSection(found.id);
+              setActiveShort(found.short);
+            }
+          }
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px' }
+    );
+
+    sectionElements.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   // Skiper94/95 Clip-path Transforms
@@ -88,7 +88,6 @@ export default function TactileSideScrubber() {
     const handlePointerMove = (moveEvent) => {
       const deltaY = moveEvent.clientY - startYRef.current;
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      
       const scrollDelta = deltaY * (totalHeight / 260);
       const targetScroll = Math.max(0, Math.min(totalHeight, startScrollRef.current + scrollDelta));
       
@@ -105,16 +104,16 @@ export default function TactileSideScrubber() {
       window.removeEventListener('pointerup', handlePointerUp);
     };
 
-    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerup', handlePointerUp);
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = useCallback((id) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -123,7 +122,9 @@ export default function TactileSideScrubber() {
         setIsExpanded(false);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
+    if (isExpanded) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isExpanded]);
 
@@ -136,24 +137,24 @@ export default function TactileSideScrubber() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             onClick={() => setIsExpanded(false)}
-            className="fixed inset-0 z-35 bg-black/15 backdrop-blur-[1px]"
+            className="fixed inset-0 z-35 bg-black/20"
           />
         )}
       </AnimatePresence>
 
       <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40 select-none flex items-center">
-        {/* 1-Click Expandable Radar HUD Panel with Fluid Spring Close Animation */}
+        {/* 1-Click Expandable Radar HUD Panel */}
         <AnimatePresence mode="wait">
           {isExpanded && (
             <motion.div
               key="glider-radar"
-              initial={{ opacity: 0, x: -35, scale: 0.88, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: -35, scale: 0.88, filter: 'blur(4px)' }}
-              transition={{ type: 'spring', damping: 24, stiffness: 340 }}
-              className="ml-9 py-4 px-3.5 rounded-[24px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-2xl backdrop-blur-2xl w-56 max-h-[75vh] overflow-y-auto flex flex-col gap-1 z-50 text-[var(--color-text)]"
+              initial={{ opacity: 0, x: -30, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -30, scale: 0.9 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+              className="ml-9 py-4 px-3.5 rounded-[24px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-2xl w-56 max-h-[75vh] overflow-y-auto flex flex-col gap-1 z-50 text-[var(--color-text)]"
             >
               {/* Header with Animated Close Button */}
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--color-border)] px-1">
@@ -177,15 +178,13 @@ export default function TactileSideScrubber() {
                 {SECTIONS.map((sec) => {
                   const isActive = activeSection === sec.id;
                   return (
-                    <motion.button
-                      whileHover={{ x: 3 }}
-                      whileTap={{ scale: 0.98 }}
+                    <button
                       key={sec.id}
                       onClick={() => {
                         scrollToSection(sec.id);
                         setIsExpanded(false);
                       }}
-                      className={`group flex items-center justify-between py-1.5 px-2.5 rounded-lg text-left transition-all cursor-pointer font-mono text-xs ${
+                      className={`group flex items-center justify-between py-1.5 px-2.5 rounded-lg text-left transition-colors cursor-pointer font-mono text-xs ${
                         isActive
                           ? 'bg-[var(--color-surface-tint)] text-[var(--color-orange)] font-bold border border-[var(--color-border)]'
                           : 'text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-tint)]'
@@ -195,7 +194,7 @@ export default function TactileSideScrubber() {
                       <span className="text-[10px] opacity-70 shrink-0 font-mono">
                         {sec.short}
                       </span>
-                    </motion.button>
+                    </button>
                   );
                 })}
               </div>
@@ -211,50 +210,38 @@ export default function TactileSideScrubber() {
             onClick={() => {
               if (!isDragging) setIsExpanded((prev) => !prev);
             }}
-            whileHover={{ x: 8, scale: 1.02 }}
+            whileHover={{ x: 6 }}
             whileTap={{ scale: 0.96 }}
-            className={`relative cursor-grab active:cursor-grabbing flex flex-col items-center justify-between py-4 px-1.5 rounded-r-[48px] border-y-2 border-r-2 border-[var(--color-text)] shadow-2xl transition-all duration-300 overflow-hidden select-none ${
+            className={`relative cursor-grab active:cursor-grabbing flex flex-col items-center justify-between py-4 px-1.5 rounded-r-[48px] border-y-2 border-r-2 border-[var(--color-text)] shadow-xl transition-all duration-200 overflow-hidden select-none will-change-transform ${
               isExpanded
-                ? 'w-12 sm:w-14 h-48 bg-[var(--color-surface-tint)] shadow-[8px_0_30px_rgba(255,111,30,0.3)]'
+                ? 'w-12 sm:w-14 h-48 bg-[var(--color-surface-tint)] shadow-[6px_0_24px_rgba(255,111,30,0.25)]'
                 : 'w-9 sm:w-11 h-44 bg-[var(--color-card-bg)] hover:w-12'
             }`}
-            style={{
-              boxShadow: '8px 0 28px rgba(0,0,0,0.25), inset 3px 0 8px rgba(255,255,255,0.3)',
-            }}
             title={isExpanded ? "Click to close radar" : "Drag up/down to slide • Click to open radar"}
           >
-            {/* Dynamic Orange Liquid Progress Fill */}
+            {/* Dynamic Orange Liquid Progress Fill (GPU scaleY) */}
             <motion.div
-              className="absolute inset-x-0 bottom-0 bg-[var(--color-orange)] pointer-events-none origin-bottom"
+              className="absolute inset-0 bg-[var(--color-orange)] pointer-events-none origin-bottom will-change-transform"
               style={{
-                height: fillHeightTransform,
-                boxShadow: '0 0 16px rgba(255, 111, 30, 0.8)',
+                scaleY: smoothProgress,
+                transformOrigin: 'bottom',
               }}
             />
 
-            {/* ============ LAYER 1: BASE UNFILLED STATE (Dark/Muted Text) ============ */}
+            {/* LAYER 1: BASE UNFILLED STATE */}
             <div className="relative z-10 w-full h-full flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-[var(--color-muted)] overflow-hidden">
-              {/* Curved Arc Rolling Wheel Indicator */}
+              {/* Rolling Indicator */}
               <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
-                    key={activeShort}
-                    initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
-                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                    exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
-                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                    className="tracking-tighter inline-block text-center font-bold"
-                  >
-                    {activeShort}
-                  </motion.span>
-                </AnimatePresence>
+                <span className="tracking-tighter inline-block text-center font-bold">
+                  {activeShort}
+                </span>
               </div>
 
-              {/* Tactical Glider Arc Ribs */}
+              {/* Glider Arc Ribs */}
               <div className="flex flex-col gap-1.5 items-center my-auto opacity-75">
                 <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
                 <span className="w-2 h-[1px] rounded-full bg-current" />
-                <span className="w-4 h-[2px] rounded-full bg-current shadow-xs" />
+                <span className="w-4 h-[2px] rounded-full bg-current" />
                 <span className="w-2 h-[1px] rounded-full bg-current" />
                 <span className="w-3.5 h-[1.5px] rounded-full bg-current" />
               </div>
@@ -264,26 +251,17 @@ export default function TactileSideScrubber() {
               </span>
             </div>
 
-            {/* ============ LAYER 2: INVERTED WHITE TEXT VIA CLIP-PATH ============ */}
+            {/* LAYER 2: INVERTED WHITE TEXT VIA CLIP-PATH */}
             <motion.div
-              className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none overflow-hidden"
+              className="absolute inset-0 z-20 w-full h-full py-4 px-1.5 flex flex-col justify-between items-center pointer-events-none font-mono text-[9px] font-bold text-white select-none overflow-hidden will-change-transform"
               style={{
                 clipPath: useTransform(clipBottomTransform, (val) => `inset(0 0 ${val} 0)`),
               }}
             >
               <div className="h-4 relative flex items-center justify-center overflow-hidden w-full">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
-                    key={activeShort}
-                    initial={{ opacity: 0, y: -14, scale: 0.7, rotateX: 60 }}
-                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-                    exit={{ opacity: 0, y: 14, scale: 0.7, rotateX: -60 }}
-                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                    className="tracking-tighter drop-shadow-xs inline-block text-center font-bold"
-                  >
-                    {activeShort}
-                  </motion.span>
-                </AnimatePresence>
+                <span className="tracking-tighter drop-shadow-xs inline-block text-center font-bold">
+                  {activeShort}
+                </span>
               </div>
 
               <div className="flex flex-col gap-1.5 items-center my-auto opacity-95">

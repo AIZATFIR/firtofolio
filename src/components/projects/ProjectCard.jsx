@@ -23,53 +23,38 @@ export default function ProjectCard({ project, index }) {
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { rootMargin: '350px' }
+      { rootMargin: '120px' }
     );
     observer.observe(cardRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Mouse Parallax 3D Spring Tilt for tactile responsiveness
+  // Direct Mouse Parallax 3D Tilt (Zero background physics loop overhead)
   const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 30, stiffness: 200, mass: 0.5 };
-  const mouseTiltX = useSpring(useTransform(mouseY, [-0.5, 0.5], [3, -3]), springConfig);
-  const mouseTiltY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), springConfig);
+  const mouseTiltY = useTransform(mouseX, [-0.5, 0.5], [-2.5, 2.5]);
 
   const handleMouseMove = (e) => {
     if (isInteractive || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(xPct);
-    mouseY.set(yPct);
   };
 
   const handleMouseLeave = () => {
     mouseX.set(0);
-    mouseY.set(0);
   };
 
-  // 100% Scroll-Driven Domino 3D Vertical Tilt Physics
-  // Tracks mouse wheel scroll progress through the viewport directly
+  // 100% Scroll-Driven Domino 3D Vertical Tilt Physics (GPU hardware accelerated)
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start end', 'end start'],
   });
 
-  // Responsive spring with high stiffness for direct, lag-free mouse response
-  const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 280,
-    damping: 32,
-    mass: 0.18,
-  });
-
   // Exact Qurabic-Indo (Scrollerfir) 3D Tilt Scroll Curve
-  const baseRotateX = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [20, 0, 0, -18]);
-  const scale = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [1.03, 1, 1, 0.96]);
-  const translateY = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
-  const opacity = useTransform(smoothScroll, [0, 0.15, 0.85, 1], [0.75, 1, 1, 0.75]);
+  const baseRotateX = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [20, 0, 0, -18]);
+  const scale = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [1.03, 1, 1, 0.96]);
+  const translateY = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.75, 1, 1, 0.75]);
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);

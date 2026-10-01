@@ -70,7 +70,7 @@ export function Skiper8({
     };
   }, []);
 
-  // Word Cycling Logic with rhythmic, immersive sweet spot pacing
+  // Word Cycling Logic with rhythmic pacing
   useEffect(() => {
     if (index === words.length - 1) {
       const exitTimer = setTimeout(() => {
@@ -79,26 +79,17 @@ export function Skiper8({
       return () => clearTimeout(exitTimer);
     }
 
-    // Sweet Spot Pacing: Important identities slow & grand, projects & greetings steady & rhythmic
     let delay = 360;
     if (index === 0) {
-      delay = 650; // Opening ";"
+      delay = 600; // Opening ";"
     } else if (index === 1) {
-      delay = 750; // First AIZATFIR
+      delay = 700; // AIZATFIR
     } else if (index === 2) {
-      delay = 850; // First Full Name
-    } else if (index >= 3 && index <= 8) {
-      delay = 340; // Playful greetings
-    } else if (index >= 9 && index <= 16) {
-      delay = 380; // Project showcases
-    } else if (index === 17) {
-      delay = 750; // Climax AIZATFIR
-    } else if (index === 18) {
-      delay = 850; // Climax Full Name
-    } else if (index === 19) {
-      delay = 750; // Building Solutions
-    } else if (index >= 20) {
-      delay = 1000; // Final Turning problems into "Manfaat"
+      delay = 400; // Hi
+    } else if (index >= 3 && index <= 9) {
+      delay = 340; // Projects
+    } else if (index >= 10) {
+      delay = 900; // Final "Turning problems into Manfaat"
     }
 
     const timeout = setTimeout(() => {
@@ -108,7 +99,6 @@ export function Skiper8({
     return () => clearTimeout(timeout);
   }, [index, words.length, onComplete]);
 
-  // Synchronized SVG curve morph paths
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 400} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
 
@@ -132,7 +122,6 @@ export function Skiper8({
     >
       {dimension.width > 0 && (
         <>
-          {/* Authentic Skiper8 Text with Bright Glowing Dot & Sharp Contrast */}
           <motion.p
             key={index}
             variants={opacity}
@@ -145,7 +134,6 @@ export function Skiper8({
             <span>{words[index]}</span>
           </motion.p>
 
-          {/* Dennis Snellenberg Mathematical SVG Curve Mask */}
           <svg className="pointer-events-none absolute top-0 h-[calc(100%+400px)] w-full fill-[#0d0e10]">
             <motion.path variants={curve} initial="initial" exit="exit" />
           </svg>
@@ -156,7 +144,7 @@ export function Skiper8({
 }
 
 /**
- * Animated rolling text effect for titles and headlines
+ * High-performance animated headline text
  */
 export function Skiper8Text({ text, className = "" }) {
   if (!text) return null;
@@ -165,34 +153,21 @@ export function Skiper8Text({ text, className = "" }) {
 
   return (
     <span className={`inline-flex flex-wrap items-baseline justify-center max-w-full gap-x-[0.25em] gap-y-[0.1em] text-center ${className}`}>
-      {words.map((word, wordIdx) => {
-        const prevCharsCount = words
-          .slice(0, wordIdx)
-          .reduce((acc, w) => acc + w.length + 1, 0);
-
-        return (
-          <span key={wordIdx} className="inline-block whitespace-nowrap">
-            {word.split("").map((char, charIdx) => {
-              const totalIdx = prevCharsCount + charIdx;
-              return (
-                <motion.span
-                  key={charIdx}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: totalIdx * 0.02,
-                    ease: [0.33, 1, 0.68, 1]
-                  }}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              );
-            })}
-          </span>
-        );
-      })}
+      {words.map((word, wordIdx) => (
+        <motion.span
+          key={wordIdx}
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{
+            duration: 0.4,
+            delay: wordIdx * 0.06,
+            ease: [0.33, 1, 0.68, 1],
+          }}
+          className="inline-block whitespace-nowrap will-change-transform"
+        >
+          {word}
+        </motion.span>
+      ))}
     </span>
   );
 }

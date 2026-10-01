@@ -42,24 +42,17 @@ export function Scrollerfir({
     offset: ['start end', 'end start'],
   });
 
-  // Tactile spring physics for silky-smooth response
-  const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 260,
-    damping: 30,
-    mass: 0.15,
-  });
-
-  // Exact Qurabic-Indo 3D Tilt Progression:
+  // Exact Qurabic-Indo 3D Tilt Progression (Direct GPU hardware accelerated):
   // 0.0 -> 0.5: Rotates from 20° tilt to 0° upright
   // 0.5 -> 1.0: Gentle exit tilt to -16°
-  const rotateX = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [rotateRange[0], 0, 0, -rotateRange[0] * 0.8]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [rotateRange[0], 0, 0, -rotateRange[0] * 0.8]);
   const scale = useTransform(
-    smoothScroll,
+    scrollYProgress,
     [0, 0.48, 0.52, 1],
     isMobile ? [0.88, 1, 1, 0.92] : [1.03, 1, 1, 0.96]
   );
-  const translateY = useTransform(smoothScroll, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
-  const headerTranslate = useTransform(smoothScroll, [0, 0.5], [0, -30]);
+  const translateY = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
+  const headerTranslate = useTransform(scrollYProgress, [0, 0.5], [0, -30]);
 
   return (
     <div

@@ -30,9 +30,14 @@ export function Skiper59({
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
 
+  const requestRenderRef = useRef(null);
+
   // Keep ref in sync
   useEffect(() => {
     isDoodleModeRef.current = isDoodleMode;
+    if (requestRenderRef.current) {
+      requestRenderRef.current();
+    }
   }, [isDoodleMode]);
 
   useEffect(() => {
@@ -42,6 +47,16 @@ export function Skiper59({
     if (!ctx) return;
 
     let dpr = window.devicePixelRatio || 1;
+    let isRendering = false;
+
+    const requestRender = () => {
+      if (!isRendering) {
+        isRendering = true;
+        animFrameRef.current = requestAnimationFrame(render);
+      }
+    };
+
+    requestRenderRef.current = requestRender;
 
     const handleResize = () => {
       dpr = window.devicePixelRatio || 1;
@@ -50,6 +65,7 @@ export function Skiper59({
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       ctx.scale(dpr, dpr);
+      requestRender();
     };
 
     handleResize();
@@ -68,6 +84,7 @@ export function Skiper59({
         if (mouseRef.current.isDown && currentStrokeRef.current) {
           const currentColor = getActiveColor();
           currentStrokeRef.current.push({ x: docX, y: docY, width: lineWidth * 1.3, color: currentColor });
+          requestRender();
         }
       } else {
         // Standard Glide Trail (Transient viewport ink)
@@ -81,6 +98,7 @@ export function Skiper59({
         if (pointsRef.current.length > pointCount) {
           pointsRef.current.shift();
         }
+        requestRender();
       }
     };
 
@@ -100,6 +118,7 @@ export function Skiper59({
         const docY = e.clientY + window.scrollY;
         const currentColor = getActiveColor();
         currentStrokeRef.current = [{ x: docX, y: docY, width: lineWidth * 1.3, color: currentColor }];
+        requestRender();
       }
     };
 
@@ -114,6 +133,7 @@ export function Skiper59({
         currentStrokeRef.current = [];
       }
       mouseRef.current.isDown = false;
+      requestRender();
     };
 
     // Mobile Touch events
@@ -132,6 +152,7 @@ export function Skiper59({
         } else {
           addPoint(t.clientX, t.clientY);
         }
+        requestRender();
       }
     };
 
@@ -155,12 +176,20 @@ export function Skiper59({
         currentStrokeRef.current = [];
       }
       mouseRef.current.isDown = false;
+      requestRender();
     };
 
     const handleDblClick = (e) => {
       // Don't toggle doodle mode on double clicking buttons
       if (e.target.closest('button') || e.target.closest('a')) return;
       setIsDoodleMode((prev) => !prev);
+    };
+
+    // Passive scroll listener for paper-glued doodles
+    const handleScroll = () => {
+      if (persistentStrokesRef.current.length > 0 || (currentStrokeRef.current && currentStrokeRef.current.length > 0)) {
+        requestRender();
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -170,9 +199,11 @@ export function Skiper59({
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
     window.addEventListener("touchend", handleTouchEnd);
     window.addEventListener("dblclick", handleDblClick);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // High-performance animation render loop with optimized drawing paths
+    // High-performance animation render loop with self-sleeping RAF
     const render = () => {
+      isRendering = false;
       const scrollX = window.scrollX || 0;
       const scrollY = window.scrollY || 0;
       const dynamicColor = getActiveColor();
@@ -180,95 +211,101 @@ export function Skiper59({
       const hasActiveStroke = currentStrokeRef.current && currentStrokeRef.current.length > 1;
       const hasGlidePoints = pointsRef.current.length > 0;
 
-      if (hasDoodles || hasActiveStroke || hasGlidePoints || isDoodleModeRef.current) {
-        ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
-        // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
-        if (hasDoodles) {
-          ctx.save();
-          ctx.translate(-scrollX, -scrollY);
-          ctx.lineCap = "round";
-          ctx.lineJoin = "round";
-          ctx.globalAlpha = 0.95;
+      // 1. Draw Persistent Doodle Strokes Glued to Paper (Document Offset)
+      if (hasDoodles) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.globalAlpha = 0.95;
 
-          const strokes = persistentStrokesRef.current;
-          for (let s = 0; s < strokes.length; s++) {
-            const stroke = strokes[s];
-            if (stroke.length > 1) {
-              ctx.beginPath();
-              ctx.strokeStyle = stroke[0].color || dynamicColor;
-              ctx.lineWidth = stroke[0].width || lineWidth;
-              ctx.moveTo(stroke[0].x, stroke[0].y);
-              for (let i = 1; i < stroke.length - 1; i++) {
-                const xc = (stroke[i].x + stroke[i + 1].x) / 2;
-                const yc = (stroke[i].y + stroke[i + 1].y) / 2;
-                ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
-              }
-              ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
-              ctx.stroke();
+        const strokes = persistentStrokesRef.current;
+        for (let s = 0; s < strokes.length; s++) {
+          const stroke = strokes[s];
+          if (stroke.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = stroke[0].color || dynamicColor;
+            ctx.lineWidth = stroke[0].width || lineWidth;
+            ctx.moveTo(stroke[0].x, stroke[0].y);
+            for (let i = 1; i < stroke.length - 1; i++) {
+              const xc = (stroke[i].x + stroke[i + 1].x) / 2;
+              const yc = (stroke[i].y + stroke[i + 1].y) / 2;
+              ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
             }
+            ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
+            ctx.stroke();
           }
-          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      // Draw Current Active Stroke in Doodle Mode (Document Offset)
+      if (hasActiveStroke) {
+        ctx.save();
+        ctx.translate(-scrollX, -scrollY);
+        ctx.strokeStyle = dynamicColor;
+        ctx.lineWidth = lineWidth * 1.3;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        const stroke = currentStrokeRef.current;
+        ctx.moveTo(stroke[0].x, stroke[0].y);
+        for (let i = 1; i < stroke.length - 1; i++) {
+          const xc = (stroke[i].x + stroke[i + 1].x) / 2;
+          const yc = (stroke[i].y + stroke[i + 1].y) / 2;
+          ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
+        }
+        ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 2. Draw Transient Glide Trail (Trail Mode in Viewport Coordinates)
+      if (!isDoodleModeRef.current && hasGlidePoints) {
+        const points = pointsRef.current;
+
+        // Alpha decay
+        for (let i = points.length - 1; i >= 0; i--) {
+          points[i].alpha -= decaySpeed;
+          if (points[i].alpha <= 0) {
+            points.splice(i, 1);
+          }
         }
 
-        // Draw Current Active Stroke in Doodle Mode (Document Offset)
-        if (hasActiveStroke) {
-          ctx.save();
-          ctx.translate(-scrollX, -scrollY);
-          ctx.strokeStyle = dynamicColor;
-          ctx.lineWidth = lineWidth * 1.3;
-          ctx.lineCap = "round";
-          ctx.lineJoin = "round";
-          ctx.globalAlpha = 1;
-          ctx.beginPath();
-          const stroke = currentStrokeRef.current;
-          ctx.moveTo(stroke[0].x, stroke[0].y);
-          for (let i = 1; i < stroke.length - 1; i++) {
-            const xc = (stroke[i].x + stroke[i + 1].x) / 2;
-            const yc = (stroke[i].y + stroke[i + 1].y) / 2;
-            ctx.quadraticCurveTo(stroke[i].x, stroke[i].y, xc, yc);
-          }
-          ctx.lineTo(stroke[stroke.length - 1].x, stroke[stroke.length - 1].y);
-          ctx.stroke();
-          ctx.restore();
-        }
+        if (points.length > 2) {
+          for (let i = 1; i < points.length - 1; i++) {
+            const xc = (points[i].x + points[i + 1].x) / 2;
+            const yc = (points[i].y + points[i + 1].y) / 2;
 
-        // 2. Draw Transient Glide Trail (Trail Mode in Viewport Coordinates)
-        if (!isDoodleModeRef.current && hasGlidePoints) {
-          const points = pointsRef.current;
+            ctx.beginPath();
+            ctx.moveTo(points[i - 1].x, points[i - 1].y);
+            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
 
-          // Alpha decay
-          for (let i = points.length - 1; i >= 0; i--) {
-            points[i].alpha -= decaySpeed;
-            if (points[i].alpha <= 0) {
-              points.splice(i, 1);
-            }
-          }
-
-          if (points.length > 2) {
-            for (let i = 1; i < points.length - 1; i++) {
-              const xc = (points[i].x + points[i + 1].x) / 2;
-              const yc = (points[i].y + points[i + 1].y) / 2;
-
-              ctx.beginPath();
-              ctx.moveTo(points[i - 1].x, points[i - 1].y);
-              ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-
-              ctx.strokeStyle = dynamicColor;
-              ctx.globalAlpha = Math.max(0, points[i].alpha);
-              ctx.lineWidth = points[i].width * (points[i].alpha * 0.8 + 0.2);
-              ctx.lineCap = "round";
-              ctx.lineJoin = "round";
-              ctx.stroke();
-            }
+            ctx.strokeStyle = dynamicColor;
+            ctx.globalAlpha = Math.max(0, points[i].alpha);
+            ctx.lineWidth = points[i].width * (points[i].alpha * 0.8 + 0.2);
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.stroke();
           }
         }
       }
 
-      animFrameRef.current = requestAnimationFrame(render);
+      // Continue animation loop ONLY if active stroke or glide decay needs frames
+      const shouldKeepLooping =
+        (!isDoodleModeRef.current && pointsRef.current.length > 0) ||
+        (isDoodleModeRef.current && mouseRef.current.isDown);
+
+      if (shouldKeepLooping) {
+        isRendering = true;
+        animFrameRef.current = requestAnimationFrame(render);
+      }
     };
 
-    render();
+    requestRender();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -279,6 +316,7 @@ export function Skiper59({
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
       window.removeEventListener("dblclick", handleDblClick);
+      window.removeEventListener("scroll", handleScroll);
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
@@ -292,6 +330,7 @@ export function Skiper59({
       redoStackRef.current.push(popped);
       setCanUndo(persistentStrokesRef.current.length > 0);
       setCanRedo(true);
+      if (requestRenderRef.current) requestRenderRef.current();
     }
   }, []);
 
@@ -302,6 +341,7 @@ export function Skiper59({
       persistentStrokesRef.current.push(popped);
       setCanUndo(true);
       setCanRedo(redoStackRef.current.length > 0);
+      if (requestRenderRef.current) requestRenderRef.current();
     }
   }, []);
 
@@ -313,6 +353,7 @@ export function Skiper59({
     pointsRef.current = [];
     setCanUndo(false);
     setCanRedo(false);
+    if (requestRenderRef.current) requestRenderRef.current();
   }, []);
 
   return (
