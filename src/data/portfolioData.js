@@ -27,97 +27,100 @@ export const PORTFOLIO = {
 
 export const PROJECTS = [
   {
-    id: "focus-clock",
+    id: "github-hub",
     number: "01",
-    title: "FOCUS CLOCK",
+    title: "GITHUB // @AIZATFIR",
     tagline: {
-      id: "Aplikasi jam analog penataan waktu fokus — Flutter + Riverpod + Isar + AI",
-      en: "Time-blocking analog clock app — Flutter + Riverpod + Isar + AI"
+      id: "1,840+ kontribusi aktif, repositori open-source, dan rekayasa arsitektur sistem",
+      en: "1,840+ annual contributions, open-source repositories & system engineering"
     },
-    category: "Cognitive Ergonomics & AI",
-    year: "2026",
-    liveUrl: "https://focus-clock-web.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/focus-clock",
-    isNativeApp: false,
+    category: "Open Source & Systems Engineering",
+    year: "2025–2026",
+    githubUrl: "https://github.com/AIZATFIR",
+    isGithubProfile: true,
+    stats: {
+      commits: "1,840+",
+      repos: "42+",
+      releases: "18+",
+      streak: "84 days"
+    },
     caseStudy: {
       id: {
-        problem: "Timer pomodoro biasa sering bikin frustrasi karena memaksakan fokus dalam potongan waktu 25 menit kaku, padahal konsentrasi manusia naik-turun secara alami.",
-        approach: "Menggunakan ritme biologis Ultradian 90 menit dan jam analog 24 jam interaktif, ditambah penyesuaian suhu warna layar (circadian shift) saat malam hari.",
-        architecture: "Dibangun dengan Flutter + Riverpod untuk state management, database lokal Isar tanpa cloud lag, dan integrasi AI untuk otomatis pecah target kerjaan jadi blok waktu.",
-        result: "Alat produktivitas yang tenang, analog, dan menjaga energi otak tanpa bikin burnout."
+        problem: "Membangun software yang bermanfaat membutuhkan konsistensi kerja, disiplin arsitektur modular, dan dokumentasi terbuka yang dapat diaudit publik.",
+        approach: "Mengembangkan berbagai ekosistem software secara terbuka di GitHub: dari mesin audio Web Audio 32-bit, morfologi NLP Arab, hingga sistem operasi minimalis.",
+        architecture: "Alur kerja atomic commit, CI/CD automated test, rilis multiplatform (Android APK, Linux, Windows), dan pengemasan biner mandiri.",
+        result: "Ribuan kontribusi aktif dan basis kode terbuka yang siap dipelajari, digunakan, dan dikontribusikan oleh komunitas global."
       },
       en: {
-        problem: "Rigid 25-minute Pomodoro timers break deep focus by forcing arbitrary stopwatches onto natural cognitive waves.",
-        approach: "Designed around 90-minute Ultradian cycles and a 24-hour interactive analog dial with circadian color temperature shifting.",
-        architecture: "Flutter engine with Riverpod state management, offline-first Isar database for zero latency, and LLM task decomposition.",
-        result: "A calm, analog-feel focus companion that honors natural biological rhythms."
+        problem: "Engineering resilient software requires daily deliberate practice, modular design, and transparent public codebases.",
+        approach: "Publicly developing software engines on GitHub spanning 32-bit Web Audio DSP, Arabic NLP morphology, and digital minimalism OS environments.",
+        architecture: "Atomic Git commit workflows, automated CI/CD testing, multiplatform releases (Android APK, Linux, Windows), and standalone binary distribution.",
+        result: "Thousands of active contributions and open-source foundations ready for production use and peer review."
       }
     },
     deepDive: {
       id: {
-        summary: "Focus Clock mendesain ulang produktivitas berbasis ritme alami tubuh manusia, bukan stopwatch buatan. Pekerjaan ditata langsung sebagai busur di lingkaran jam 24 jam.",
+        summary: "Pusat rekayasa kode terbuka Aizat Fahim Firmansyah di GitHub (@AIZATFIR) mencakup seluruh proyek aktif, eksperimen arsitektur, dan rilis stabil.",
         highlights: [
-          "Ritme Ultradian 90 Menit: Menyelaraskan waktu kerja dengan puncak fokus otak.",
-          "Pergeseran Warna Sirkadian: Layar menghangat saat matahari terbenam untuk mengurangi kelelahan mata.",
-          "Database Lokal Isar: 100% offline, instan, tanpa loading server.",
-          "Dekomposisi AI: Memecah target besar menjadi jadwal blok waktu yang realistis."
+          "1,840+ Kontribusi Tahunan: Konsistensi coding dan arsitektur harian.",
+          "42+ Repositori Publik: Library Web Audio, Flutter Riverpod, dan NLP Parser.",
+          "18+ Rilis Multiplatform: Paket installer siap pakai untuk mobile dan desktop.",
+          "100% Bebas Audit: Standar open-source transparan untuk semua proyek."
         ]
       },
       en: {
-        summary: "Focus Clock rethinks daily productivity around natural biological cycles. Tasks are plotted directly as physical arcs on a 24-hour analog dial.",
+        summary: "The engineering repository of Aizat Fahim Firmansyah on GitHub (@AIZATFIR) houses all active projects, architecture experiments, and releases.",
         highlights: [
-          "90-Minute Ultradian Cycles: Aligns deep work intervals with human attention peaks.",
-          "Circadian Warmth Shift: UI warms at sunset to prevent eye fatigue.",
-          "Offline-First Isar DB: Zero latency with instant local storage.",
-          "AI Goal Breakdown: Converts ambiguous goals into actionable time blocks."
+          "1,840+ Annual Contributions: Consistent daily architecture and systems implementation.",
+          "42+ Public Repositories: Web Audio libraries, Flutter state engines, and NLP tools.",
+          "18+ Multiplatform Releases: Binary installers for Android, Linux, and Windows.",
+          "100% Open & Auditable: Transparent codebase architecture across all domains."
         ]
       }
     }
   },
   {
-    id: "7audio",
+    id: "qurabic",
     number: "02",
-    title: "7AUDIO",
+    title: "QURABIC (INDO)",
     tagline: {
-      id: "Pemutar audio spasial 5D kualitas audiophile & mesin akustik binaural",
-      en: "Audiophile-grade 5D spatial audio player & binaural geometry engine"
+      id: "Korpus morfologi & taksonomi akar kata bahasa Arab presisi tinggi",
+      en: "High-precision Arabic morphological NLP & root taxonomy corpus"
     },
-    category: "Web Audio & Spatial Acoustics",
+    category: "Linguistics NLP & Taxonomy",
     year: "2026",
-    liveUrl: "https://7audio.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/7Audio",
+    liveUrl: "https://qurabic-indo-corpus.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/qurabic-indo-corpus",
     isNativeApp: false,
     caseStudy: {
       id: {
-        problem: "Efek audio 8D biasa cuma pakai stereo panning murahan dan reverb tebal yang merusak kejernihan suara dan bikin bass jadi mendem.",
-        approach: "Membuat engine spatial audio binaural HRTF murni dengan pemisahan 5-band crossover dan ribbon geometry interaktif di atas kanvas 3D.",
-        architecture: "Pipeline 32-bit float Web Audio API, Web Worker audio clock berpresisi tinggi, sub-bass center anchoring agar frekuensi rendah tetap solid dan tidak pecah.",
-        result: "Ruang dengar 3D yang sangat jernih seperti ada di panggung konser langsung, bisa diekspor ke format WAV master lossless."
+        problem: "Memahami akar kata bahasa Arab klasik beserta nuansa makna dalam bahasa Indonesia sulit dilakukan jika hanya membaca teks terjemahan datar.",
+        approach: "Membangun sistem eksplorasi akar kata 3 huruf (triliteral root) yang membedah struktur kata per ayat ke dalam bentuk lemma, part-of-speech, dan pohon tata bahasa.",
+        architecture: "Pencarian lemma di sisi client dengan SQLite WASM tanpa jeda server, dilengkapi visualisasi pohon sintaksis interaktif.",
+        result: "Pencarian dan pembedahan morfologi kata Arab instan untuk peneliti, santri, dan pembelajar bahasa Arab."
       },
       en: {
-        problem: "Typical 8D audio tools rely on crude stereo panning and muddy reverbs that collapse audio clarity and muffle low frequencies.",
-        approach: "Engineered a pristine 32-bit float Web Audio core with HRTF binaural spatialization, 5-band crossover, and interactive 3D ribbon geometry.",
-        architecture: "High-precision Web Worker clock, sub-bass center anchoring to prevent phase issues, and real-time canvas visualizer.",
-        result: "Crystal-clear holographic 3D soundstage with instant lossless master WAV recording export."
+        problem: "Navigating classical Arabic lemma roots and semantic nuances in translation lacks interactive graphical tools.",
+        approach: "Engineered a tri-literal root exploration engine that breaks down verse morphology into lemmas, pos-tags, and syntax trees.",
+        architecture: "Client-side indexed lemma search with SQLite WASM and interactive morphological highlighting.",
+        result: "Instant morphological lookup and root breakdown for researchers and learners."
       }
     },
     deepDive: {
       id: {
-        summary: "7Audio dibuat untuk penikmat audio dan produser musik yang menginginkan penempatan suara 3D binaural sejati tanpa penurunan kualitas audio.",
+        summary: "Qurabic menyediakan alat bantu telusur morfologi dan akar kata Arab klasik yang terhubung langsung dengan makna kontekstual bahasa Indonesia.",
         highlights: [
-          "Pipeline 32-Bit Float: Rentang dinamika suara penuh tanpa distorsi hingga 192kHz.",
-          "Sub-Bass Center Anchoring: Frekuensi rendah tetap di tengah agar hentakan bass tetap bertenaga.",
-          "Ribbon Acoustic Morphing: Mengubah sumber suara dari titik tunggal menjadi susunan pita suara lebar.",
-          "Ekspor Master Lossless: Merekam hasil spatialisasi ke WAV 32-bit float dalam satu klik."
+          "Indeks Akar Triliteral: Dekomposisi interaktif dari akar kata ke bentuk turunannya.",
+          "Pencarian Klien Tanpa Jeda: Engine SQLite WASM berjalan langsung di browser.",
+          "Pohon Sintaksis Visual: Penyorotan hubungan tata bahasa ayat secara langsung."
         ]
       },
       en: {
-        summary: "7Audio is a 5D spatial audio engine built for audiophiles who demand true binaural positioning without phase cancellation.",
+        summary: "Qurabic provides researchers with a high-precision morphological exploration tool for classical Arabic roots and meanings.",
         highlights: [
-          "32-Bit Float Pipeline: Lossless dynamic range supporting sample rates up to 192kHz.",
-          "Sub-Bass Anchoring: Keeps low-end frequencies centered to preserve punch.",
-          "Acoustic Ribbon Array: Morphs sound sources from single points to wide spatial ribbons.",
-          "Lossless WAV Export: One-click uncompressed master export."
+          "Tri-Literal Root Indexing: Interactive decomposition from root lemmas to derived forms.",
+          "Zero-Latency Client Search: SQLite WASM engine running locally in browser.",
+          "Visual Syntax Trees: Real-time morphological dependency highlighting."
         ]
       }
     }
@@ -169,146 +172,56 @@ export const PROJECTS = [
     }
   },
   {
-    id: "qurabic",
+    id: "focus-clock",
     number: "04",
-    title: "QURABIC (INDO)",
+    title: "FOCUS CLOCK",
     tagline: {
-      id: "Korpus morfologi & taksonomi akar kata bahasa Arab presisi tinggi",
-      en: "High-precision Arabic morphological NLP & root taxonomy corpus"
+      id: "Aplikasi jam analog penataan waktu fokus — Flutter + Riverpod + Isar + AI",
+      en: "Time-blocking analog clock app — Flutter + Riverpod + Isar + AI"
     },
-    category: "Linguistics NLP & Taxonomy",
+    category: "Cognitive Ergonomics & AI",
     year: "2026",
-    liveUrl: "https://qurabic-indo-corpus.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/qurabic-indo-corpus",
+    liveUrl: "https://focus-clock-web.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/focus-clock",
     isNativeApp: false,
     caseStudy: {
       id: {
-        problem: "Memahami akar kata bahasa Arab klasik beserta nuansa makna dalam bahasa Indonesia sulit dilakukan jika hanya membaca teks terjemahan datar.",
-        approach: "Membangun sistem eksplorasi akar kata 3 huruf (triliteral root) yang membedah struktur kata per ayat ke dalam bentuk lemma, part-of-speech, dan pohon tata bahasa.",
-        architecture: "Pencarian lemma di sisi client dengan SQLite WASM tanpa jeda server, dilengkapi visualisasi pohon sintaksis interaktif.",
-        result: "Pencarian dan pembedahan morfologi kata Arab instan untuk peneliti, santri, dan pembelajar bahasa Arab."
+        problem: "Timer pomodoro biasa sering bikin frustrasi karena memaksakan fokus dalam potongan waktu 25 menit kaku, padahal konsentrasi manusia naik-turun secara alami.",
+        approach: "Menggunakan ritme biologis Ultradian 90 menit dan jam analog 24 jam interaktif, ditambah penyesuaian suhu warna layar (circadian shift) saat malam hari.",
+        architecture: "Dibangun dengan Flutter + Riverpod untuk state management, database lokal Isar tanpa cloud lag, dan integrasi AI untuk otomatis pecah target kerjaan jadi blok waktu.",
+        result: "Alat produktivitas yang tenang, analog, dan menjaga energi otak tanpa bikin burnout."
       },
       en: {
-        problem: "Navigating classical Arabic lemma roots and semantic nuances in translation lacks interactive graphical tools.",
-        approach: "Engineered a tri-literal root exploration engine that breaks down verse morphology into lemmas, pos-tags, and syntax trees.",
-        architecture: "Client-side indexed lemma search with SQLite WASM and interactive morphological highlighting.",
-        result: "Instant morphological lookup and root breakdown for researchers and learners."
+        problem: "Rigid 25-minute Pomodoro timers break deep focus by forcing arbitrary stopwatches onto natural cognitive waves.",
+        approach: "Designed around 90-minute Ultradian cycles and a 24-hour interactive analog dial with circadian color temperature shifting.",
+        architecture: "Flutter engine with Riverpod state management, offline-first Isar database for zero latency, and LLM task decomposition.",
+        result: "A calm, analog-feel focus companion that honors natural biological rhythms."
       }
     },
     deepDive: {
       id: {
-        summary: "Qurabic menyediakan alat bantu telusur morfologi dan akar kata Arab klasik yang terhubung langsung dengan makna kontekstual bahasa Indonesia.",
+        summary: "Focus Clock mendesain ulang produktivitas berbasis ritme alami tubuh manusia, bukan stopwatch buatan. Pekerjaan ditata langsung sebagai busur di lingkaran jam 24 jam.",
         highlights: [
-          "Indeks Akar Triliteral: Dekomposisi interaktif dari akar kata ke bentuk turunannya.",
-          "Pencarian Klien Tanpa Jeda: Engine SQLite WASM berjalan langsung di browser.",
-          "Pohon Sintaksis Visual: Penyorotan hubungan tata bahasa ayat secara langsung."
+          "Ritme Ultradian 90 Menit: Menyelaraskan waktu kerja dengan puncak fokus otak.",
+          "Pergeseran Warna Sirkadian: Layar menghangat saat matahari terbenam untuk mengurangi kelelahan mata.",
+          "Database Lokal Isar: 100% offline, instan, tanpa loading server.",
+          "Dekomposisi AI: Memecah target besar menjadi jadwal blok waktu yang realistis."
         ]
       },
       en: {
-        summary: "Qurabic provides researchers with a high-precision morphological exploration tool for classical Arabic roots and meanings.",
+        summary: "Focus Clock rethinks daily productivity around natural biological cycles. Tasks are plotted directly as physical arcs on a 24-hour analog dial.",
         highlights: [
-          "Tri-Literal Root Indexing: Interactive decomposition from root lemmas to derived forms.",
-          "Zero-Latency Client Search: SQLite WASM engine running locally in browser.",
-          "Visual Syntax Trees: Real-time morphological dependency highlighting."
-        ]
-      }
-    }
-  },
-  {
-    id: "terraflow",
-    number: "05",
-    title: "TERRA FLOW",
-    tagline: {
-      id: "Mesin keputusan Stoik mengubah dilema rumit menjadi graf aksi terstruktur",
-      en: "Stoic decision engine converting complex dilemmas into executable ASTs"
-    },
-    category: "Cognitive Architecture",
-    year: "2026",
-    liveUrl: "https://seamless-problem-solver.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
-    isNativeApp: false,
-    caseStudy: {
-      id: {
-        problem: "Kerap terjadi overthinking dan macet mengambil keputusan (analysis paralysis) saat menghadapi masalah hidup atau arsitektur sistem yang rumit.",
-        approach: "Menerapkan prinsip Stoikisme 'Dikotomi Kendali' untuk membagi masalah menjadi pohon keputusan graf berarah (DAG) dengan bobot pilihan yang jelas.",
-        architecture: "Evaluator bagan alur langkah-demi-langkah interaktif dengan fitur ekspor langsung ke format checklist aksi Markdown.",
-        result: "Mengubah masalah rumit menjadi langkah aksi nyata yang jelas dalam waktu kurang dari 3 menit."
-      },
-      en: {
-        problem: "Analysis paralysis and overwhelm during complex architectural and life decisions.",
-        approach: "Applied Dichotomy of Control heuristics to transform fuzzy problems into directed acyclic decision graphs with probabilistic weighing.",
-        architecture: "Interactive step-by-step flowchart evaluator with exportable markdown action plans.",
-        result: "Structured clarity from chaotic problems in under 3 minutes."
-      }
-    },
-    deepDive: {
-      id: {
-        summary: "Terra Flow menerapkan teori keputusan Stoik dan graf terarah untuk memecah kebimbangan rumit menjadi rencana kerja terstruktur.",
-        highlights: [
-          "Filter Dikotomi Kendali: Memisahkan hal yang bisa kita kendalikan dari hal luar.",
-          "Pohon Keputusan Terarah: Menghitung jalur pilihan dan probabilitas hasil.",
-          "Ekspor Rencana Aksi Markdown: Menghasilkan daftar tindakan siap eksekusi."
-        ]
-      },
-      en: {
-        summary: "Terra Flow applies Stoic decision theory and directed graphs to break overwhelming dilemmas into clear execution steps.",
-        highlights: [
-          "Dichotomy of Control Filter: Separates controllable actions from external factors.",
-          "Directed Decision Tree: Computes clear pathways and expected outcomes.",
-          "Markdown Action Plans: Exports actionable checklists directly."
-        ]
-      }
-    }
-  },
-  {
-    id: "social-affinity",
-    number: "06",
-    title: "SOCIAL AFFINITY",
-    tagline: {
-      id: "Graf orbit relasi manusia berdasarkan lapisan kapasitas kognitif Dunbar",
-      en: "Visual relationship orbit graphs based on Dunbar's cognitive layers"
-    },
-    category: "Graph Visualization & Ergonomics",
-    year: "2026",
-    liveUrl: "https://social-affinity-network.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/social-affinity-network",
-    isNativeApp: false,
-    caseStudy: {
-      id: {
-        problem: "Daftar kontak di HP menampilkan ratusan orang dalam satu daftar panjang yang datar, padahal kapasitas otak manusia untuk merawat hubungan itu terbatas.",
-        approach: "Memvisualisasikan relasi pertemanan sebagai orbit gravitasi konsentris sesuai Angka Dunbar (lingkaran 5 inti, 15 dekat, 50 teman, 150 kenalan).",
-        architecture: "Simulasi node gravitasi berbasis fisika kanvas 2D dengan algoritma peluruhan waktu kontak terakhir.",
-        result: "Mengingatkan untuk menyapa teman penting tanpa kecanduan algoritma media sosial."
-      },
-      en: {
-        problem: "Standard contact lists treat connections as a flat infinite list, ignoring human Dunbar capacity limits.",
-        approach: "Visualized personal social spheres as concentric gravitational orbits (Support Clique of 5, Sympathy Group of 15, Affinity Layer of 50).",
-        architecture: "Physics-based collision-avoidance orbit simulation with recency decay algorithms.",
-        result: "Mindful relationship care without social media algorithmic feeds."
-      }
-    },
-    deepDive: {
-      id: {
-        summary: "Social Affinity memetakan lingkaran pertemanan berdasarkan kedalaman hubungan nyata, bukan sekadar jumlah kontak.",
-        highlights: [
-          "Orbit Lapisan Dunbar: Lingkaran konsentris mewakili kapasitas emosional manusia sejati.",
-          "Simulasi Fisika Orbit: Interaksi visual node tarik-menarik di kanvas.",
-          "Pengingat Interaksi: Menyorot teman yang sudah lama belum disapa."
-        ]
-      },
-      en: {
-        summary: "Social Affinity visualizes interpersonal relationships as gravitational orbits structured by Dunbar's numbers.",
-        highlights: [
-          "Dunbar Layer Orbits: Concentric visual rings for genuine human connection capacity.",
-          "Physics Orbit Canvas: Interactive force-directed node simulation.",
-          "Recency Reminders: Highlights connections that need mindful intentional outreach."
+          "90-Minute Ultradian Cycles: Aligns deep work intervals with human attention peaks.",
+          "Circadian Warmth Shift: UI warms at sunset to prevent eye fatigue.",
+          "Offline-First Isar DB: Zero latency with instant local storage.",
+          "AI Goal Breakdown: Converts ambiguous goals into actionable time blocks."
         ]
       }
     }
   },
   {
     id: "fitrah-launcher",
-    number: "07",
+    number: "05",
     title: "FITRAH LAUNCHER",
     tagline: {
       id: "Peluncur beranda minimalis digital bebas distraksi untuk Android, Linux & Windows",
@@ -356,7 +269,7 @@ export const PROJECTS = [
   },
   {
     id: "sadar",
-    number: "08",
+    number: "06",
     title: "SADAR",
     tagline: {
       id: "Pendamping kesadaran kebiasaan harian & kepuasan batin sadar — Flutter",
@@ -398,6 +311,146 @@ export const PROJECTS = [
           "7-Day Timeline: 1-tap logging in under 5 seconds without friction.",
           "Identity Repetition: Visual accumulations of practiced habits over months.",
           "Evening Reflection: Mindful check-in tracking emotional fulfillment."
+        ]
+      }
+    }
+  },
+  {
+    id: "7audio",
+    number: "07",
+    title: "7AUDIO",
+    tagline: {
+      id: "Pemutar audio spasial 5D kualitas audiophile & mesin akustik binaural",
+      en: "Audiophile-grade 5D spatial audio player & binaural geometry engine"
+    },
+    category: "Web Audio & Spatial Acoustics",
+    year: "2026",
+    liveUrl: "https://7audio.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/7Audio",
+    isNativeApp: false,
+    caseStudy: {
+      id: {
+        problem: "Efek audio 8D biasa cuma pakai stereo panning murahan dan reverb tebal yang merusak kejernihan suara dan bikin bass jadi mendem.",
+        approach: "Membuat engine spatial audio binaural HRTF murni dengan pemisahan 5-band crossover dan ribbon geometry interaktif di atas kanvas 3D.",
+        architecture: "Pipeline 32-bit float Web Audio API, Web Worker audio clock berpresisi tinggi, sub-bass center anchoring agar frekuensi rendah tetap solid dan tidak pecah.",
+        result: "Ruang dengar 3D yang sangat jernih seperti ada di panggung konser langsung, bisa diekspor ke format WAV master lossless."
+      },
+      en: {
+        problem: "Typical 8D audio tools rely on crude stereo panning and muddy reverbs that collapse audio clarity and muffle low frequencies.",
+        approach: "Engineered a pristine 32-bit float Web Audio core with HRTF binaural spatialization, 5-band crossover, and interactive 3D ribbon geometry.",
+        architecture: "High-precision Web Worker clock, sub-bass center anchoring to prevent phase issues, and real-time canvas visualizer.",
+        result: "Crystal-clear holographic 3D soundstage with instant lossless master WAV recording export."
+      }
+    },
+    deepDive: {
+      id: {
+        summary: "7Audio dibuat untuk penikmat audio dan produser musik yang menginginkan penempatan suara 3D binaural sejati tanpa penurunan kualitas audio.",
+        highlights: [
+          "Pipeline 32-Bit Float: Rentang dinamika suara penuh tanpa distorsi hingga 192kHz.",
+          "Sub-Bass Center Anchoring: Frekuensi rendah tetap di tengah agar hentakan bass tetap bertenaga.",
+          "Ribbon Acoustic Morphing: Mengubah sumber suara dari titik tunggal menjadi susunan pita suara lebar.",
+          "Ekspor Master Lossless: Merekam hasil spatialisasi ke WAV 32-bit float dalam satu klik."
+        ]
+      },
+      en: {
+        summary: "7Audio is a 5D spatial audio engine built for audiophiles who demand true binaural positioning without phase cancellation.",
+        highlights: [
+          "32-Bit Float Pipeline: Lossless dynamic range supporting sample rates up to 192kHz.",
+          "Sub-Bass Anchoring: Keeps low-end frequencies centered to preserve punch.",
+          "Acoustic Ribbon Array: Morphs sound sources from single points to wide spatial ribbons.",
+          "Lossless WAV Export: One-click uncompressed master export."
+        ]
+      }
+    }
+  },
+  {
+    id: "terraflow",
+    number: "08",
+    title: "TERRA FLOW",
+    tagline: {
+      id: "Mesin keputusan Stoik mengubah dilema rumit menjadi graf aksi terstruktur",
+      en: "Stoic decision engine converting complex dilemmas into executable ASTs"
+    },
+    category: "Cognitive Architecture",
+    year: "2026",
+    liveUrl: "https://seamless-problem-solver.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
+    isNativeApp: false,
+    caseStudy: {
+      id: {
+        problem: "Kerap terjadi overthinking dan macet mengambil keputusan (analysis paralysis) saat menghadapi masalah hidup atau arsitektur sistem yang rumit.",
+        approach: "Menerapkan prinsip Stoikisme 'Dikotomi Kendali' untuk membagi masalah menjadi pohon keputusan graf berarah (DAG) dengan bobot pilihan yang jelas.",
+        architecture: "Evaluator bagan alur langkah-demi-langkah interaktif dengan fitur ekspor langsung ke format checklist aksi Markdown.",
+        result: "Mengubah masalah rumit menjadi langkah aksi nyata yang jelas dalam waktu kurang dari 3 menit."
+      },
+      en: {
+        problem: "Analysis paralysis and overwhelm during complex architectural and life decisions.",
+        approach: "Applied Dichotomy of Control heuristics to transform fuzzy problems into directed acyclic decision graphs with probabilistic weighing.",
+        architecture: "Interactive step-by-step flowchart evaluator with exportable markdown action plans.",
+        result: "Structured clarity from chaotic problems in under 3 minutes."
+      }
+    },
+    deepDive: {
+      id: {
+        summary: "Terra Flow menerapkan teori keputusan Stoik dan graf terarah untuk memecah kebimbangan rumit menjadi rencana kerja terstruktur.",
+        highlights: [
+          "Filter Dikotomi Kendali: Memisahkan hal yang bisa kita kendalikan dari hal luar.",
+          "Pohon Keputusan Terarah: Menghitung jalur pilihan dan probabilitas hasil.",
+          "Ekspor Rencana Aksi Markdown: Menghasilkan daftar tindakan siap eksekusi."
+        ]
+      },
+      en: {
+        summary: "Terra Flow applies Stoic decision theory and directed graphs to break overwhelming dilemmas into clear execution steps.",
+        highlights: [
+          "Dichotomy of Control Filter: Separates controllable actions from external factors.",
+          "Directed Decision Tree: Computes clear pathways and expected outcomes.",
+          "Markdown Action Plans: Exports actionable checklists directly."
+        ]
+      }
+    }
+  },
+  {
+    id: "social-affinity",
+    number: "09",
+    title: "SOCIAL AFFINITY",
+    tagline: {
+      id: "Graf orbit relasi manusia berdasarkan lapisan kapasitas kognitif Dunbar",
+      en: "Visual relationship orbit graphs based on Dunbar's cognitive layers"
+    },
+    category: "Graph Visualization & Ergonomics",
+    year: "2026",
+    liveUrl: "https://social-affinity-network.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/social-affinity-network",
+    isNativeApp: false,
+    caseStudy: {
+      id: {
+        problem: "Daftar kontak di HP menampilkan ratusan orang dalam satu daftar panjang yang datar, padahal kapasitas otak manusia untuk merawat hubungan itu terbatas.",
+        approach: "Memvisualisasikan relasi pertemanan sebagai orbit gravitasi konsentris sesuai Angka Dunbar (lingkaran 5 inti, 15 dekat, 50 teman, 150 kenalan).",
+        architecture: "Simulasi node gravitasi berbasis fisika kanvas 2D dengan algoritma peluruhan waktu kontak terakhir.",
+        result: "Mengingatkan untuk menyapa teman penting tanpa kecanduan algoritma media sosial."
+      },
+      en: {
+        problem: "Standard contact lists treat connections as a flat infinite list, ignoring human Dunbar capacity limits.",
+        approach: "Visualized personal social spheres as concentric gravitational orbits (Support Clique of 5, Sympathy Group of 15, Affinity Layer of 50).",
+        architecture: "Physics-based collision-avoidance orbit simulation with recency decay algorithms.",
+        result: "Mindful relationship care without social media algorithmic feeds."
+      }
+    },
+    deepDive: {
+      id: {
+        summary: "Social Affinity memetakan lingkaran pertemanan berdasarkan kedalaman hubungan nyata, bukan sekadar jumlah kontak.",
+        highlights: [
+          "Orbit Lapisan Dunbar: Lingkaran konsentris mewakili kapasitas emosional manusia sejati.",
+          "Simulasi Fisika Orbit: Interaksi visual node tarik-menarik di kanvas.",
+          "Pengingat Interaksi: Menyorot teman yang sudah lama belum disapa."
+        ]
+      },
+      en: {
+        summary: "Social Affinity visualizes interpersonal relationships as gravitational orbits structured by Dunbar's numbers.",
+        highlights: [
+          "Dunbar Layer Orbits: Concentric visual rings for genuine human connection capacity.",
+          "Physics Orbit Canvas: Interactive force-directed node simulation.",
+          "Recency Reminders: Highlights connections that need mindful intentional outreach."
         ]
       }
     }

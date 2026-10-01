@@ -4,18 +4,19 @@ import { Compass, X } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'intro', label: 'INTRO', short: '00' },
-  { id: 'project-focus-clock', label: 'FOCUS CLOCK', short: '01' },
-  { id: 'project-7audio', label: '7AUDIO', short: '02' },
+  { id: 'project-github-hub', label: 'GITHUB @AIZATFIR', short: '01' },
+  { id: 'project-qurabic', label: 'QURABIC', short: '02' },
   { id: 'project-rync432', label: 'RYNC432', short: '03' },
-  { id: 'project-qurabic', label: 'QURABIC', short: '04' },
-  { id: 'project-terraflow', label: 'TERRA FLOW', short: '05' },
-  { id: 'project-social-affinity', label: 'SOCIAL AFFINITY', short: '06' },
-  { id: 'project-fitrah-launcher', label: 'FITRAH LAUNCHER', short: '07' },
-  { id: 'project-sadar', label: 'SADAR', short: '08' },
-  { id: 'art', label: 'ART', short: '09' },
-  { id: 'writing', label: 'WRITING', short: '10' },
-  { id: 'gallery', label: 'GALLERY', short: '11' },
-  { id: 'contact', label: 'CONTACT', short: '12' },
+  { id: 'project-focus-clock', label: 'FOCUS CLOCK', short: '04' },
+  { id: 'project-fitrah-launcher', label: 'FITRAH LAUNCHER', short: '05' },
+  { id: 'project-sadar', label: 'SADAR', short: '06' },
+  { id: 'project-7audio', label: '7AUDIO', short: '07' },
+  { id: 'project-terraflow', label: 'TERRA FLOW', short: '08' },
+  { id: 'project-social-affinity', label: 'SOCIAL AFFINITY', short: '09' },
+  { id: 'art', label: 'ART', short: '10' },
+  { id: 'writing', label: 'WRITING', short: '11' },
+  { id: 'gallery', label: 'GALLERY', short: '12' },
+  { id: 'contact', label: 'CONTACT', short: '13' },
 ];
 
 export default function TactileSideScrubber() {

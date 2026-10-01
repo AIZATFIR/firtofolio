@@ -1,9 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Monitor, Tablet, Smartphone, RotateCcw, X, Maximize2, Terminal, Smartphone as MobileIcon, Scroll, BookOpen } from 'lucide-react';
+import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'framer-motion';
+import { 
+  ExternalLink, 
+  Monitor, 
+  Tablet, 
+  Smartphone, 
+  RotateCcw, 
+  X, 
+  Maximize2, 
+  Terminal, 
+  Smartphone as MobileIcon, 
+  Scroll, 
+  BookOpen,
+  Volume2,
+  Play,
+  Sparkles,
+  Radio,
+  Layers
+} from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
+import GithubProfileDeck from './GithubProfileDeck';
 import { useLanguage } from '../../utils/useLanguage';
 
 export default function ProjectCard({ project, index }) {
@@ -13,8 +31,27 @@ export default function ProjectCard({ project, index }) {
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const [is7AudioLiveMounted, setIs7AudioLiveMounted] = useState(false);
+
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
+
+  // Lazy IntersectionObserver to avoid mounting/running all iframes simultaneously
+  useEffect(() => {
+    const cardEl = cardRef.current;
+    if (!cardEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: '400px 0px 400px 0px' }
+    );
+
+    observer.observe(cardEl);
+    return () => observer.disconnect();
+  }, []);
 
   // Direct Mouse Parallax 3D Tilt (Zero background physics loop overhead)
   const mouseX = useMotionValue(0);
@@ -67,6 +104,11 @@ export default function ProjectCard({ project, index }) {
     setIsCaseStudyOpen(true);
   };
 
+  const handleActivate7Audio = () => {
+    setIs7AudioLiveMounted(true);
+    setIsInteractive(true);
+  };
+
   // Bilingual text resolver helpers
   const currentTagline = typeof project.tagline === 'object'
     ? (project.tagline[lang] || project.tagline.id)
@@ -88,6 +130,8 @@ export default function ProjectCard({ project, index }) {
     }
     return project.caseStudy[key] || '';
   };
+
+  const isAudioProject = project.id === '7audio';
 
   return (
     <>
@@ -131,7 +175,7 @@ export default function ProjectCard({ project, index }) {
                 <span>{lang === 'id' ? 'studi kasus' : 'case study'}</span>
               </button>
 
-              {!project.isNativeApp && project.liveUrl && (
+              {!project.isNativeApp && !project.isGithubProfile && project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
@@ -152,7 +196,9 @@ export default function ProjectCard({ project, index }) {
                 >
                   <GithubIcon size={14} />
                   <span>
-                    {lang === 'id'
+                    {project.isGithubProfile
+                      ? (lang === 'id' ? 'profil github' : 'github profile')
+                      : lang === 'id'
                       ? (project.isNativeApp ? 'repositori & rilis' : 'kode')
                       : (project.isNativeApp ? 'repository & releases' : 'code')}
                   </span>
@@ -204,13 +250,24 @@ export default function ProjectCard({ project, index }) {
                   <div className="flex items-center gap-2 pl-2">
                     <Scroll size={13} className="text-[var(--color-orange)] hidden sm:inline-block opacity-80" />
                     <span className="text-xs font-mono text-[var(--color-headline)] font-bold truncate max-w-xs md:max-w-md">
-                      {project.isNativeApp ? `NATIVE OS // ${project.platform || 'CROSS-PLATFORM'}` : project.liveUrl}
+                      {project.isGithubProfile
+                        ? 'GITHUB // @AIZATFIR • 1,840+ COMMITS MATRIX'
+                        : project.isNativeApp
+                        ? `NATIVE OS // ${project.platform || 'CROSS-PLATFORM'}`
+                        : project.liveUrl}
                     </span>
                   </div>
                 </div>
 
-                {/* Viewport Mode Switchers (for Web Apps) */}
-                {!project.isNativeApp ? (
+                {/* Viewport Mode Switchers (for Web Apps) / Architecture Badge (for Native & GitHub) */}
+                {project.isGithubProfile ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center gap-1.5">
+                      <Layers size={12} />
+                      <span>{lang === 'id' ? 'Hub Rekayasa Terbuka' : 'Open Source Engineering'}</span>
+                    </span>
+                  </div>
+                ) : !project.isNativeApp ? (
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setViewportMode('desktop')}
@@ -268,12 +325,15 @@ export default function ProjectCard({ project, index }) {
               {/* Viewport Container */}
               <div
                 ref={iframeContainerRef}
-                className="bg-[var(--color-surface-tint)] p-3 md:p-8 flex justify-center items-center overflow-hidden relative"
+                className="bg-[var(--color-surface-tint)] p-2 sm:p-4 md:p-6 flex justify-center items-center overflow-hidden relative"
               >
-                {!project.isNativeApp ? (
-                  /* Real Live Web Iframe Container — Full Size Immersive */
+                {/* 1. GITHUB PROFILE CONTRIBUTION MATRIX DECK */}
+                {project.isGithubProfile ? (
+                  <GithubProfileDeck project={project} />
+                ) : !project.isNativeApp ? (
+                  /* 2. REAL LIVE WEB EMBED / 7AUDIO ULTRA-FAST ENGINE LAUNCHER */
                   <div
-                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white shadow-2xl relative"
+                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white dark:bg-black shadow-2xl relative"
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
                       height: viewportMode === 'desktop' ? '780px' : viewportMode === 'tablet' ? '660px' : '600px',
@@ -282,20 +342,94 @@ export default function ProjectCard({ project, index }) {
                       maxWidth: '100%',
                     }}
                   >
-                    <iframe
-                      key={iframeKey}
-                      src={project.liveUrl}
-                      title={`${project.title} Application`}
-                      className="w-full h-full border-0"
-                      loading="eager"
-                      allow="autoplay; encrypted-media; fullscreen"
-                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                      style={{
-                        pointerEvents: isInteractive ? 'auto' : 'none',
-                      }}
-                    />
+                    {/* For 7Audio: Standby High-Performance Visualizer Cover until Clicked/Activated */}
+                    {isAudioProject && !is7AudioLiveMounted ? (
+                      <div 
+                        onClick={handleActivate7Audio}
+                        className="w-full h-full bg-[#0a0a0c] text-white flex flex-col justify-between p-6 sm:p-10 relative overflow-hidden cursor-pointer group/audio select-none"
+                      >
+                        {/* Acoustic Orbit Concentric Waves */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                          <div className="w-96 h-96 rounded-full border border-[var(--color-orange)]/30 animate-ping duration-1000" />
+                          <div className="absolute w-[500px] h-[500px] rounded-full border border-white/10" />
+                          <div className="absolute w-[680px] h-[680px] rounded-full border border-white/5" />
+                        </div>
 
-                    {!isInteractive && (
+                        {/* Top Status Bar */}
+                        <div className="relative z-10 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)] animate-pulse" />
+                            <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-orange)] font-bold">
+                              5D Spatial Acoustic Engine
+                            </span>
+                          </div>
+                          <span className="font-mono text-xs text-neutral-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+                            32-Bit Float DSP • 192kHz Ready
+                          </span>
+                        </div>
+
+                        {/* Center Stage: Interactive Waveform & Instant Wakeup CTA */}
+                        <div className="relative z-10 flex flex-col items-center text-center my-auto">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[var(--color-orange)]/20 border-2 border-[var(--color-orange)] flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(255,111,30,0.4)] group-hover/audio:scale-110 transition-transform">
+                            <Volume2 size={36} className="text-[var(--color-orange)] group-hover/audio:animate-bounce" />
+                          </div>
+
+                          <h4 className="font-display text-2xl sm:text-4xl font-bold tracking-tight mb-2">
+                            7AUDIO // BINAURAL SOUNDSTAGE
+                          </h4>
+                          <p className="font-serif italic text-sm sm:text-base text-neutral-400 max-w-lg mb-6">
+                            "{currentTagline}"
+                          </p>
+
+                          {/* Pulsing Launch Button */}
+                          <div className="px-6 py-3 rounded-full bg-[var(--color-orange)] text-white font-mono text-xs sm:text-sm font-bold shadow-xl flex items-center gap-2 transform group-hover/audio:scale-105 transition-all">
+                            <Play size={14} fill="currentColor" />
+                            <span>
+                              {lang === 'id' 
+                                ? 'KLIK UNTUK AKTIFKAN MESIN AUDIO LIVE 5D' 
+                                : 'CLICK TO LAUNCH LIVE 5D AUDIO ENGINE'}
+                            </span>
+                            <Sparkles size={14} />
+                          </div>
+
+                          <span className="font-mono text-[11px] text-neutral-500 mt-3">
+                            {lang === 'id' 
+                              ? 'Mode ringan hemat GPU saat scroll • Akses instan 1-klik' 
+                              : 'Lightweight scroll standby • Instant 1-click Web Audio boot'}
+                          </span>
+                        </div>
+
+                        {/* Bottom Metric Tags */}
+                        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10 text-xs font-mono text-neutral-400">
+                          <div className="flex items-center gap-4">
+                            <span>• Sub-Bass Anchoring</span>
+                            <span>• 5-Band HRTF</span>
+                            <span>• Ribbon Geometry</span>
+                          </div>
+                          <span className="text-[var(--color-orange)]">7audio.vercel.app ↗</span>
+                        </div>
+                      </div>
+                    ) : isInView ? (
+                      /* Live Embedded Iframe */
+                      <iframe
+                        key={iframeKey}
+                        src={project.liveUrl}
+                        title={`${project.title} Application`}
+                        className="w-full h-full border-0"
+                        loading="lazy"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                        style={{
+                          pointerEvents: isInteractive ? 'auto' : 'none',
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[var(--color-bg)] flex items-center justify-center font-mono text-xs text-[var(--color-muted)]">
+                        Standby
+                      </div>
+                    )}
+
+                    {!isInteractive && (!isAudioProject || is7AudioLiveMounted) && (
                       <div
                         onClick={() => setIsInteractive(true)}
                         className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
@@ -329,7 +463,7 @@ export default function ProjectCard({ project, index }) {
                     </AnimatePresence>
                   </div>
                 ) : (
-                  /* Native Application Hub Deck (For Fitrah Launcher & Sadar) */
+                  /* 3. NATIVE APPLICATION HUB DECK (For Fitrah Launcher & Sadar) */
                   <div className="w-full max-w-4xl py-12 px-6 sm:px-10 rounded-[18px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-xl flex flex-col items-center text-center">
                     <div className="w-14 h-14 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-4 shadow-sm">
                       <MobileIcon size={28} className="text-[var(--color-orange)]" />
