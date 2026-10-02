@@ -12,10 +12,6 @@ import {
   Smartphone as MobileIcon, 
   Scroll, 
   BookOpen,
-  Volume2,
-  Play,
-  Sparkles,
-  Radio,
   Layers
 } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
@@ -31,27 +27,9 @@ export default function ProjectCard({ project, index }) {
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const [is7AudioLiveMounted, setIs7AudioLiveMounted] = useState(false);
 
   const cardRef = useRef(null);
   const iframeContainerRef = useRef(null);
-
-  // Lazy IntersectionObserver to avoid mounting/running all iframes simultaneously
-  useEffect(() => {
-    const cardEl = cardRef.current;
-    if (!cardEl) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { rootMargin: '400px 0px 400px 0px' }
-    );
-
-    observer.observe(cardEl);
-    return () => observer.disconnect();
-  }, []);
 
   // Direct Mouse Parallax 3D Tilt (Zero background physics loop overhead)
   const mouseX = useMotionValue(0);
@@ -104,11 +82,6 @@ export default function ProjectCard({ project, index }) {
     setIsCaseStudyOpen(true);
   };
 
-  const handleActivate7Audio = () => {
-    setIs7AudioLiveMounted(true);
-    setIsInteractive(true);
-  };
-
   // Bilingual text resolver helpers
   const currentTagline = typeof project.tagline === 'object'
     ? (project.tagline[lang] || project.tagline.id)
@@ -130,8 +103,6 @@ export default function ProjectCard({ project, index }) {
     }
     return project.caseStudy[key] || '';
   };
-
-  const isAudioProject = project.id === '7audio';
 
   return (
     <>
@@ -340,96 +311,26 @@ export default function ProjectCard({ project, index }) {
                       maxHeight: '86vh',
                       minHeight: '500px',
                       maxWidth: '100%',
+                      contain: 'layout paint',
                     }}
                   >
-                    {/* For 7Audio: Standby High-Performance Visualizer Cover until Clicked/Activated */}
-                    {isAudioProject && !is7AudioLiveMounted ? (
-                      <div 
-                        onClick={handleActivate7Audio}
-                        className="w-full h-full bg-[#0a0a0c] text-white flex flex-col justify-between p-6 sm:p-10 relative overflow-hidden cursor-pointer group/audio select-none"
-                      >
-                        {/* Acoustic Orbit Concentric Waves */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
-                          <div className="w-96 h-96 rounded-full border border-[var(--color-orange)]/30 animate-ping duration-1000" />
-                          <div className="absolute w-[500px] h-[500px] rounded-full border border-white/10" />
-                          <div className="absolute w-[680px] h-[680px] rounded-full border border-white/5" />
-                        </div>
+                    {/* Real Live Web Iframe — Preloaded at launch & permanently mounted */}
+                    <iframe
+                      key={iframeKey}
+                      src={project.liveUrl}
+                      title={`${project.title} Application`}
+                      className="w-full h-full border-0"
+                      loading="eager"
+                      allow="autoplay; encrypted-media; fullscreen"
+                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                      style={{
+                        pointerEvents: isInteractive ? 'auto' : 'none',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                      }}
+                    />
 
-                        {/* Top Status Bar */}
-                        <div className="relative z-10 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-orange)] animate-pulse" />
-                            <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-orange)] font-bold">
-                              5D Spatial Acoustic Engine
-                            </span>
-                          </div>
-                          <span className="font-mono text-xs text-neutral-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                            32-Bit Float DSP • 192kHz Ready
-                          </span>
-                        </div>
-
-                        {/* Center Stage: Interactive Waveform & Instant Wakeup CTA */}
-                        <div className="relative z-10 flex flex-col items-center text-center my-auto">
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[var(--color-orange)]/20 border-2 border-[var(--color-orange)] flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(255,111,30,0.4)] group-hover/audio:scale-110 transition-transform">
-                            <Volume2 size={36} className="text-[var(--color-orange)] group-hover/audio:animate-bounce" />
-                          </div>
-
-                          <h4 className="font-display text-2xl sm:text-4xl font-bold tracking-tight mb-2">
-                            7AUDIO // BINAURAL SOUNDSTAGE
-                          </h4>
-                          <p className="font-serif italic text-sm sm:text-base text-neutral-400 max-w-lg mb-6">
-                            "{currentTagline}"
-                          </p>
-
-                          {/* Pulsing Launch Button */}
-                          <div className="px-6 py-3 rounded-full bg-[var(--color-orange)] text-white font-mono text-xs sm:text-sm font-bold shadow-xl flex items-center gap-2 transform group-hover/audio:scale-105 transition-all">
-                            <Play size={14} fill="currentColor" />
-                            <span>
-                              {lang === 'id' 
-                                ? 'KLIK UNTUK AKTIFKAN MESIN AUDIO LIVE 5D' 
-                                : 'CLICK TO LAUNCH LIVE 5D AUDIO ENGINE'}
-                            </span>
-                            <Sparkles size={14} />
-                          </div>
-
-                          <span className="font-mono text-[11px] text-neutral-500 mt-3">
-                            {lang === 'id' 
-                              ? 'Mode ringan hemat GPU saat scroll • Akses instan 1-klik' 
-                              : 'Lightweight scroll standby • Instant 1-click Web Audio boot'}
-                          </span>
-                        </div>
-
-                        {/* Bottom Metric Tags */}
-                        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10 text-xs font-mono text-neutral-400">
-                          <div className="flex items-center gap-4">
-                            <span>• Sub-Bass Anchoring</span>
-                            <span>• 5-Band HRTF</span>
-                            <span>• Ribbon Geometry</span>
-                          </div>
-                          <span className="text-[var(--color-orange)]">7audio.vercel.app ↗</span>
-                        </div>
-                      </div>
-                    ) : isInView ? (
-                      /* Live Embedded Iframe */
-                      <iframe
-                        key={iframeKey}
-                        src={project.liveUrl}
-                        title={`${project.title} Application`}
-                        className="w-full h-full border-0"
-                        loading="lazy"
-                        allow="autoplay; encrypted-media; fullscreen"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                        style={{
-                          pointerEvents: isInteractive ? 'auto' : 'none',
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-[var(--color-bg)] flex items-center justify-center font-mono text-xs text-[var(--color-muted)]">
-                        Standby
-                      </div>
-                    )}
-
-                    {!isInteractive && (!isAudioProject || is7AudioLiveMounted) && (
+                    {!isInteractive && (
                       <div
                         onClick={() => setIsInteractive(true)}
                         className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
