@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   ExternalLink, 
   Monitor, 
@@ -23,30 +24,39 @@ export default function ProjectCard({ project }) {
   const [viewportMode, setViewportMode] = useState('desktop');
   const [iframeKey, setIframeKey] = useState(0);
   const [iframeLoading, setIframeLoading] = useState(true);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
 
+  // 3D paper scroll / roll-up animation as card emerges into view
+  const cardRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ['start end', 'center center'],
+  });
+
+  const rotateX = useTransform(scrollYProgress, [0, 1], [18, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
+  const translateY = useTransform(scrollYProgress, [0, 1], [70, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.35], [0.55, 1]);
+
   const handleReload = () => {
     setIframeLoading(true);
     setIframeKey((prev) => prev + 1);
-    setIsPreviewOpen(true);
   };
 
   // Listen for Escape key to exit interactive mode
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (isInteractive) setIsInteractive(false);
-        if (isPreviewOpen) setIsPreviewOpen(false);
+      if (e.key === 'Escape' && isInteractive) {
+        setIsInteractive(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isInteractive, isPreviewOpen]);
+  }, [isInteractive]);
 
   const handleOpenCaseStudy = (stageIndex = 0) => {
     setSelectedStageIdx(stageIndex);
@@ -148,13 +158,23 @@ export default function ProjectCard({ project }) {
 
           {/* 3D IMMERSIVE PERSPECTIVE SHOWCASE CARD (SCROLLERFIR PATTERN) */}
           <div
+            ref={cardRef}
             className="relative w-full group py-4 md:py-8"
             style={{
-              perspective: '1000px',
-              transformStyle: 'preserve-3d',
+              perspective: '1400px',
             }}
           >
-            <div className={`project-preview-shell w-full border border-[var(--color-border)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 relative shadow-2xl${isPreviewOpen || project.isGithubProfile ? ' is-live' : ''}`}>
+            <motion.div
+              style={{
+                rotateX,
+                scale,
+                translateY,
+                opacity,
+                transformOrigin: '50% 0%',
+                transformPerspective: 1400,
+              }}
+              className="project-preview-shell w-full border border-[var(--color-border)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 relative shadow-2xl is-live"
+            >
               {/* Top Glass Rim Specular Highlight */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent z-30 pointer-events-none" />
 
@@ -245,101 +265,61 @@ export default function ProjectCard({ project }) {
                   <div
                     className={`project-preview-window rounded-[16px] overflow-hidden border border-[var(--color-border)] ${project.isGithubProfile ? 'bg-[#0d1117]' : 'bg-white dark:bg-[#0d1117]'} shadow-2xl relative`}
                     style={{
-                      width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? (project.isGithubProfile ? '780px' : '680px') : viewportMode === 'tablet' ? '620px' : '600px',
-                      maxHeight: '86vh',
+                      width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '390px',
+                      height: viewportMode === 'desktop' ? 'clamp(780px, 88vh, 960px)' : viewportMode === 'tablet' ? '820px' : '780px',
                       maxWidth: '100%',
                       contain: 'layout paint',
                     }}
                   >
-                    {project.isGithubProfile || isPreviewOpen || !project.previewImage ? (
-                      <>
-                        {iframeLoading && (
-                          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0d1117] text-[#e6edf3] font-mono text-xs gap-3 select-none">
-                            <div className="w-8 h-8 rounded-full border-2 border-[#30363d] border-t-[var(--color-orange)] animate-spin" />
-                            <span className="opacity-75 tracking-wider">
-                              {lang === 'id' ? 'Memuat live GitHub @AIZATFIR...' : 'Loading live GitHub @AIZATFIR...'}
-                            </span>
-                          </div>
-                        )}
-                        <iframe
-                          key={iframeKey}
-                          src={project.liveUrl}
-                          title={`${project.title} live preview`}
-                          className="w-full h-full border-0"
-                          loading={project.isGithubProfile ? 'eager' : 'lazy'}
-                          onLoad={() => setIframeLoading(false)}
-                          allow="autoplay; encrypted-media; fullscreen"
-                          sandbox={project.isGithubProfile ? undefined : 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'}
-                          style={{
-                            pointerEvents: isInteractive ? 'auto' : 'none',
-                            transform: 'translateZ(0)',
-                            backfaceVisibility: 'hidden',
-                          }}
-                        />
-
-                        {!isInteractive && (
-                          <div
-                            onClick={() => setIsInteractive(true)}
-                            className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
-                            title={lang === 'id' ? 'Klik untuk interaksi langsung' : 'Click to interact'}
-                          >
-                            <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
-                              <span>
-                                {project.isGithubProfile
-                                  ? (lang === 'id' ? 'Klik untuk interaksi langsung di halaman profil GitHub' : 'Click to interact with real live GitHub profile')
-                                  : (lang === 'id' ? 'Klik untuk interaksi langsung di dalam halaman' : 'Click to interact directly')}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-
-                        {isInteractive && (
-                          <button
-                            onClick={() => setIsInteractive(false)}
-                            className="absolute top-4 right-4 z-30 px-3.5 py-1.5 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none"
-                            title={lang === 'id' ? 'Keluar mode interaktif (Esc)' : 'Exit interaction (Esc)'}
-                          >
-                            <X size={13} />
-                            <span>{lang === 'id' ? 'Keluar Esc' : 'Exit Esc'}</span>
-                          </button>
-                        )}
-
-                        {!project.isGithubProfile && (
-                          <button
-                            onClick={() => { setIsPreviewOpen(false); setIsInteractive(false); }}
-                            className="absolute top-4 left-4 z-30 min-h-9 px-3 py-1 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:border-[var(--color-orange)] transition-colors cursor-pointer"
-                            aria-label={lang === 'id' ? 'Tutup preview langsung' : 'Close live preview'}
-                            title={lang === 'id' ? 'Tutup preview (Esc)' : 'Close preview (Esc)'}
-                          >
-                            <X size={12} />
-                            <span>{lang === 'id' ? 'Tutup preview' : 'Close preview'}</span>
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => { setIsPreviewOpen(true); setIsInteractive(true); }}
-                        className="project-preview-image group relative block h-full w-full overflow-hidden cursor-pointer text-left"
-                        aria-label={lang === 'id' ? `Buka preview langsung ${project.title}` : `Open ${project.title} live preview`}
-                      >
-                        <img
-                          src={project.previewImage}
-                          alt={`${project.title} website screenshot`}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                        />
-                        <span className="project-preview-caption absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 px-5 py-5 sm:px-8 sm:py-7">
-                          <span>
-                            <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">{lang === 'id' ? 'Tangkapan layar situs asli' : 'Real website screenshot'}</span>
-                            <span className="mt-1 block text-lg font-semibold text-white sm:text-2xl">{lang === 'id' ? 'Klik untuk memuat live preview' : 'Click to load live preview'}</span>
-                          </span>
-                          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-sm transition-transform group-hover:translate-x-1" aria-hidden="true">
-                            <ExternalLink size={18} />
-                          </span>
+                    {iframeLoading && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0d1117] text-[#e6edf3] font-mono text-xs gap-3 select-none">
+                        <div className="w-8 h-8 rounded-full border-2 border-[#30363d] border-t-[var(--color-orange)] animate-spin" />
+                        <span className="opacity-75 tracking-wider">
+                          {lang === 'id' ? `Memuat live ${project.title}...` : `Loading live ${project.title}...`}
                         </span>
+                      </div>
+                    )}
+                    <iframe
+                      key={iframeKey}
+                      src={project.liveUrl}
+                      title={`${project.title} live preview`}
+                      className="w-full h-full border-0"
+                      loading={project.isGithubProfile ? 'eager' : 'lazy'}
+                      onLoad={() => setIframeLoading(false)}
+                      allow="autoplay; encrypted-media; fullscreen"
+                      sandbox={project.isGithubProfile ? undefined : 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'}
+                      style={{
+                        pointerEvents: isInteractive ? 'auto' : 'none',
+                        transform: 'translateZ(0)',
+                        backfaceVisibility: 'hidden',
+                      }}
+                    />
+
+                    {!isInteractive && (
+                      <div
+                        onClick={() => setIsInteractive(true)}
+                        className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-8"
+                        title={lang === 'id' ? 'Klik untuk interaksi langsung' : 'Click to interact'}
+                      >
+                        <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-5 py-2.5 rounded-full bg-[var(--color-card-bg)]/90 backdrop-blur-md border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
+                          <span>
+                            {project.isGithubProfile
+                              ? (lang === 'id' ? 'Klik untuk interaksi langsung di halaman profil GitHub' : 'Click to interact with real live GitHub profile')
+                              : (lang === 'id' ? 'Klik untuk interaksi langsung di dalam halaman' : 'Click to interact directly with live site')}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {isInteractive && (
+                      <button
+                        onClick={() => setIsInteractive(false)}
+                        className="absolute top-4 right-4 z-30 px-3.5 py-1.5 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none"
+                        title={lang === 'id' ? 'Keluar mode interaktif (Esc)' : 'Exit interaction (Esc)'}
+                      >
+                        <X size={13} />
+                        <span>{lang === 'id' ? 'Keluar Esc' : 'Exit Esc'}</span>
                       </button>
                     )}
                   </div>
@@ -389,7 +369,7 @@ export default function ProjectCard({ project }) {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* 4-Stage Clickable Case Study Grid */}

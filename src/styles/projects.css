@@ -8,15 +8,9 @@
 }
 
 .project-preview-shell {
-  transform: perspective(1800px) rotateX(1.2deg);
   transform-origin: 50% 0%;
-  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 500ms ease;
-  box-shadow: 0 24px 60px -34px rgba(39, 27, 14, 0.6);
-}
-
-.project-preview-shell:hover,
-.project-preview-shell.is-live {
-  transform: perspective(1800px) rotateX(0);
+  box-shadow: 0 28px 70px -30px rgba(39, 27, 14, 0.65);
+  will-change: transform, opacity;
 }
 
 .project-preview-image {
