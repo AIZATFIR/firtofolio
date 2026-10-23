@@ -13,10 +13,11 @@ const SECTIONS = [
   { id: 'project-7audio', label: '7AUDIO', short: '07' },
   { id: 'project-terraflow', label: 'TERRA FLOW', short: '08' },
   { id: 'project-social-affinity', label: 'SOCIAL AFFINITY', short: '09' },
-  { id: 'art', label: 'ART', short: '10' },
-  { id: 'writing', label: 'WRITING', short: '11' },
-  { id: 'gallery', label: 'GALLERY', short: '12' },
-  { id: 'contact', label: 'CONTACT', short: '13' },
+  { id: 'project-valeska', label: 'VALESKA', short: '10' },
+  { id: 'art', label: 'ART', short: '11' },
+  { id: 'writing', label: 'WRITING', short: '12' },
+  { id: 'gallery', label: 'GALLERY', short: '13' },
+  { id: 'contact', label: 'CONTACT', short: '14' },
 ];
 
 export default function TactileSideScrubber() {

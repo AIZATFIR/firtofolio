@@ -21,7 +21,8 @@ export const PORTFOLIO = {
     { num: "01", title: "7Audio — Audiophile 5D Spatial Audio Engine", status: "Active" },
     { num: "02", title: "Focus Clock 2.0 — Circadian Time-Blocking Engine", status: "Active" },
     { num: "03", title: "Fitrah Launcher — Digital Minimalism OS Workspace", status: "Active" },
-    { num: "04", title: "Sadar — Conscious Habit Awareness Companion", status: "Active" }
+    { num: "04", title: "Sadar — Conscious Habit Awareness Companion", status: "Active" },
+    { num: "05", title: "Valeska — Personal Agent Workspace & Eden Sanctuary", status: "Active" }
   ]
 };
 
@@ -31,13 +32,15 @@ export const PROJECTS = [
     number: "01",
     title: "GITHUB // @AIZATFIR",
     tagline: {
-      id: "1,840+ kontribusi aktif, repositori open-source, dan rekayasa arsitektur sistem",
-      en: "1,840+ annual contributions, open-source repositories & system engineering"
+      id: "Profil resmi, 1,840+ kontribusi aktif, repositori open-source, dan rekayasa arsitektur sistem",
+      en: "Official profile, 1,840+ annual contributions, open-source repositories & system engineering"
     },
     category: "Open Source & Systems Engineering",
     year: "2025–2026",
+    liveUrl: "/api/github-profile",
     githubUrl: "https://github.com/AIZATFIR",
     isGithubProfile: true,
+    isNativeApp: false,
     stats: {
       commits: "1,840+",
       repos: "42+",
@@ -90,7 +93,8 @@ export const PROJECTS = [
     category: "Linguistics NLP & Taxonomy",
     year: "2026",
     liveUrl: "https://qurabic-indo-corpus.vercel.app/",
-    githubUrl: "https://github.com/AIZATFIR/qurabic-indo-corpus",
+    previewImage: "/assets/previews/qurabic.webp",
+    githubUrl: "https://github.com/AIZATFIR/Qurabic-Indo",
     isNativeApp: false,
     caseStudy: {
       id: {
@@ -136,6 +140,7 @@ export const PROJECTS = [
     category: "Distributed Systems & Audio",
     year: "2026",
     liveUrl: "https://rync432.vercel.app/",
+    previewImage: "/assets/previews/rync432.webp",
     githubUrl: "https://github.com/AIZATFIR/rync432",
     isNativeApp: false,
     caseStudy: {
@@ -182,6 +187,7 @@ export const PROJECTS = [
     category: "Cognitive Ergonomics & AI",
     year: "2026",
     liveUrl: "https://focus-clock-web.vercel.app/",
+    previewImage: "/assets/previews/focus-clock.webp",
     githubUrl: "https://github.com/AIZATFIR/focus-clock",
     isNativeApp: false,
     caseStudy: {
@@ -326,6 +332,7 @@ export const PROJECTS = [
     category: "Web Audio & Spatial Acoustics",
     year: "2026",
     liveUrl: "https://7audio.vercel.app/",
+    previewImage: "/assets/previews/7audio.webp",
     githubUrl: "https://github.com/AIZATFIR/7Audio",
     isNativeApp: false,
     caseStudy: {
@@ -374,6 +381,7 @@ export const PROJECTS = [
     category: "Cognitive Architecture",
     year: "2026",
     liveUrl: "https://seamless-problem-solver.vercel.app/",
+    previewImage: "/assets/previews/terraflow.webp",
     githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
     isNativeApp: false,
     caseStudy: {
@@ -420,6 +428,7 @@ export const PROJECTS = [
     category: "Graph Visualization & Ergonomics",
     year: "2026",
     liveUrl: "https://social-affinity-network.vercel.app/",
+    previewImage: "/assets/previews/social-affinity.webp",
     githubUrl: "https://github.com/AIZATFIR/social-affinity-network",
     isNativeApp: false,
     caseStudy: {
@@ -451,6 +460,55 @@ export const PROJECTS = [
           "Dunbar Layer Orbits: Concentric visual rings for genuine human connection capacity.",
           "Physics Orbit Canvas: Interactive force-directed node simulation.",
           "Recency Reminders: Highlights connections that need mindful intentional outreach."
+        ]
+      }
+    }
+  },
+  {
+    id: "valeska",
+    number: "10",
+    title: "VALESKA",
+    tagline: {
+      id: "Misi, worker agent, dan kondisi homeserver dalam satu ruang kendali",
+      en: "A calm control room for agent missions, workers, and homeserver health"
+    },
+    category: "Agent Monitoring & Orchestration",
+    year: "2026",
+    githubUrl: "https://github.com/AIZATFIR/Valeska",
+    isNativeApp: true,
+    isPrivateWorkspace: true,
+    platform: "Private homeserver app • public source on GitHub",
+    caseStudy: {
+      id: {
+        problem: "Mengelola beberapa worker agent dan memahami status eksekusi mereka tersebar di terminal dan layanan yang berbeda.",
+        approach: "Menyatukan pembuatan sesi agent, pengiriman misi dengan kriteria penerimaan, log worker, interupsi, dan pemantauan runtime ke dalam satu workspace.",
+        architecture: "UI React dan TypeScript terhubung ke server Express serta sesi worker native OpenCode melalui Herdr. Status dan hasil ditampilkan dari sumber aktual; kondisi yang tidak tersedia tetap ditandai Unknown atau Unavailable.",
+        result: "Ruang kendali agent pribadi dengan monitoring worker dan homeserver, plus UI evaluasi misi untuk meninjau brief dan kriteria penerimaan."
+      },
+      en: {
+        problem: "Managing multiple agent workers and understanding their execution status is scattered across terminals and services.",
+        approach: "Brings agent sessions, scoped missions with acceptance criteria, worker logs, interruption, and runtime monitoring into one workspace.",
+        architecture: "A React and TypeScript UI connects to an Express server and native OpenCode worker sessions through Herdr. Status and results come from actual sources; unavailable information remains marked Unknown or Unavailable.",
+        result: "A private agent control room for worker and homeserver monitoring, plus a mission evaluation UI for reviewing briefs and acceptance criteria."
+      }
+    },
+    deepDive: {
+      id: {
+        summary: "Valeska adalah workspace pribadi untuk mengorkestrasi sesi agent, memantau worker, dan mengelola misi dengan batas serta kriteria penerimaan yang jelas.",
+        highlights: [
+          "Orkestrasi sesi OpenCode melalui worker yang dikelola.",
+          "Monitor untuk status worker dan metrik homeserver aktual.",
+          "Misi menyimpan brief dan kriteria penerimaan untuk review.",
+          "Output native worker tetap terlihat; status sukses tidak ditebak dari proses idle."
+        ]
+      },
+      en: {
+        summary: "Valeska is a private workspace for orchestrating agent sessions, monitoring workers, and managing missions with bounded briefs and clear acceptance criteria.",
+        highlights: [
+          "Orchestrates native OpenCode sessions through managed workers.",
+          "Monitors actual worker status and homeserver metrics.",
+          "Missions retain bounded briefs and acceptance criteria for review.",
+          "Shows native worker output; idle processes are not treated as proof of success."
         ]
       }
     }

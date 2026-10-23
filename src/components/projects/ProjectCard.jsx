@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import { 
   ExternalLink, 
   Monitor, 
@@ -17,65 +16,37 @@ import {
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import CaseStudyModal from './CaseStudyModal';
-import GithubProfileDeck from './GithubProfileDeck';
 import { useLanguage } from '../../utils/useLanguage';
 
-export default function ProjectCard({ project, index }) {
+export default function ProjectCard({ project }) {
   const { lang } = useLanguage();
   const [viewportMode, setViewportMode] = useState('desktop');
   const [iframeKey, setIframeKey] = useState(0);
+  const [iframeLoading, setIframeLoading] = useState(true);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isInteractive, setIsInteractive] = useState(false);
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [selectedStageIdx, setSelectedStageIdx] = useState(0);
 
-  const cardRef = useRef(null);
-  const iframeContainerRef = useRef(null);
-
-  // Direct Mouse Parallax 3D Tilt (Zero background physics loop overhead)
-  const mouseX = useMotionValue(0);
-  const mouseTiltY = useTransform(mouseX, [-0.5, 0.5], [-2.5, 2.5]);
-
-  const handleMouseMove = (e) => {
-    if (isInteractive || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    mouseX.set(xPct);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-  };
-
-  // 100% Scroll-Driven Domino 3D Vertical Tilt Physics (GPU hardware accelerated)
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Exact Qurabic-Indo (Scrollerfir) 3D Tilt Scroll Curve
-  const baseRotateX = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [20, 0, 0, -18]);
-  const scale = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [1.03, 1, 1, 0.96]);
-  const translateY = useTransform(scrollYProgress, [0, 0.48, 0.52, 1], [60, 0, 0, -50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.75, 1, 1, 0.75]);
-
   const handleReload = () => {
+    setIframeLoading(true);
     setIframeKey((prev) => prev + 1);
+    setIsPreviewOpen(true);
   };
 
   // Listen for Escape key to exit interactive mode
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.key === 'Escape' || e.keyCode === 27) && isInteractive) {
-        setIsInteractive(false);
+      if (e.key === 'Escape') {
+        if (isInteractive) setIsInteractive(false);
+        if (isPreviewOpen) setIsPreviewOpen(false);
       }
     };
-    window.addEventListener('keydown', handleKeyDown, { capture: true });
-    document.addEventListener('keydown', handleKeyDown, { capture: true });
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown, { capture: true });
-      document.removeEventListener('keydown', handleKeyDown, { capture: true });
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isInteractive]);
+  }, [isInteractive, isPreviewOpen]);
 
   const handleOpenCaseStudy = (stageIndex = 0) => {
     setSelectedStageIdx(stageIndex);
@@ -107,9 +78,6 @@ export default function ProjectCard({ project, index }) {
   return (
     <>
       <section
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         className="project-scene relative min-h-screen py-16 sm:py-20 flex flex-col justify-center border-b border-[var(--color-border)] overflow-visible"
         id={`project-${project.id}`}
         style={{ perspective: 1300 }}
@@ -186,25 +154,7 @@ export default function ProjectCard({ project, index }) {
               transformStyle: 'preserve-3d',
             }}
           >
-            {/* Ambient Warm Underglow beneath the 3D plane */}
-            <div
-              className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-[var(--color-orange)]/20 via-transparent to-transparent blur-3xl pointer-events-none rounded-full"
-            />
-
-            <motion.div
-              style={{
-                rotateX: isInteractive ? 0 : baseRotateX,
-                rotateY: isInteractive ? 0 : mouseTiltY,
-                scale: isInteractive ? 1 : scale,
-                translateY: isInteractive ? 0 : translateY,
-                opacity,
-                transformOrigin: '50% 0%',
-                transformStyle: 'preserve-3d',
-                boxShadow:
-                  '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
-              }}
-              className="w-full border-[1.5px] border-[var(--color-text)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 will-change-transform relative shadow-2xl"
-            >
+            <div className={`project-preview-shell w-full border border-[var(--color-border)] rounded-[24px] bg-[var(--color-card-bg)] overflow-hidden mb-8 relative shadow-2xl${isPreviewOpen || project.isGithubProfile ? ' is-live' : ''}`}>
               {/* Top Glass Rim Specular Highlight */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent z-30 pointer-events-none" />
 
@@ -222,23 +172,16 @@ export default function ProjectCard({ project, index }) {
                     <Scroll size={13} className="text-[var(--color-orange)] hidden sm:inline-block opacity-80" />
                     <span className="text-xs font-mono text-[var(--color-headline)] font-bold truncate max-w-xs md:max-w-md">
                       {project.isGithubProfile
-                        ? 'GITHUB // @AIZATFIR • 1,840+ COMMITS MATRIX'
+                        ? 'https://github.com/AIZATFIR'
                         : project.isNativeApp
-                        ? `NATIVE OS // ${project.platform || 'CROSS-PLATFORM'}`
+                        ? `${project.isPrivateWorkspace ? 'PRIVATE WEB APP' : 'NATIVE OS'} // ${project.platform || 'CROSS-PLATFORM'}`
                         : project.liveUrl}
                     </span>
                   </div>
                 </div>
 
-                {/* Viewport Mode Switchers (for Web Apps) / Architecture Badge (for Native & GitHub) */}
-                {project.isGithubProfile ? (
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center gap-1.5">
-                      <Layers size={12} />
-                      <span>{lang === 'id' ? 'Hub Rekayasa Terbuka' : 'Open Source Engineering'}</span>
-                    </span>
-                  </div>
-                ) : !project.isNativeApp ? (
+                {/* Viewport Mode Switchers (for Web Apps & GitHub) / Architecture Badge (for Native Apps) */}
+                {!project.isNativeApp ? (
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setViewportMode('desktop')}
@@ -287,91 +230,130 @@ export default function ProjectCard({ project, index }) {
                 ) : (
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs text-[var(--color-orange)] font-bold px-3 py-1 rounded-full bg-[var(--color-surface-tint)] border border-[var(--color-border)]">
-                      {lang === 'id' ? 'Arsitektur Native' : 'Native Architecture'}
+                      {project.isPrivateWorkspace
+                        ? (lang === 'id' ? 'Workspace privat' : 'Private workspace')
+                        : (lang === 'id' ? 'Arsitektur Native' : 'Native Architecture')}
                     </span>
                   </div>
                 )}
               </div>
 
               {/* Viewport Container */}
-              <div
-                ref={iframeContainerRef}
-                className="bg-[var(--color-surface-tint)] p-2 sm:p-4 md:p-6 flex justify-center items-center overflow-hidden relative"
-              >
-                {/* 1. GITHUB PROFILE CONTRIBUTION MATRIX DECK */}
-                {project.isGithubProfile ? (
-                  <GithubProfileDeck project={project} />
-                ) : !project.isNativeApp ? (
-                  /* 2. REAL LIVE WEB EMBED / 7AUDIO ULTRA-FAST ENGINE LAUNCHER */
+              <div className="bg-[var(--color-surface-tint)] p-2 sm:p-4 md:p-6 flex justify-center items-center overflow-hidden relative">
+                {!project.isNativeApp ? (
+                  /* REAL LIVE WEB EMBED (Authentic GitHub Profile Embed & Interactive Web Apps) */
                   <div
-                    className="transition-all duration-300 ease-out rounded-[16px] overflow-hidden border border-[var(--color-border)] bg-white dark:bg-black shadow-2xl relative"
+                    className={`project-preview-window rounded-[16px] overflow-hidden border border-[var(--color-border)] ${project.isGithubProfile ? 'bg-[#0d1117]' : 'bg-white dark:bg-[#0d1117]'} shadow-2xl relative`}
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '375px',
-                      height: viewportMode === 'desktop' ? '780px' : viewportMode === 'tablet' ? '660px' : '600px',
+                      height: viewportMode === 'desktop' ? (project.isGithubProfile ? '780px' : '680px') : viewportMode === 'tablet' ? '620px' : '600px',
                       maxHeight: '86vh',
-                      minHeight: '500px',
                       maxWidth: '100%',
                       contain: 'layout paint',
                     }}
                   >
-                    {/* Real Live Web Iframe — Preloaded at launch & permanently mounted */}
-                    <iframe
-                      key={iframeKey}
-                      src={project.liveUrl}
-                      title={`${project.title} Application`}
-                      className="w-full h-full border-0"
-                      loading="eager"
-                      allow="autoplay; encrypted-media; fullscreen"
-                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                      style={{
-                        pointerEvents: isInteractive ? 'auto' : 'none',
-                        transform: 'translateZ(0)',
-                        backfaceVisibility: 'hidden',
-                      }}
-                    />
+                    {project.isGithubProfile || isPreviewOpen || !project.previewImage ? (
+                      <>
+                        {iframeLoading && (
+                          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0d1117] text-[#e6edf3] font-mono text-xs gap-3 select-none">
+                            <div className="w-8 h-8 rounded-full border-2 border-[#30363d] border-t-[var(--color-orange)] animate-spin" />
+                            <span className="opacity-75 tracking-wider">
+                              {lang === 'id' ? 'Memuat live GitHub @AIZATFIR...' : 'Loading live GitHub @AIZATFIR...'}
+                            </span>
+                          </div>
+                        )}
+                        <iframe
+                          key={iframeKey}
+                          src={project.liveUrl}
+                          title={`${project.title} live preview`}
+                          className="w-full h-full border-0"
+                          loading={project.isGithubProfile ? 'eager' : 'lazy'}
+                          onLoad={() => setIframeLoading(false)}
+                          allow="autoplay; encrypted-media; fullscreen"
+                          sandbox={project.isGithubProfile ? undefined : 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'}
+                          style={{
+                            pointerEvents: isInteractive ? 'auto' : 'none',
+                            transform: 'translateZ(0)',
+                            backfaceVisibility: 'hidden',
+                          }}
+                        />
 
-                    {!isInteractive && (
-                      <div
-                        onClick={() => setIsInteractive(true)}
-                        className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
-                        title="Click to interact with full app"
-                      >
-                        <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
-                          <span>{lang === 'id' ? 'Klik untuk interaksi langsung & ratakan tampilan' : 'Click to interact & flatten view'}</span>
-                        </div>
-                      </div>
-                    )}
+                        {!isInteractive && (
+                          <div
+                            onClick={() => setIsInteractive(true)}
+                            className="absolute inset-0 z-20 cursor-pointer bg-transparent group/hint flex items-end justify-center pb-6"
+                            title={lang === 'id' ? 'Klik untuk interaksi langsung' : 'Click to interact'}
+                          >
+                            <div className="opacity-0 group-hover/hint:opacity-100 transition-all duration-200 transform translate-y-2 group-hover/hint:translate-y-0 px-4 py-2 rounded-full bg-[var(--color-card-bg)] border border-[var(--color-orange)] shadow-2xl text-xs font-mono font-bold text-[var(--color-text)] flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
+                              <span>
+                                {project.isGithubProfile
+                                  ? (lang === 'id' ? 'Klik untuk interaksi langsung di halaman profil GitHub' : 'Click to interact with real live GitHub profile')
+                                  : (lang === 'id' ? 'Klik untuk interaksi langsung di dalam halaman' : 'Click to interact directly')}
+                              </span>
+                            </div>
+                          </div>
+                        )}
 
-                    <AnimatePresence>
-                      {isInteractive && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                          className="absolute top-4 right-4 z-30 flex items-center gap-2"
-                        >
+                        {isInteractive && (
                           <button
                             onClick={() => setIsInteractive(false)}
-                            className="px-4 py-2 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none group"
-                            title="Exit interaction mode (Esc)"
+                            className="absolute top-4 right-4 z-30 px-3.5 py-1.5 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-orange)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:bg-[var(--color-orange)] hover:text-white transition-all cursor-pointer select-none"
+                            title={lang === 'id' ? 'Keluar mode interaktif (Esc)' : 'Exit interaction (Esc)'}
                           >
-                            <X size={13} className="text-[var(--color-orange)] group-hover:text-white transition-colors" />
+                            <X size={13} />
                             <span>{lang === 'id' ? 'Keluar Esc' : 'Exit Esc'}</span>
                           </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        )}
+
+                        {!project.isGithubProfile && (
+                          <button
+                            onClick={() => { setIsPreviewOpen(false); setIsInteractive(false); }}
+                            className="absolute top-4 left-4 z-30 min-h-9 px-3 py-1 rounded-full bg-[var(--color-card-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xl flex items-center gap-1.5 font-mono text-xs font-bold hover:border-[var(--color-orange)] transition-colors cursor-pointer"
+                            aria-label={lang === 'id' ? 'Tutup preview langsung' : 'Close live preview'}
+                            title={lang === 'id' ? 'Tutup preview (Esc)' : 'Close preview (Esc)'}
+                          >
+                            <X size={12} />
+                            <span>{lang === 'id' ? 'Tutup preview' : 'Close preview'}</span>
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => { setIsPreviewOpen(true); setIsInteractive(true); }}
+                        className="project-preview-image group relative block h-full w-full overflow-hidden cursor-pointer text-left"
+                        aria-label={lang === 'id' ? `Buka preview langsung ${project.title}` : `Open ${project.title} live preview`}
+                      >
+                        <img
+                          src={project.previewImage}
+                          alt={`${project.title} website screenshot`}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                        />
+                        <span className="project-preview-caption absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 px-5 py-5 sm:px-8 sm:py-7">
+                          <span>
+                            <span className="block font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">{lang === 'id' ? 'Tangkapan layar situs asli' : 'Real website screenshot'}</span>
+                            <span className="mt-1 block text-lg font-semibold text-white sm:text-2xl">{lang === 'id' ? 'Klik untuk memuat live preview' : 'Click to load live preview'}</span>
+                          </span>
+                          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/30 bg-white/15 text-white backdrop-blur-sm transition-transform group-hover:translate-x-1" aria-hidden="true">
+                            <ExternalLink size={18} />
+                          </span>
+                        </span>
+                      </button>
+                    )}
                   </div>
                 ) : (
-                  /* 3. NATIVE APPLICATION HUB DECK (For Fitrah Launcher & Sadar) */
+                  /* 2. NATIVE APPLICATION HUB DECK (For Fitrah Launcher & Sadar) */
                   <div className="w-full max-w-4xl py-12 px-6 sm:px-10 rounded-[18px] bg-[var(--color-card-bg)] border border-[var(--color-border)] shadow-xl flex flex-col items-center text-center">
                     <div className="w-14 h-14 rounded-2xl bg-[var(--color-surface-tint)] border border-[var(--color-border)] flex items-center justify-center mb-4 shadow-sm">
                       <MobileIcon size={28} className="text-[var(--color-orange)]" />
                     </div>
 
                     <h4 className="font-display text-2xl sm:text-4xl font-bold text-[var(--color-headline)] mb-2">
-                      {project.title} — {lang === 'id' ? 'Ruang Kerja Native' : 'Native Workspace'}
+                      {project.title} — {project.isPrivateWorkspace
+                        ? (lang === 'id' ? 'Web Workspace Privat' : 'Private Web Workspace')
+                        : (lang === 'id' ? 'Ruang Kerja Native' : 'Native Workspace')}
                     </h4>
 
                     <p className="font-serif italic text-sm sm:text-base text-[var(--color-muted)] max-w-xl mb-6">
@@ -407,7 +389,7 @@ export default function ProjectCard({ project, index }) {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* 4-Stage Clickable Case Study Grid */}

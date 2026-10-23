@@ -62,11 +62,18 @@ export function Skiper8({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Lock scroll during preloader
+  // Lock scroll during preloader and resume with Lenis
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    if (window.__lenis) {
+      window.__lenis.stop();
+    }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      if (window.__lenis) {
+        window.__lenis.start();
+        window.__lenis.resize();
+      }
     };
   }, []);
 

@@ -34,6 +34,7 @@ function MainApp() {
     "TERRA FLOW",
     "FITRAH LAUNCHER",
     "SADAR",
+    "VALESKA",
     'Turning problems into "Manfaat"'
   ];
 
