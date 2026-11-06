@@ -266,7 +266,7 @@ export default function ProjectCard({ project }) {
                     className={`project-preview-window rounded-[16px] overflow-hidden border border-[var(--color-border)] ${project.isGithubProfile ? 'bg-[#0d1117]' : 'bg-white dark:bg-[#0d1117]'} shadow-2xl relative`}
                     style={{
                       width: viewportMode === 'desktop' ? '100%' : viewportMode === 'tablet' ? '768px' : '390px',
-                      height: viewportMode === 'desktop' ? 'clamp(780px, 88vh, 960px)' : viewportMode === 'tablet' ? '820px' : '780px',
+                      height: viewportMode === 'desktop' ? 'clamp(520px, 80vh, 920px)' : viewportMode === 'tablet' ? '700px' : '560px',
                       maxWidth: '100%',
                       contain: 'layout paint',
                     }}

@@ -474,9 +474,10 @@ export const PROJECTS = [
     },
     category: "Agent Monitoring & Orchestration",
     year: "2026",
+    liveUrl: "https://valeska.zafir.my.id",
     githubUrl: "https://github.com/AIZATFIR/Valeska",
-    isNativeApp: true,
-    isPrivateWorkspace: true,
+    isNativeApp: false,
+    isPrivateWorkspace: false,
     platform: "Private homeserver app • public source on GitHub",
     caseStudy: {
       id: {
