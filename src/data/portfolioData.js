@@ -381,7 +381,6 @@ export const PROJECTS = [
     category: "Cognitive Architecture",
     year: "2026",
     liveUrl: "https://seamless-problem-solver.vercel.app/",
-    embedBlocked: true,
     previewImage: "/assets/previews/terraflow.webp",
     githubUrl: "https://github.com/AIZATFIR/seamless-problem-solver",
     isNativeApp: false,
@@ -516,26 +515,6 @@ export const PROJECTS = [
     }
   }
 ];
-
-// Public deployments confirmed from repository homepage metadata.
-PROJECTS.push(
-  {
-    id: 'abrahamic-lore', number: '11', title: 'ABRAHAMIC LORE',
-    tagline: { id: 'Eksplorasi Abrahamic Lore di web', en: 'Explore Abrahamic Lore on the web' },
-    category: 'Web Project', year: '2026',
-    liveUrl: 'https://abrahamic-lore.vercel.app',
-    githubUrl: 'https://github.com/AIZATFIR/abrahamic-lore',
-    previewImage: '/assets/previews/abrahamic-lore.webp'
-  },
-  {
-    id: 'sekolah-php-admin', number: '12', title: 'SEKOLAH PHP ADMIN',
-    tagline: { id: 'Proyek antarmuka administrasi sekolah', en: 'School administration interface project' },
-    category: 'Web Project', year: '2026',
-    liveUrl: 'https://sekolah-php-admin.vercel.app',
-    githubUrl: 'https://github.com/AIZATFIR/sekolah-php-admin',
-    previewImage: '/assets/previews/sekolah-php-admin.webp'
-  }
-);
 
 export const TOOLBOX = [
   {
