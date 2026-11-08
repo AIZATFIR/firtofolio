@@ -12,8 +12,8 @@ export default function SmoothScrollProvider({ children }) {
   useEffect(() => {
     // Check if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      document.documentElement.style.scrollBehavior = 'smooth';
+    if (prefersReducedMotion || window.matchMedia('(pointer: coarse)').matches) {
+      document.documentElement.style.scrollBehavior = 'auto';
       return undefined;
     }
 

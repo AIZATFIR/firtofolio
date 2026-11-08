@@ -19,7 +19,8 @@ import { Signature } from './components/ui/Signature';
 import { LanguageProvider, useLanguage } from './utils/useLanguage';
 
 function MainApp() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isMobile] = useState(() => window.matchMedia('(max-width: 767px), (pointer: coarse), (prefers-reduced-motion: reduce)').matches);
+  const [isLoading, setIsLoading] = useState(!isMobile);
   const { lang } = useLanguage();
 
   // Tight, rhythmic, non-duplicate preloader sequence
@@ -51,18 +52,18 @@ function MainApp() {
       </AnimatePresence>
 
       {/* Skiper59 - Fluid Drawing Cursor & Paper Canvas Layer */}
-      <Skiper59 color="#ff6f1e" lineWidth={2.5} pointCount={24} decaySpeed={0.045} />
+      {!isMobile && <Skiper59 color="#ff6f1e" lineWidth={2.5} pointCount={24} decaySpeed={0.045} />}
 
       <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-500">
         {/* Optical Progressive Blur Masks */}
-        <Skiper41 position="top" height="60px" />
-        <Skiper41 position="bottom" height="60px" />
+        {!isMobile && <Skiper41 position="top" height="60px" />}
+        {!isMobile && <Skiper41 position="bottom" height="60px" />}
 
         {/* Minimal Static Top Header */}
         <MinimalHeader />
 
         {/* Tactile Side Navigation Scrubber */}
-        <TactileSideScrubber />
+        {!isMobile && <TactileSideScrubber />}
 
         {/* HERO SECTION — Clean Typography Choreography with Authentic Signature */}
         <section
@@ -70,7 +71,7 @@ function MainApp() {
           id="intro"
         >
           {/* Subtle Vector Wave Canvas */}
-          <AgentWaveBackground />
+          {!isMobile && <AgentWaveBackground />}
 
           {/* Deep Semicolon Background Glyph */}
           <DeepSemicolon />
@@ -105,6 +106,7 @@ function MainApp() {
 
         {/* WORK — FULLSCREEN IMMERSIVE PROJECT SHOWCASE */}
         <div id="work" className="pt-8 pb-16">
+          <h2 className="work-heading">{lang === 'id' ? 'Karya pilihan' : 'Selected work'}</h2>
           {PROJECTS.map((project, idx) => (
             <ProjectCard key={project.id} project={project} index={idx} />
           ))}
