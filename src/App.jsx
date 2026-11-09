@@ -55,8 +55,10 @@ function MainApp() {
 
       <div className="min-h-screen w-full max-w-full bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-orange)] selection:text-white font-sans antialiased relative overflow-x-hidden transition-colors duration-500">
         {/* Optical Progressive Blur Masks */}
-        <Skiper41 position="top" height="60px" />
-        <Skiper41 position="bottom" height="60px" />
+        <div className="dark-only-reading-masks" aria-hidden="true">
+          <Skiper41 position="top" height="60px" />
+          <Skiper41 position="bottom" height="60px" />
+        </div>
 
         {/* Minimal Static Top Header */}
         <MinimalHeader />

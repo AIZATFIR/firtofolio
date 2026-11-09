@@ -19,9 +19,9 @@
   --color-deep-semicolon: rgba(43, 26, 7, 0.04);
 
   /* Typography */
-  --font-display: 'Fraunces', 'Space Grotesk', serif;
+  --font-display: 'Fraunces', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'Space Grotesk', 'JetBrains Mono', monospace;
   --font-handwritten: 'Caveat', cursive, sans-serif;
 
   /* Type Scale */
@@ -88,6 +88,87 @@ body {
 
 .font-mono {
   font-family: var(--font-mono);
+}
+
+.dark-only-reading-masks {
+  display: none;
+}
+
+[data-theme="dark"] .dark-only-reading-masks {
+  display: contents;
+}
+
+.project-scene {
+  scroll-margin-top: 4rem;
+}
+
+.project-scene h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.project-tagline {
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.project-preview-shell {
+  box-shadow: 0 28px 80px -42px rgba(26, 20, 15, 0.34);
+  will-change: transform, opacity;
+}
+
+.project-preview-stage {
+  background: var(--color-card-bg);
+  padding: 0;
+}
+
+.project-preview-window {
+  width: 100%;
+  border: 0;
+}
+
+.native-project-preview {
+  width: 100%;
+  min-height: clamp(20rem, 58vw, 44rem);
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  color: var(--color-muted);
+  background:
+    radial-gradient(ellipse at 78% 30%, color-mix(in srgb, var(--color-orange) 12%, transparent), transparent 45%),
+    var(--color-card-bg);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.native-project-preview svg {
+  color: var(--color-orange);
+}
+
+@media (max-width: 640px) {
+  .project-scene {
+    min-height: auto;
+    padding-block: 4rem;
+  }
+
+  .project-scene > div {
+    width: 100%;
+    padding-inline: 1rem;
+  }
+
+  .project-preview-shell {
+    border-radius: 14px;
+  }
+
+  .project-preview-window {
+    height: 68svh !important;
+    min-height: 28rem;
+    max-height: 42rem;
+  }
 }
 
 /* Pill Action Button */
