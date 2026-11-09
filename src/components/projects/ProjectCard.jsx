@@ -121,6 +121,8 @@ export default function ProjectCard({ project }) {
                       src={project.liveUrl}
                       title={`${project.title} live preview`}
                       className="w-full h-full border-0"
+                      data-lenis-prevent
+                      scrolling="yes"
                       loading={project.isGithubProfile ? 'eager' : 'lazy'}
                       onLoad={() => setIframeLoading(false)}
                       allow="autoplay; encrypted-media; fullscreen"

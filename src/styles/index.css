@@ -128,6 +128,15 @@ body {
 .project-preview-window {
   width: 100%;
   border: 0;
+  overscroll-behavior: contain;
+}
+
+.project-preview-window iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .native-project-preview {
