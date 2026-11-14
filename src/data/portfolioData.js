@@ -235,8 +235,9 @@ export const PROJECTS = [
     },
     category: "Digital Minimalism & Native OS",
     year: "2026",
+    liveUrl: "https://fitrah-web.vercel.app/",
     githubUrl: "https://github.com/AIZATFIR/Fitrah-Launcher",
-    isNativeApp: true,
+    isNativeApp: false,
     platform: "Android APK • Linux x64 • Windows",
     caseStudy: {
       id: {
@@ -283,8 +284,9 @@ export const PROJECTS = [
     },
     category: "Human Awareness & Native OS",
     year: "2026",
+    liveUrl: "https://sadar-web.vercel.app/",
     githubUrl: "https://github.com/AIZATFIR/Sadar",
-    isNativeApp: true,
+    isNativeApp: false,
     platform: "Android APK • Linux • Windows",
     caseStudy: {
       id: {
@@ -513,6 +515,62 @@ export const PROJECTS = [
         ]
       }
     }
+  },
+  {
+    id: "abrahamic-lore",
+    number: "11",
+    title: "ABRAHAMIC LORE",
+    tagline: {
+      id: "Jelajahi kisah dan sejarah tiga agama Abrahamik",
+      en: "Explore the stories and history of the Abrahamic faiths"
+    },
+    category: "Interactive Learning",
+    year: "2026",
+    liveUrl: "https://abrahamic-lore.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/abrahamic-lore",
+    isNativeApp: false
+  },
+  {
+    id: "eduadmin",
+    number: "12",
+    title: "EDUADMIN",
+    tagline: {
+      id: "Administrasi sekolah, presensi, analitik, dan kartu pelajar digital",
+      en: "School administration, attendance, analytics, and digital student cards"
+    },
+    category: "Education Administration",
+    year: "2026",
+    liveUrl: "https://sekolah-php-admin.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/sekolah-php-admin",
+    isNativeApp: false
+  },
+  {
+    id: "catalove",
+    number: "13",
+    title: "CATALOVE",
+    tagline: {
+      id: "Etalase toko fleksibel untuk produk, cerita, dan pesanan",
+      en: "A flexible storefront for products, stories, and orders"
+    },
+    category: "Commerce Platform",
+    year: "2026",
+    liveUrl: "https://sofizcake.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/Catalove",
+    isNativeApp: false
+  },
+  {
+    id: "vizuozo",
+    number: "14",
+    title: ";WAVE",
+    tagline: {
+      id: "Visualizer audio 3D yang bergerak mengikuti suara",
+      en: "A living 3D audio visualizer shaped by sound"
+    },
+    category: "Audio Visualization",
+    year: "2026",
+    liveUrl: "https://vizuozo.vercel.app/",
+    githubUrl: "https://github.com/AIZATFIR/vizuozo",
+    isNativeApp: false
   }
 ];
 

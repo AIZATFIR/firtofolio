@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ExternalLink, Smartphone } from 'lucide-react';
+import { ExternalLink, Smartphone, X } from 'lucide-react';
 import GithubIcon from '../GithubIcon';
 import { Skiper8Text } from '../ui/skiper8';
 import { useLanguage } from '../../utils/useLanguage';
@@ -8,6 +8,7 @@ import { useLanguage } from '../../utils/useLanguage';
 export default function ProjectCard({ project }) {
   const { lang } = useLanguage();
   const [iframeLoading, setIframeLoading] = useState(true);
+  const [isInteractive, setIsInteractive] = useState(false);
 
   // 3D paper scroll / roll-up animation as card emerges into view
   const cardRef = useRef(null);
@@ -25,6 +26,15 @@ export default function ProjectCard({ project }) {
   const currentTagline = typeof project.tagline === 'object'
     ? (project.tagline[lang] || project.tagline.id)
     : project.tagline;
+
+  useEffect(() => {
+    if (!isInteractive) return undefined;
+    const lockPreview = (event) => {
+      if (event.key === 'Escape') setIsInteractive(false);
+    };
+    window.addEventListener('keydown', lockPreview);
+    return () => window.removeEventListener('keydown', lockPreview);
+  }, [isInteractive]);
 
   return (
     <section
@@ -128,11 +138,32 @@ export default function ProjectCard({ project }) {
                       allow="autoplay; encrypted-media; fullscreen"
                       sandbox={project.isGithubProfile ? undefined : 'allow-scripts allow-same-origin allow-forms allow-popups allow-modals'}
                       style={{
-                        pointerEvents: 'auto',
+                        pointerEvents: isInteractive ? 'auto' : 'none',
                         transform: 'translateZ(0)',
                         backfaceVisibility: 'hidden',
                       }}
                     />
+
+                    {!isInteractive && (
+                      <button
+                        type="button"
+                        onClick={() => setIsInteractive(true)}
+                        className="absolute inset-0 z-20 cursor-pointer bg-transparent"
+                        aria-label={lang === 'id' ? `Aktifkan preview ${project.title}` : `Interact with ${project.title} preview`}
+                      />
+                    )}
+
+                    {isInteractive && (
+                      <button
+                        type="button"
+                        onClick={() => setIsInteractive(false)}
+                        className="absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-black/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        aria-label={lang === 'id' ? 'Kunci preview (Esc)' : 'Lock preview (Esc)'}
+                        title={lang === 'id' ? 'Kunci preview · Esc' : 'Lock preview · Esc'}
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
 
                   </div>
                 ) : (
